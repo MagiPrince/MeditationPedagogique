@@ -1,3 +1,9 @@
+# Ignore Mac DS_store
+.DS_Store
+
+# Ignore migrations Django
+*migrations
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
