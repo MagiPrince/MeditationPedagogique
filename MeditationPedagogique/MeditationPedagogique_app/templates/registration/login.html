@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block extracss %}
+    <link rel="stylesheet" href="/static/css/login.css">
+{% endblock %}
+
+{% block body_content %}
+
+    <div class="midas-container container-fluid">
+        {% if user.is_authenticated%}
+            <div>
+                <div>
+                    <p class="h1">Connexion</p>
+                </div>
+                <div>
+                    <p>Vous êtes déjà connecté.</p>
+                </div>
+            </div>
+        {% else %}
+            <form method="post">
+                {% csrf_token %}
+                <div>
+                    <p class="h1 col-sm-3">Connexion</p>
+                </div>
+                <div class="username">
+                    <label for="id_username">Nom d'utilisateur</label>
+                    <div class="input-bal">
+                        <input type="text" class="form-control" name="username" id="id_username" placeholder="Nom d'utilisateur">
+                    </div>
+                </div>
+                <div class="password">
+                    <label for="id_password">Mot de passe</label>
+                    <div class="input-bal">
+                        <input type="password" class="form-control" name="password" id="id_password" placeholder="Mot de passe">
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </form>
+        {% endif %}
+    </div>
+
+{% endblock %}

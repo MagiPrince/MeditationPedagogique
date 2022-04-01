@@ -1,0 +1,17 @@
+body {
+    margin-left: 30%;
+    margin-right: 30%;
+}
+
+.password {
+    margin-top: 20px;
+}
+
+.input-bal {
+    margin-top: 5px;
+}
+
+button {
+    margin-top: 20px;
+    float: right;
+}
