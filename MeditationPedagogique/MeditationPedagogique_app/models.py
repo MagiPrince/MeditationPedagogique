@@ -27,3 +27,24 @@ class Ressource(models.Model):
     title = models.CharField(max_length=255, blank=True, null=True)
     description = models.TextField(blank=True, null=True)
     date = models.DateTimeField(blank=False)
+
+
+class Comment(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    ressource = models.ForeignKey(Ressource, on_delete=models.CASCADE)
+    date = models.DateTimeField(blank=False)
+    is_text = models.BooleanField(blank=False)
+    text = models.TextField(blank=True, null=True)
+    audio_path = models.CharField(max_length=255, blank=True, null=True)
+
+
+class Question(models.Model):
+    lesson = models.PositiveSmallIntegerField(blank=False)
+    text = models.CharField(max_length=255, blank=False)
+
+
+class Answer(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    date = models.DateTimeField(blank=False)
+    answer = models.PositiveSmallIntegerField(blank=False, )
