@@ -51,3 +51,6 @@ class CustomUserForm(UserCreationForm):
         if commit:
             user.save()
         return user
+
+
+#class ChangePasswordForm()
