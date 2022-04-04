@@ -27,7 +27,3 @@ def register_request(request):
         messages.error(request, 'Unsuccessful registration. Invalid information.')
     form = CustomUserForm()
     return render(request,'registration/inscription.html', context)
-
-
-def change_password_success(request):
-	return render(request, 'registration/change_password_success.html')
