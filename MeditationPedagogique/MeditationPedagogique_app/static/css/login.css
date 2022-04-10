@@ -1,6 +1,7 @@
-body {
+.body-content{
     margin-left: 30%;
     margin-right: 30%;
+    padding-bottom: 2.5%;
 }
 
 .password {

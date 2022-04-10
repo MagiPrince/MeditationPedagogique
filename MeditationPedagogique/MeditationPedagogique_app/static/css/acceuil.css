@@ -1,0 +1,23 @@
+.titre {
+    padding-top: 3%;
+    padding-bottom: 3%;
+}
+
+.introduction {
+    padding-top: 3%;
+    padding-left: 5%;
+    text-align: center;
+    padding-bottom: 3%;
+}
+
+.modification {
+    background-color: lightblue;
+    color: black;
+    padding-top: 3%;
+    padding-left: 0.5%;
+}
+
+.introductionDiv .modification {
+    padding-right: 5%;
+    padding-top: 2.5%;
+}
