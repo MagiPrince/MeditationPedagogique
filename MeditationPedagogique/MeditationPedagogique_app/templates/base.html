@@ -32,11 +32,13 @@
     {% block body_header %}
         {% include 'navbar.html' %}
     {% endblock %}
+    <div class="body-content">
     {% block body_content %}
-    <div class="midas-container container-fluid">
-        <p>TEST BASE</p>
-    </div>
+        <div class="midas-container container-fluid">
+            <p>TEST BASE</p>
+        </div>
     {% endblock %}
+    </div>
     {% block body_footer %}
     {% endblock %}
 </body>
