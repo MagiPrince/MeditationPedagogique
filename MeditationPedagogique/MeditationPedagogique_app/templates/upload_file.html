@@ -1,0 +1,16 @@
+<p class="title is-4">Rendre un devoir</p>
+
+    {% if text != ''%}
+        <p>{{ text }}</p>
+    {% endif %}
+
+    <form action="/import-data/" method="post" id="data" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="file" name="data_file" accept=".png, .jpg, .pdf">
+        <input class="button is-primary" type="submit" value="Importer">
+    </form>
+
+    {% if uploaded_file_url %}
+        <p>Fichier importé : <a href="{{ uploaded_file_url }}">{{ uploaded_file_url }}</a></p>
+    {% endif %}
+</section>
