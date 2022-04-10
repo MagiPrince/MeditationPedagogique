@@ -1,10 +1,13 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
+from .forms import CustomUserForm
 from .models import User, Ressource, Comment, Question, Answer
 
 
 @admin.register(User)
 class UserAdmin(BaseUserAdmin):
+
+    add_form = CustomUserForm
 
     add_fieldsets = (
         (None, {
