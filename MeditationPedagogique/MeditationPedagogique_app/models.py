@@ -47,4 +47,4 @@ class Answer(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     date = models.DateTimeField(blank=False)
-    answer = models.PositiveSmallIntegerField(blank=False, )
+    answer = models.PositiveSmallIntegerField(blank=False)
