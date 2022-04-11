@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from .forms import CustomUserForm
-from .models import User, Ressource, Comment, Question, Answer
+from .models import User, Ressource, Comment, Question, Answer, Type, Lesson, Element
 
 
 @admin.register(User)
@@ -65,3 +65,27 @@ class AnswerAdmin(admin.ModelAdmin):
 
 
 admin.register(Answer, AnswerAdmin)
+
+
+@admin.register(Type)
+class TypeAdmin(admin.ModelAdmin):
+    list_display = ['id', 'name']
+
+
+admin.register(Type, TypeAdmin)
+
+
+@admin.register(Lesson)
+class LessonAdmin(admin.ModelAdmin):
+    list_display = ['id', 'title']
+
+
+admin.register(Lesson, LessonAdmin)
+
+
+@admin.register(Element)
+class ElementAdmin(admin.ModelAdmin):
+    list_display = ['id', 'type', 'lesson', 'order', 'path', 'text']
+
+
+admin.register(Element, ElementAdmin)

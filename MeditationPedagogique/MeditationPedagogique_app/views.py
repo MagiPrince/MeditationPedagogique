@@ -1,8 +1,9 @@
-from django.http import HttpResponse
-from django.shortcuts import  render, redirect
+from django.shortcuts import render, redirect
 from .forms import CustomUserForm
 from django.contrib.auth import login
 from django.contrib import messages
+import os
+from .models import Lesson
 
 
 # Create your views here.
@@ -22,8 +23,27 @@ def register_request(request):
         if form.is_valid():
             user = form.save()
             login(request, user)
-            messages.success(request, 'Registration successful.' )
+            messages.success(request, 'Registration successful.')
             return redirect(index)
-        messages.error(request, 'Unsuccessful registration. Invalid information.')
+        messages.error(
+            request, 'Unsuccessful registration. Invalid information.')
     form = CustomUserForm()
-    return render(request,'registration/inscription.html', context)
+    return render(request, 'registration/inscription.html', context)
+
+
+def lesson(request, number):
+    context = {}
+    filename = 'lessons/lesson_' + str(number) + '.html'
+    return render(request, filename, context)
+
+
+def create_lesson(request):
+    root = 'medias'
+    next_lesson_number = len(os.listdir(root))
+    medias_directory_name = os.path.join(
+        root, 'lesson_' + str(next_lesson_number))
+    os.makedirs(medias_directory_name, exist_ok=True)
+    lessonDB = Lesson(title='Lesson title')
+    lessonDB.save()
+
+    return lesson(request, next_lesson_number)

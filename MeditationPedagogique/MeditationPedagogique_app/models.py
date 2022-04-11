@@ -47,4 +47,20 @@ class Answer(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     date = models.DateTimeField(blank=False)
-    answer = models.PositiveSmallIntegerField(blank=False, )
+    answer = models.PositiveSmallIntegerField(blank=False)
+
+
+class Type(models.Model):
+    name = models.CharField(max_length=255, blank=False)
+
+
+class Lesson(models.Model):
+    title = models.CharField(max_length=255, blank=False)
+
+
+class Element(models.Model):
+    type = models.ForeignKey(Type, on_delete=models.CASCADE)
+    lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE)
+    order = models.PositiveSmallIntegerField(blank=False)
+    path = models.CharField(max_length=255, blank=True, null=True)
+    text = models.TextField(blank=True, null=True)
