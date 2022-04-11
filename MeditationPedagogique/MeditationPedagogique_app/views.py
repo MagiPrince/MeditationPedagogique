@@ -33,8 +33,10 @@ def register_request(request):
 
 def lesson(request, number):
     context = {}
-    filename = 'lessons/lesson_' + str(number) + '.html'
-    return render(request, filename, context)
+    context['elements'] = Lesson.objects.all().filter(id=number)
+    context['title'] = Lesson.objects.all().filter(id=number)[0].title
+    context['lessonNumber'] = number
+    return render(request, 'lessons/lesson.html', context)
 
 
 def create_lesson(request):
