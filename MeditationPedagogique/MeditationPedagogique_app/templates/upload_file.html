@@ -1,8 +1,5 @@
-<p class="title is-4">Rendre un devoir</p>
-
-    {% if text != ''%}
-        <p>{{ text }}</p>
-    {% endif %}
+<section>
+    <p class="title is-4">Rendre un devoir</p>
 
     <form action="/import-data/" method="post" id="data" enctype="multipart/form-data">
         {% csrf_token %}
