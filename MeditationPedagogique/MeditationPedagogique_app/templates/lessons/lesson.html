@@ -9,16 +9,12 @@
     {% for element in elements %}
         {% if element.type == 'paragraph' %}
             {% include 'lessons/elements/paragraph.html' with text=element.text %}
-        {% endif %}
         {% elif element.type == 'image' %}
             {% include 'lessons/elements/image.html' with path=element.path %}
-        {% endif %}
         {% elif element.type == 'audio' %}
             {% include 'lessons/elements/audio.html' with path=element.path %}
-        {% endif %}
         {% elif element.type == 'video' %}
             {% include 'lessons/elements/video.html' with path=element.path %}
-        {% endif %}
         {% elif element.type == 'document' %}
             {% include 'lessons/elements/document.html' with path=element.path %}
         {% endif %}
