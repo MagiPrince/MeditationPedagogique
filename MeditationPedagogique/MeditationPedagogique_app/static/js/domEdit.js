@@ -1,6 +1,6 @@
 (function ($) {
 
-var firstTimeTitre = true;
+var firstTimeTitle = true;
 var firstTimeParagraph = true;
 
 
@@ -23,12 +23,12 @@ $(document).ready(function(){
             }
             $(this).toggleClass("fa-check-square fa-edit");
             classList = $(this).parent().siblings(".modifiable");
-            if (classList.hasClass("titre") && firstTimeTitre && modifying == true){
-                $('.titre').domEdit({
-                    editorClass: 'titreModification',
-                    onSetEditorStyle: function($editorTitre, $editingElement) {
-                        $editorTitre.css('font-size', '150%');
-                        $editorTitre.css('margin-left', '0%');
+            if (classList.hasClass("title") && firstTimeTitle && modifying == true){
+                $('.title').domEdit({
+                    editorClass: 'titleModification',
+                    onSetEditorStyle: function($editorTitle, $editingElement) {
+                        $editorTitle.css('font-size', '150%');
+                        $editorTitle.css('margin-left', '0%');
                     },
                     event: e,
                 });
