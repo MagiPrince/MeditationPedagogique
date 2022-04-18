@@ -3,7 +3,7 @@
     padding-bottom: 3%;
 }
 
-.introduction {
+.paragraph {
     padding-top: 3%;
     padding-left: 5%;
     padding-bottom: 3%;
@@ -16,7 +16,7 @@
     padding-left: 0.5%;
 }
 
-.introductionDiv .modification {
+.paragraphDiv .modification {
     padding-right: 5%;
     padding-top: 2.5%;
 }

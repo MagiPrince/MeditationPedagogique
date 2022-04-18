@@ -1,7 +1,7 @@
 (function ($) {
 
 var firstTimeTitre = true;
-var firstTimeIntro = true;
+var firstTimeParagraph = true;
 
 
 $(document).ready(function(){
@@ -15,7 +15,7 @@ $(document).ready(function(){
                 // Not having 2 fields modifiying at the same time
                 $(".modifiable").not($(this)).each(
                     function(){
-                        if ($(this).siblings('.modification').find('.modificationButton').hasClass('fa-check-square')){   
+                        if ($(this).siblings('.modification').find('.modificationButton').hasClass('fa-check-square')){
                             $(this).siblings('.modification').find('.modificationButton').toggleClass("fa-edit fa-check-square");
                         }
                     }
@@ -28,17 +28,17 @@ $(document).ready(function(){
                     editorClass: 'titreModification',
                     onSetEditorStyle: function($editorTitre, $editingElement) {
                         $editorTitre.css('font-size', '150%');
-                        $editorTitre.css('margin-left', '0.15%');
+                        $editorTitre.css('margin-left', '0%');
                     },
                     event: e,
                 });
             }
-            if (classList.hasClass("introduction") && firstTimeIntro && modifying == true){
-                $('.introduction').domEdit({
-                    editorClass: 'introductionModification',
-                    onSetEditorStyle: function($editorIntro, $editingElement) {
-                        $editorIntro.css('font-size', '90%');
-                        $editorIntro.css('margin-left', '3.6%');
+            if (classList.hasClass("paragraph") && firstTimeParagraph && modifying == true){
+                $('.paragraph').domEdit({
+                    editorClass: 'paragraphModification',
+                    onSetEditorStyle: function($editorParagraph, $editingElement) {
+                        $editorParagraph.css('font-size', '90%');
+                        $editorParagraph.css('margin-left', '3.6%');
                     },
                     event: e,
                 });
@@ -68,6 +68,7 @@ $(document).ready(function(){
 
 
     function closeDomEditor(e) {
+        console.log('he')
         if ($(this).hasClass("fa-edit") == true){
             $editor.remove();
             //Le résultat est : $editor.val()
@@ -89,7 +90,7 @@ $(document).ready(function(){
         $editor.css('font-weight', $element.css('font-weight'));
         $editor.css('text-align', $element.css('text-align'));
         $editor.css('font-family', $element.css('font-family'));
-        $editor.css('padding', $element.css('padding'));
+        //$editor.css('padding', $element.css('padding'));
         $editor.css('position', 'absolute');
         $editor.css('border-style', 'dotted');
         $editor.css('border-width', '3px');
@@ -126,7 +127,7 @@ $(document).ready(function(){
 
             if (target === $editor[0] || target === document.body || !$body.has(target)){
                 return;
-            } 
+            }
             var $element = $(target);
 
             if (!$editor.parent().length) {
