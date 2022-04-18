@@ -5,17 +5,18 @@
     <link rel="stylesheet" href="/static/css/lesson.css">
 {% endblock %}
 {% block body_content %}
+    {% csrf_token %}
     {% include 'lessons/elements/title.html' with title=title %}
     {% for element in elements %}
-        {% if element.type == 'paragraph' %}
+        {% if element.type.name == 'paragraph' %}
             {% include 'lessons/elements/paragraph.html' with text=element.text %}
-        {% elif element.type == 'image' %}
+        {% elif element.type.name == 'image' %}
             {% include 'lessons/elements/image.html' with path=element.path %}
-        {% elif element.type == 'audio' %}
+        {% elif element.type.name == 'audio' %}
             {% include 'lessons/elements/audio.html' with path=element.path %}
-        {% elif element.type == 'video' %}
+        {% elif element.type.name == 'video' %}
             {% include 'lessons/elements/video.html' with path=element.path %}
-        {% elif element.type == 'document' %}
+        {% elif element.type.name == 'document' %}
             {% include 'lessons/elements/document.html' with path=element.path %}
         {% endif %}
         {% include 'lessons/add_element.html' %}

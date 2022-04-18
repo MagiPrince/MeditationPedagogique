@@ -3,7 +3,7 @@ from .forms import CustomUserForm
 from django.contrib.auth import login
 from django.contrib import messages
 import os
-from .models import Lesson
+from .models import Lesson, Element, Type
 
 
 # Create your views here.
@@ -33,10 +33,26 @@ def register_request(request):
 
 def lesson(request, number):
     context = {}
-    context['elements'] = Lesson.objects.all().filter(id=number)
+    lessonNumber = Lesson.objects.get(id=number)
+    elements =  Element.objects.filter(lesson=lessonNumber)
+    context['elements'] = elements
     context['title'] = Lesson.objects.all().filter(id=number)[0].title
     context['lessonNumber'] = number
     return render(request, 'lessons/lesson.html', context)
+
+def add_paragraph_request(request, number, order):
+    if request.method == 'POST':
+        print(number)
+        """ type = models.ForeignKey(Type, on_delete=models.CASCADE)
+        lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE)
+        order = models.PositiveSmallIntegerField(blank=False)
+        path = models.CharField(max_length=255, blank=True, null=True)
+        text = models.TextField(blank=True, null=True) """
+        type = Type.objects.get(name='paragraph')
+        lessonNumber = Lesson.objects.get(id=number)
+        elementDB = Element(type=type, lesson=lessonNumber, order=order, text='Ceci est un paragraphe')
+        elementDB.save()
+    return lesson(request, number)
 
 
 def create_lesson(request):
