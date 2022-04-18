@@ -1,0 +1,10 @@
+<lessonParagraph></lessonParagraph>
+
+<div class="d-flex justify-content flex-row paragraphDiv">
+    <p class="paragraph modifiable" >{{ text }}</p>
+    {% if user.is_authenticated%}
+    <div class="modification">
+        <i class="fas fa-edit modificationButton" type="button"></i>
+    </div>
+    {% endif %}
+</div>

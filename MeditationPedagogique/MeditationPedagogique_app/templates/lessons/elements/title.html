@@ -1,0 +1,10 @@
+<div class="d-flex justify-content-center flex-row">
+    {% if user.is_authenticated%}
+    <h1 class="title modifiable">{{ title }}</h1>
+    <div class="modification">
+        <i class="fas fa-edit modificationButton" type="button"></i>
+    </div>
+    {% else %}
+    <h1 class="title">{{ title }}</h1>
+    {% endif %}
+</div>
