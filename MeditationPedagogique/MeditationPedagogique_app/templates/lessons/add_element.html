@@ -1,2 +1,7 @@
-<p><button>Add paragraph</button></p>
-<p><button>Add media</button></p>
+{% if user.is_authenticated%}
+<div class="d-flex justify-content-center flex-row">
+    <button class='btn btn-dark' onclick="add_paragraph()">Add paragraph</button>
+    <div class="divider"></div>
+    <button class='btn btn-dark'>Add media</button>
+</div>
+{% endif %}

@@ -1,0 +1,27 @@
+.title {
+    padding-top: 3%;
+    padding-bottom: 3%;
+}
+
+.paragraph {
+    padding-top: 3%;
+    padding-left: 5%;
+    padding-bottom: 3%;
+}
+
+.modification {
+    background-color: white;
+    color: black;
+    padding-top: 3%;
+    padding-left: 0.5%;
+}
+
+.paragraphDiv .modification {
+    padding-right: 5%;
+    padding-top: 2.5%;
+}
+
+.divider{
+    width: 25px;
+    height: auto;
+}

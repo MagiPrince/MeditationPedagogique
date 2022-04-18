@@ -1,11 +1,11 @@
 body {
-    background-color: darkblue !important;
+    background-color: rgb(238, 238, 238) !important;
 }
 
 .body-content {
     margin-top: 5%;
     margin-left: 15%;
     margin-right: 15%;
-    background-color: lightblue
+    background-color: white
 }
 
