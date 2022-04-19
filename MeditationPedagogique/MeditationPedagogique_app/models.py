@@ -64,3 +64,7 @@ class Element(models.Model):
     order = models.PositiveSmallIntegerField(blank=False)
     path = models.CharField(max_length=255, blank=True, null=True)
     text = models.TextField(blank=True, null=True)
+
+class GeneralInformation(models.Model):
+    title = models.CharField(max_length=255, blank=False)
+    description = models.TextField(blank=False, null=True)

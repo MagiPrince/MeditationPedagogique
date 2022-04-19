@@ -66,7 +66,6 @@ def create_lesson(request):
     medias_directory_name = os.path.join(
     root, 'lesson_' + str(lessonDB.id))
     os.makedirs(medias_directory_name, exist_ok=True)
-
     return lesson(request, lessonDB.id)
 
 
