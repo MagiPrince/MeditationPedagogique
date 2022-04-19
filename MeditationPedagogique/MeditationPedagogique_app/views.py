@@ -67,7 +67,7 @@ def create_lesson(request):
     root, 'lesson_' + str(lessonDB.id))
     os.makedirs(medias_directory_name, exist_ok=True)
 
-    return lesson(request, next_lesson_number)
+    return lesson(request, lessonDB.id)
 
 
 def delete_lesson(request, lesson_id):
