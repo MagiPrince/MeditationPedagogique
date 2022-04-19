@@ -51,6 +51,7 @@ def lesson(request, number):
     context['elements'] = elements
     context['title'] = Lesson.objects.all().filter(id=number)[0].title
     context['lessonNumber'] = number
+    context['ressources'] = Ressource.objects.filter(lesson=number)
     return render(request, 'lessons/lesson.html', context)
 
 
@@ -83,23 +84,31 @@ def create_lesson(request):
 
 @login_required
 def import_data(request):
+    """
+    Import file passed by POST method, saving it in appropriate folder and creating a Ressource object in DB
+    """
     if request.method == 'POST':
         accepted_format_dictionnary = ['png', 'jpg', 'pdf']
         homework = request.FILES['homework']
         lesson = request.POST.get('lessonNb', '')
         if str(homework).split('.')[-1].lower() in accepted_format_dictionnary:
+            # Get slug of the lesson
             lesson_object = Lesson.objects.get(id=lesson).slug
+            # Save file in appropriate folder
             fs = FileSystemStorage(location=os.path.join(settings.MEDIA_ROOT, lesson_object))
             filename = fs.save(homework.name, homework)
             request.session['upload_success'] = True
             request.session['uploaded_file_url'] = filename
             
+            # Create Ressource element in DB
             ressource = Ressource(user = request.user, path = os.path.join(os.path.join(settings.MEDIA_ROOT, lesson_object), filename), lesson = lesson, date = datetime.datetime.now())
             ressource.save()
 
             return redirect('lesson', lesson)
         
+        # If somehow we receive a file that does not correspond to the define extensions
         request.session['upload_success'] = False
         return redirect('lesson', lesson)
 
+    # If the request is not POST the user is redirected to the index
     return redirect('index')
