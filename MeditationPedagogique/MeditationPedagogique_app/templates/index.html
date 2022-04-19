@@ -5,6 +5,7 @@
     <link rel="stylesheet" href="/static/css/acceuil.css">
 {% endblock %}
 {% block body_content %}
+
     <div class="d-flex justify-content-center titleDiv flex-row">
         <!-- if user.is_authenticated-->
         {% if user.is_superuser %}
@@ -25,76 +26,26 @@
         {% endif %}
     </div>
 
-    <div class="lessonsArea" style="width:90%;">
+    <div class="lessonsArea">
         <div class="row lessonsArea-body" id="lessonsArea">
+            {% for lesson in lessonList %}
+            <div class="col-md-3 col-sm-6 ">
+                <a href='/lesson/{{lesson.id}}' class="square">
+                    {% if user.is_superuser%}
+                    <button type="button" onclick="location.href='{% url 'delete-lesson' lesson.id %}'; return false" class="fas fa-times-circle fa-lg"> </button>
+                    <!--<a href="{% url 'delete-lesson' lesson.id %}" class="fas fa-times-circle fa-lg"> </a>-->
+                    {% endif %}
+                    <div>{{ lesson.title }}</div>
+                </a>
+            </div>
+            {% endfor %}
             <div id="addLesson" class="col-md-3 col-sm-6 ">
-                <div class="square addLesson">
-                    <button type="button" onclick="addLesson('Salut')" class="fas fa-plus-circle fa-5x"> </button>
+                <div class="square">
+                    <button type="button" onclick="window.location.href = '/create_lesson';" class="fas fa-plus-circle fa-5x"> </button>
                     <div class="createLesson">Créer une nouvelle leçon</div>
                 </div>
             </div>
-            <div class="col-md-3 col-sm-6 ">
-                <div class="square">
-                    <button type="button" onclick="deleteLesson()" class="fas fa-times-circle fa-lg" > </button>
-                    <div>Créer une nouvelle leçon et blablabli et blablabla</div>
-                </div>
-            </div>
-            <div class="col-md-3 col-sm-6 ">
-                <div class="square">
-                    <button type="button" onclick="deleteLesson()" class="fas fa-times-circle fa-lg"> </button>
-                    <div>Créer une nouvelle leçon, si tu en es capable bien évidemment n'est-ce aps</div>
-                </div>
-            </div>
-            <div class="col-md-3 col-sm-6 ">
-                <div class="square">
-                    <button type="button" onclick="deleteLesson()" class="fas fa-times-circle fa-lg"> </button>
-                    <div>Créer une nouvelle leçon</div>
-                </div>
-            </div>
-            <div class="col-md-3 col-sm-6 ">
-                <div class="square">
-                    <button type="button" onclick="deleteLesson()" class="fas fa-times-circle fa-lg"> </button>
-                    <div>Créer une nouvelle leçon</div>
-                </div>
-            </div>
-            <div class="col-md-3 col-sm-6 ">
-                <div class="square">
-                    <button type="button" onclick="deleteLesson()" class="fas fa-times-circle fa-lg"> </button>
-                    <div>Créer une nouvelle leçon</div>
-                </div>
-            </div>
-
-    <script>
-        function createNewLesson(e) {
-           console.log("Nouvelle leçon créée");
-        }
-
-        function deleteLesson(e) {
-           console.log("Leçon supprimée");
-        }
-
-        function addLesson(name){
-            var lessonsAreaDiv = document.getElementById('lessonsArea');
-            var addLessonDiv = document.getElementById('addLesson');
-            var flexCol = document.createElement("div");
-            flexCol.classList.add("col-md-3");
-            flexCol.classList.add("col-sm-6");
-            var square = document.createElement("div");
-            square.classList.add("square");
-            var content = document.createElement("div");
-            content.innerHTML = name;
-            var deleteButton = document.createElement("Button");
-            deleteButton.classList.add("fas");
-            deleteButton.classList.add("fa-times-circle");
-            deleteButton.classList.add("fa-lg");
-            deleteButton.setAttribute("type", "button");
-            deleteButton.setAttribute("onclick", "deleteLesson()");
-            square.appendChild(deleteButton);
-            square.appendChild(content);
-            flexCol.appendChild(square);
-            flexCol = lessonsAreaDiv.insertBefore(flexCol, addLessonDiv)
-        }
-
-    </script>
+        </div>
+    </div>
 
 {% endblock %}

@@ -22,6 +22,7 @@
 }
 
 .lessonsArea {
+    width:80%;
     display: block;
     margin-left: auto;
     margin-right: auto;
@@ -34,7 +35,7 @@
     text-align: center;
     border: solid;
     border-color: black;
-    height: 15em;
+    height: 13.4em;
     padding: 1rem;
     display: flex;
     flex-direction: column;
@@ -42,13 +43,10 @@
     position: relative;
 }
 
-.addLesson {
-    background-color:#00c010;
-}
-
 .fa-plus-circle{
     padding-top: 3.3rem;
-    background-color:#00c010;
+    color:#00c010;
+    background-color: white;
     border: 0;
 }
 
@@ -66,4 +64,13 @@
     position: absolute;
     top: 0.5rem;
     right: 0.5rem;
+}
+
+a {
+    text-decoration: none;
+    color: black;
+}
+
+a:hover{
+    color: black;
 }

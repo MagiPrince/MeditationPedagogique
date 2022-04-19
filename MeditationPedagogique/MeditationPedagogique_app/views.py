@@ -3,6 +3,7 @@ from .forms import CustomUserForm
 from django.contrib.auth import login
 from django.contrib import messages
 import os
+import shutil
 from .models import Lesson, Element, Type
 
 
@@ -12,6 +13,9 @@ def index(request):
     context = {
         'test': 'CECI EST UN TEST'
     }
+
+    context['lessonList'] = Lesson.objects.all()
+
     return render(request, 'index.html', context)
 
 
@@ -56,12 +60,20 @@ def add_paragraph_request(request, number, order):
 
 
 def create_lesson(request):
-    root = 'medias'
-    next_lesson_number = len(os.listdir(root))
-    medias_directory_name = os.path.join(
-        root, 'lesson_' + str(next_lesson_number))
-    os.makedirs(medias_directory_name, exist_ok=True)
     lessonDB = Lesson(title='Lesson title')
     lessonDB.save()
+    root = 'medias'
+    medias_directory_name = os.path.join(
+    root, 'lesson_' + str(lessonDB.id))
+    os.makedirs(medias_directory_name, exist_ok=True)
 
     return lesson(request, next_lesson_number)
+
+
+def delete_lesson(request, lesson_id):
+    root = 'medias'
+    lesson = Lesson.objects.get(pk=lesson_id)
+    lesson.delete()
+    lesson_directory = os.path.join(root, 'lesson_' + str(lesson_id))
+    shutil.rmtree(lesson_directory)
+    return redirect('index')
