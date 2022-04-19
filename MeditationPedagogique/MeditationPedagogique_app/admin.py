@@ -3,7 +3,6 @@ from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from .forms import CustomUserForm
 from .models import User, Ressource, Comment, Question, Answer, Type, Lesson, Element
 
-
 @admin.register(User)
 class UserAdmin(BaseUserAdmin):
 
@@ -89,3 +88,4 @@ class ElementAdmin(admin.ModelAdmin):
 
 
 admin.register(Element, ElementAdmin)
+

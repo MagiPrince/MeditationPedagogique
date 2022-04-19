@@ -6,22 +6,79 @@
 {% endblock %}
 {% block body_content %}
     <div class="d-flex justify-content-center titleDiv flex-row">
-        {% if user.is_authenticated%}
-        <h1 class="title modifiable">Title Général</h1>
+        <!-- if user.is_authenticated-->
+        {% if user.is_superuser %}
+        <h1 class="title modifiable">Titre Général</h1>
         <div class="modification">
             <i class="fas fa-edit modificationButton" type="button"></i>
         </div>
         {% else %}
-        <h1 class="title">Title Général</h1>
+        <h1 class="title">Titre Général</h1>
         {% endif %}
     </div>
     <div class="d-flex justify-content-center flex-row paragraphDiv">
         <p class="paragraph modifiable" >Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-        {% if user.is_authenticated%}
+        {% if user.is_superuser%}
         <div class="modification">
             <i class="fas fa-edit modificationButton" type="button"></i>
         </div>
         {% endif %}
     </div>
+
+    <div class="lessonsArea" style="width:90%;">
+        <div class="row lessonsArea-body" id="lessonsArea">
+            <div id="addLesson" class="col-md-3 col-sm-6 ">
+                <div class="square addLesson">
+                    <button type="button" onclick="addLesson('Salut')" class="fas fa-plus-circle fa-5x" aria-hidden="true" style="background-color: #00c010;border: 0;/*! justify-self: center; */"> </button>
+                    <div class="createLesson">Créer une nouvelle leçon</div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6 ">
+                <div class="square">
+                    <div>Créer une nouvelle leçon et blablabli et blablabla</div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6 ">
+                <div class="square">
+                    <div>Créer une nouvelle leçon, si tu en es capable bien évidemment n'est-ce aps</div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6 ">
+                <div class="square">
+                    <div>Créer une nouvelle leçon</div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6 ">
+                <div class="square">
+                    <div>Créer une nouvelle leçon</div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6 ">
+                <div class="square">
+                    <div>Créer une nouvelle leçon</div>
+                </div>
+            </div>
+
+    <script>
+        function createNewLesson(e) {
+           console.log("Nouvelle lesson créée");
+        }
+
+        function addLesson(name){
+            var lessonsAreaDiv = document.getElementById('lessonsArea');
+            var addLessonDiv = document.getElementById('addLesson');
+            var flexCol = document.createElement("div");
+            flexCol.classList.add("col-md-3");
+            flexCol.classList.add("col-sm-6");
+            var square = document.createElement("div");
+            square.classList.add("square");
+            var content = document.createElement("div");
+            content.innerHTML = name;
+            square.appendChild(content);
+            flexCol.appendChild(square);
+            flexCol = lessonsAreaDiv.insertBefore(flexCol, addLessonDiv)
+        }
+
+    </script>
 
 {% endblock %}
