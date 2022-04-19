@@ -6,13 +6,9 @@ from django.contrib.auth.decorators import login_required
 from django.core.files.storage import FileSystemStorage
 from django.conf import settings
 import os
-<<<<<<< HEAD
 import shutil
-from .models import Lesson, Element, Type
-=======
 import datetime
 from .models import Lesson, Element, Ressource, Type
->>>>>>> david
 
 
 # Create your views here.
