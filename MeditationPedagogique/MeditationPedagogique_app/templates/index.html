@@ -29,39 +29,48 @@
         <div class="row lessonsArea-body" id="lessonsArea">
             <div id="addLesson" class="col-md-3 col-sm-6 ">
                 <div class="square addLesson">
-                    <button type="button" onclick="addLesson('Salut')" class="fas fa-plus-circle fa-5x" aria-hidden="true" style="background-color: #00c010;border: 0;/*! justify-self: center; */"> </button>
+                    <button type="button" onclick="addLesson('Salut')" class="fas fa-plus-circle fa-5x"> </button>
                     <div class="createLesson">Créer une nouvelle leçon</div>
                 </div>
             </div>
             <div class="col-md-3 col-sm-6 ">
                 <div class="square">
+                    <button type="button" onclick="deleteLesson()" class="fas fa-times-circle fa-lg" > </button>
                     <div>Créer une nouvelle leçon et blablabli et blablabla</div>
                 </div>
             </div>
             <div class="col-md-3 col-sm-6 ">
                 <div class="square">
+                    <button type="button" onclick="deleteLesson()" class="fas fa-times-circle fa-lg"> </button>
                     <div>Créer une nouvelle leçon, si tu en es capable bien évidemment n'est-ce aps</div>
                 </div>
             </div>
             <div class="col-md-3 col-sm-6 ">
                 <div class="square">
+                    <button type="button" onclick="deleteLesson()" class="fas fa-times-circle fa-lg"> </button>
                     <div>Créer une nouvelle leçon</div>
                 </div>
             </div>
             <div class="col-md-3 col-sm-6 ">
                 <div class="square">
+                    <button type="button" onclick="deleteLesson()" class="fas fa-times-circle fa-lg"> </button>
                     <div>Créer une nouvelle leçon</div>
                 </div>
             </div>
             <div class="col-md-3 col-sm-6 ">
                 <div class="square">
+                    <button type="button" onclick="deleteLesson()" class="fas fa-times-circle fa-lg"> </button>
                     <div>Créer une nouvelle leçon</div>
                 </div>
             </div>
 
     <script>
         function createNewLesson(e) {
-           console.log("Nouvelle lesson créée");
+           console.log("Nouvelle leçon créée");
+        }
+
+        function deleteLesson(e) {
+           console.log("Leçon supprimée");
         }
 
         function addLesson(name){
@@ -74,6 +83,13 @@
             square.classList.add("square");
             var content = document.createElement("div");
             content.innerHTML = name;
+            var deleteButton = document.createElement("Button");
+            deleteButton.classList.add("fas");
+            deleteButton.classList.add("fa-times-circle");
+            deleteButton.classList.add("fa-lg");
+            deleteButton.setAttribute("type", "button");
+            deleteButton.setAttribute("onclick", "deleteLesson()");
+            square.appendChild(deleteButton);
             square.appendChild(content);
             flexCol.appendChild(square);
             flexCol = lessonsAreaDiv.insertBefore(flexCol, addLessonDiv)
