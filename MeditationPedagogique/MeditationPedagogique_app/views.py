@@ -90,7 +90,7 @@ def delete_lesson(request, lesson_id):
     lesson.delete()
     lesson_directory = os.path.join(root, 'lesson_' + str(lesson_id))
     shutil.rmtree(lesson_directory)
-    return lesson(request, next_lesson_number)
+    return redirect('index')
 
 
 @login_required
