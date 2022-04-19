@@ -3,8 +3,9 @@
 
     <form action="/import-data/" method="post" id="data" enctype="multipart/form-data">
         {% csrf_token %}
-        <input type="file" name="data_file" accept=".png, .jpg, .pdf">
-        <input class="button is-primary" type="submit" value="Importer">
+        <input class="form-control" type="file" id="formFile" name="homework" accept=".png, .jpg, .pdf">
+        <input type="hidden" id="lessonNb" name="lessonNb" value={{ lesson }}>
+        <input class="btn btn-primary" id="formFileSubmit" type="submit" value="Importer">
     </form>
 
     {% if uploaded_file_url %}

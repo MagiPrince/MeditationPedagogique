@@ -22,5 +22,8 @@
         {% include 'lessons/add_element.html' %}
     {% endfor %}
     {% include 'lessons/image_gallery.html' with lesson=lessonNumber%}
+    {% if user.is_authenticated %}
+        {% include 'lessons/upload_file.html' with lesson=lessonNumber %}
+    {% endif %}
     {% include 'lessons/feedbacks.html' with lesson=lessonNumber%}
 {% endblock %}

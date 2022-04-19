@@ -77,7 +77,7 @@ admin.register(Type, TypeAdmin)
 
 @admin.register(Lesson)
 class LessonAdmin(admin.ModelAdmin):
-    list_display = ['id', 'title']
+    list_display = ['id', 'title', 'slug']
 
 
 admin.register(Lesson, LessonAdmin)

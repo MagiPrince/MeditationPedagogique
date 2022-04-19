@@ -2,6 +2,8 @@ from django.shortcuts import render, redirect
 from .forms import CustomUserForm
 from django.contrib.auth import login
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.core.files.storage import FileSystemStorage
 import os
 from .models import Lesson, Element, Type
 
@@ -40,6 +42,7 @@ def lesson(request, number):
     context['lessonNumber'] = number
     return render(request, 'lessons/lesson.html', context)
 
+
 def add_paragraph_request(request, number, order):
     if request.method == 'POST':
         print(number)
@@ -65,3 +68,18 @@ def create_lesson(request):
     lessonDB.save()
 
     return lesson(request, next_lesson_number)
+
+
+@login_required
+def import_data(request):
+    if request.method == 'POST':
+        accepted_format_dictionnary = ['png', 'jpg', 'pdf']
+        homework = request.FILES['homework']
+        if str(homework).split('.')[-1].lower() in accepted_format_dictionnary:
+            fs = FileSystemStorage()
+            filename = fs.save(homework.name, homework)
+            uploaded_file_url = fs.url(filename)
+            return redirect('lesson')
+        else:
+            text_to_return = {'text': 'Le format n\'est pas correct'}
+    return render(request, 'forms/import/import_data.html', text_to_return)

@@ -9,5 +9,6 @@ urlpatterns = [
     path('change-password-success/', PasswordChangeDoneView.as_view(template_name='registration/change_password_success.html'), name='password_change_done'),
     path('lesson/<int:number>', views.lesson, name='lesson'),
     path('create_lesson/', views.create_lesson, name='create_lesson'),
-    path('lesson/<int:number>/add_paragraph/<int:order>/', views.add_paragraph_request, name='add_paragraph')
+    path('lesson/<int:number>/add_paragraph/<int:order>/', views.add_paragraph_request, name='add_paragraph'),
+    path('import-data/', views.import_data, name='import_data'),
 ]
