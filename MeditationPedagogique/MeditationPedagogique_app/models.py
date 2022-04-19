@@ -35,6 +35,10 @@ class Ressource(models.Model):
     description = models.TextField(blank=True, null=True)
     date = models.DateTimeField(blank=False)
 
+    def delete(self, *args, **kwargs):
+        os.remove(self.path)
+        super().delete(*args, **kwargs)
+
 
 class Comment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)

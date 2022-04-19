@@ -23,7 +23,7 @@
     {% endfor %}
     {% include 'lessons/image_gallery.html' with lesson=lessonNumber%}
     {% if user.is_authenticated %}
-        {% include 'lessons/upload_file.html' with lesson=lessonNumber %}
+        {% include 'lessons/upload_file.html' with lesson=lessonNumber uploaded_file_url=uploaded_file_url upload_success=upload_success %}
     {% endif %}
     {% include 'lessons/feedbacks.html' with lesson=lessonNumber%}
 {% endblock %}

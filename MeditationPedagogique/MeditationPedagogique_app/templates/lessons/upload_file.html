@@ -1,5 +1,15 @@
 <section>
-    <p class="title is-4">Rendre un devoir</p>
+    <h2>Rendre un devoir</h2>
+
+    {% if upload_success %}
+        <div class="alert alert-success" role="alert">
+            Le devoir a bien été rendu
+        </div>
+    {% elif upload_success != '' %}
+        <div class="alert alert-danger" role="alert">
+            Une erreur est survenu lors du rendu
+        </div>
+    {% endif %}
 
     <form action="/import-data/" method="post" id="data" enctype="multipart/form-data">
         {% csrf_token %}

@@ -4,8 +4,10 @@ from django.contrib.auth import login
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.files.storage import FileSystemStorage
+from django.conf import settings
 import os
-from .models import Lesson, Element, Type
+import datetime
+from .models import Lesson, Element, Ressource, Type
 
 
 # Create your views here.
@@ -34,9 +36,18 @@ def register_request(request):
 
 
 def lesson(request, number):
-    context = {}
+    context = {
+        'upload_success': '',
+        'uploaded_file_url': '',
+    }
     lessonNumber = Lesson.objects.get(id=number)
     elements =  Element.objects.filter(lesson=lessonNumber)
+    if 'upload_success' in request.session:
+        context['upload_success'] = request.session['upload_success']
+        del request.session['upload_success']
+    if 'uploaded_file_url' in request.session:
+        context['uploaded_file_url'] = request.session['uploaded_file_url']
+        del request.session['uploaded_file_url']
     context['elements'] = elements
     context['title'] = Lesson.objects.all().filter(id=number)[0].title
     context['lessonNumber'] = number
@@ -75,11 +86,20 @@ def import_data(request):
     if request.method == 'POST':
         accepted_format_dictionnary = ['png', 'jpg', 'pdf']
         homework = request.FILES['homework']
+        lesson = request.POST.get('lessonNb', '')
         if str(homework).split('.')[-1].lower() in accepted_format_dictionnary:
-            fs = FileSystemStorage()
+            lesson_object = Lesson.objects.get(id=lesson).slug
+            fs = FileSystemStorage(location=os.path.join(settings.MEDIA_ROOT, lesson_object))
             filename = fs.save(homework.name, homework)
-            uploaded_file_url = fs.url(filename)
-            return redirect('lesson')
-        else:
-            text_to_return = {'text': 'Le format n\'est pas correct'}
-    return render(request, 'forms/import/import_data.html', text_to_return)
+            request.session['upload_success'] = True
+            request.session['uploaded_file_url'] = filename
+            
+            ressource = Ressource(user = request.user, path = os.path.join(os.path.join(settings.MEDIA_ROOT, lesson_object), filename), lesson = lesson, date = datetime.datetime.now())
+            ressource.save()
+
+            return redirect('lesson', lesson)
+        
+        request.session['upload_success'] = False
+        return redirect('lesson', lesson)
+
+    return redirect('index')
