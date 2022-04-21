@@ -4,6 +4,9 @@
 {% block extracss %}
     <link rel="stylesheet" href="/static/css/acceuil.css">
 {% endblock %}
+
+
+
 {% block body_content %}
 
     <div class="d-flex justify-content-center titleDiv flex-row">
@@ -30,10 +33,25 @@
         <div class="row lessonsArea-body" id="lessonsArea">
             {% for lesson in lessonList %}
             <div class="col-md-3 col-sm-6 ">
-                <a href='/lesson/{{lesson.id}}' class="square">
+                <a  class="square"> <!--href='/lesson/{{lesson.id}}'-->
                     {% if user.is_superuser%}
-                    <button type="button" onclick="location.href='{% url 'delete-lesson' lesson.id %}'; return false" class="fas fa-times-circle fa-lg"> </button>
-                    <!--<a href="{% url 'delete-lesson' lesson.id %}" class="fas fa-times-circle fa-lg"> </a>-->
+                    <!--<button type="button" onclick="location.href='{% url 'delete-lesson' lesson.id %}'; return false" class="fas fa-times-circle fa-lg"> </button>-->
+                    <button type="button" class="fas fa-times-circle fa-lg" onclick="return false" data-bs-toggle="modal" data-bs-target="#exampleModal"></button>
+                    <!-- Modal -->
+                    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Voulez-vous réellement supprimer cette leçon ?</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-footer d-flex justify-content-center">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                                    <button type="button" onclick="location.href='{% url 'delete-lesson' lesson.id %}'; return false" class="btn btn-danger">Supprimer</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     {% endif %}
                     <div>{{ lesson.title }}</div>
                 </a>
@@ -47,5 +65,6 @@
             </div>
         </div>
     </div>
+
 
 {% endblock %}

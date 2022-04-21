@@ -75,6 +75,9 @@ def add_paragraph_request(request, number, order):
 
 
 def create_lesson(request):
+
+    #id = Lesson.objects.latest('id')
+    #print("Salut c'est ici kozo", id)
     lessonDB = Lesson(title='Lesson title')
     lessonDB.save()
     root = 'medias'

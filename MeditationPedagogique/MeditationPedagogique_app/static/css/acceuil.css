@@ -74,3 +74,12 @@ a {
 a:hover{
     color: black;
 }
+
+.modal-title {
+    color: red;
+}
+
+.modal-footer button {
+    padding: 0.8rem;
+    margin: 1rem;
+}
