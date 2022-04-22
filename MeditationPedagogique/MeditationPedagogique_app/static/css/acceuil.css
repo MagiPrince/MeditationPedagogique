@@ -88,7 +88,7 @@ a:hover{
     margin: 0 1rem;
 }
 
-#deleteModal .modal-header{
+#deleteModalHeader{
     background-color: #c85a54;
     color: white;
 }

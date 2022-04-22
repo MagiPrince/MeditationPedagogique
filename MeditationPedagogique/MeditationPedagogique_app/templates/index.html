@@ -44,7 +44,7 @@
                     <div class="modal fade" id="delete{{lesson.id}}" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true" onclick="return false">
                         <div class="modal-dialog">
                             <div class="modal-content">
-                                    <div class="modal-header">
+                                    <div class="modal-header" id="deleteModalHeader">
                                         <h5 class="modal-title" id="deleteModalLabel">Attention !</h5>
                                         <button type="button" class="btn-close close-modal" data-bs-dismiss="modal" aria-label="Close" onclick="return false;"></button>
                                     </div>
@@ -53,7 +53,6 @@
                                   </div>
                                 <div class="modal-footer d-flex justify-content-center">
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="return false;">Annuler</button>
-                                    <script>console.log({{lesson.id}})</script>
                                     <button type="button" onclick="location.href='{% url 'delete-lesson' lesson.id %}'; return false" class="btn btn-danger">Supprimer</button>
                                 </div>
                             </div>
@@ -64,6 +63,7 @@
                 </a>
             </div>
             {% endfor %}
+            {% if user.is_superuser%}
             <div id="addLesson" class="col-md-3 col-sm-6 ">
                 <div class="square">
                     <button type="button" class="fas fa-plus-circle fa-5x" data-bs-toggle="modal" data-bs-target="#askLessonNameModal"> </button>
@@ -95,16 +95,18 @@
                     <div class="createLesson">Créer une nouvelle leçon</div>
                 </div>
             </div>
+            <script>
+                var myModal = new bootstrap.Modal(document.getElementById('askLessonNameModal'))
+                if (document.getElementById('askLessonNameModal').getAttribute("value") == "True"){
+                    document.getElementById('askLessonNameModal').setAttribute("value", "False")
+                    myModal.show()
+                }
+            </script>
+            {% endif %}
         </div>
     </div>
 
 
-    <script>
-        var myModal = new bootstrap.Modal(document.getElementById('askLessonNameModal'))
-        if (document.getElementById('askLessonNameModal').getAttribute("value") == "True"){
-            document.getElementById('askLessonNameModal').setAttribute("value", "False")
-            myModal.show()
-        }
-    </script>
+
 
 {% endblock %}

@@ -54,7 +54,7 @@ class CustomUserForm(UserCreationForm):
         return user
 
 class createLessonForm(ModelForm):
-    title = forms.CharField(label='title', max_length=255)
+    title = forms.CharField(label='Titre', max_length=255)
     class Meta:
         model = Lesson
         fields = ('title',)
@@ -63,5 +63,5 @@ class createLessonForm(ModelForm):
         title = self.cleaned_data['title']
         new = Lesson.objects.filter(title=title)
         if new.count():
-            raise forms.ValidationError("not unique")
+            raise forms.ValidationError("Ce titre a déjà été donné à une autre leçon")
         return title

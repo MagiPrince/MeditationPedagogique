@@ -73,16 +73,13 @@ class Lesson(models.Model):
     def save(self, *args, **kwargs):
         if self.slug == '':
             self.slug = "{}".format(re.sub(r"[^\w\s]", '_', remove_accents((self.title).lower())).replace(' ', '_'))
-            print(self.slug)
             path = os.path.join(settings.MEDIA_ROOT, self.slug)
             if not os.path.isdir(path):
                 os.mkdir(path)
         super(Lesson, self).save(*args, **kwargs)
     
     def delete(self, *args, **kwargs):
-        print("ici")
         lesson_directory = os.path.join(settings.MEDIA_ROOT, self.slug)
-        print("la")
         #lesson_directory = os.path.join(root, 'lesson_' + str(lesson_id))
         shutil.rmtree(lesson_directory)
         super(Lesson, self).delete(*args, **kwargs)

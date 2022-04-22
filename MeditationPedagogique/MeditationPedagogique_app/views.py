@@ -99,7 +99,6 @@ def add_paragraph_request(request, number, order):
 
 def delete_lesson(request, lesson_id):
     lesson = Lesson.objects.get(pk=lesson_id)
-    print(lesson_id)
     lesson.delete()
     return redirect('index')
 
