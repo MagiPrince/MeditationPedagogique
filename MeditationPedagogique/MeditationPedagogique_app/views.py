@@ -1,24 +1,49 @@
 from django.shortcuts import render, redirect
-from .forms import CustomUserForm
+from .forms import CustomUserForm, createLessonForm
 from django.contrib.auth import login
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.files.storage import FileSystemStorage
 from django.conf import settings
+from django.http import HttpResponse
+from django.apps import apps
 import os
 import shutil
 import datetime
-from .models import Lesson, Element, Ressource, Type
+from .models import Lesson, Element, Ressource, Type, GeneralInformation
 
 
 # Create your views here.
 def index(request):
-    # Get all lectures in the DB
-    context = {
-        'test': 'CECI EST UN TEST'
-    }
+    print(request)
 
+    #Form to get title of new lesson
+
+    context = {}
+    context['showForm'] = "False"
+
+    if request.method == 'POST':
+        form = createLessonForm(request.POST)
+        if form.is_valid():
+            title=form['title'].value()
+            form.save()
+            messages.success(request, 'Creation of lesson successful.')
+            lessonDB = Lesson.objects.get(title=title)
+            return redirect("lesson/"+str(lessonDB.id))
+        else:
+            context['showForm'] = "True"
+    else:
+        form = createLessonForm()
+        
+    context['form'] = form
+
+    # Get all lectures in the DB
     context['lessonList'] = Lesson.objects.all()
+    nbObjects = GeneralInformation.objects.all().count()
+    if nbObjects == 0:
+        GeneralInformation.objects.create(title="Titre général", description="Description du cours")
+    context['generalTitle'] = GeneralInformation.objects.all()[0].title
+    context['generalDescription'] = GeneralInformation.objects.all()[0].description
 
     return render(request, 'index.html', context)
 
@@ -74,19 +99,6 @@ def add_paragraph_request(request, number, order):
     return lesson(request, number)
 
 
-def create_lesson(request):
-
-    #id = Lesson.objects.latest('id')
-    #print("Salut c'est ici kozo", id)
-    lessonDB = Lesson(title='Lesson title')
-    lessonDB.save()
-    root = 'medias'
-    medias_directory_name = os.path.join(
-    root, 'lesson_' + str(lessonDB.id))
-    os.makedirs(medias_directory_name, exist_ok=True)
-    return lesson(request, lessonDB.id)
-
-
 def delete_lesson(request, lesson_id):
     root = 'medias'
     lesson = Lesson.objects.get(pk=lesson_id)
@@ -126,3 +138,18 @@ def import_data(request):
 
     # If the request is not POST the user is redirected to the index
     return redirect('index')
+
+
+def update_data(request):
+    if request.method == 'POST':
+        content = request.POST['content']
+        table = request.POST['table']
+        id = int(request.POST['id'])
+        field = request.POST['field']
+        model = apps.get_model(app_label='MeditationPedagogique_app', model_name=table)
+        entry = model.objects.all()[id]
+        setattr(entry, field, content)
+        entry.save(update_fields=[field])
+
+    return HttpResponse('Modification done !')
+    #return HttpResponse(response, mimetype='application/json')

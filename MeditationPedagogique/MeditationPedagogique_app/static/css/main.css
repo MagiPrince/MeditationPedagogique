@@ -1,5 +1,6 @@
 body {
-    background-color: rgb(238, 238, 238) !important;
+    /*background-color: rgb(238, 238, 238) !important*/
+    background-color: #E1F5FE !important;
 }
 
 .body-content {
@@ -9,3 +10,6 @@ body {
     background-color: white
 }
 
+.navbar {
+    background-color:#64B5F6;
+}

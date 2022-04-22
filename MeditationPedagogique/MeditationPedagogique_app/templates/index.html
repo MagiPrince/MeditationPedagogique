@@ -6,26 +6,29 @@
 {% endblock %}
 
 
-
 {% block body_content %}
+    {% csrf_token %}
 
     <div class="d-flex justify-content-center titleDiv flex-row">
         <!-- if user.is_authenticated-->
         {% if user.is_superuser %}
-        <h1 class="title modifiable">Titre Général</h1>
+        <h1 class="generalTitle title modifiable">{{generalTitle}}</h1>
         <div class="modification">
             <i class="fas fa-edit modificationButton" type="button"></i>
         </div>
         {% else %}
-        <h1 class="title">Titre Général</h1>
+        <h1 class="generalTitle title">{{generalTitle}}</h1>
         {% endif %}
     </div>
     <div class="d-flex justify-content-center flex-row paragraphDiv">
-        <p class="paragraph modifiable" >Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+        
         {% if user.is_superuser%}
+        <p class="generalDescription paragraph modifiable modifiableDescription">{{generalDescription}}</p>
         <div class="modification">
             <i class="fas fa-edit modificationButton" type="button"></i>
         </div>
+        {% else %}
+        <p class="generalDescription paragraph">{{generalDescription}}</p>
         {% endif %}
     </div>
 
@@ -33,20 +36,22 @@
         <div class="row lessonsArea-body" id="lessonsArea">
             {% for lesson in lessonList %}
             <div class="col-md-3 col-sm-6 ">
-                <a  class="square"> <!--href='/lesson/{{lesson.id}}'-->
+                <a href='/lesson/{{lesson.id}}' class="square">
                     {% if user.is_superuser%}
-                    <!--<button type="button" onclick="location.href='{% url 'delete-lesson' lesson.id %}'; return false" class="fas fa-times-circle fa-lg"> </button>-->
-                    <button type="button" class="fas fa-times-circle fa-lg" onclick="return false" data-bs-toggle="modal" data-bs-target="#exampleModal"></button>
+                    <button type="button" class="fas fa-times-circle fa-lg" onclick="return false;" data-bs-toggle="modal" data-bs-target="#deleteModal"></button>
                     <!-- Modal -->
-                    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true" onclick="return false">
                         <div class="modal-dialog">
                             <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="exampleModalLabel">Voulez-vous réellement supprimer cette leçon ?</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="deleteModalLabel">Attention !</h5>
+                                        <button type="button" class="btn-close close-modal" data-bs-dismiss="modal" aria-label="Close" onclick="return false;"></button>
+                                    </div>
+                                <div class="modal-body">
+                                    Voulez-vous réellement supprimer cette leçon ?
+                                  </div>
                                 <div class="modal-footer d-flex justify-content-center">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="return false;">Annuler</button>
                                     <button type="button" onclick="location.href='{% url 'delete-lesson' lesson.id %}'; return false" class="btn btn-danger">Supprimer</button>
                                 </div>
                             </div>
@@ -59,12 +64,46 @@
             {% endfor %}
             <div id="addLesson" class="col-md-3 col-sm-6 ">
                 <div class="square">
-                    <button type="button" onclick="window.location.href = '/create_lesson';" class="fas fa-plus-circle fa-5x"> </button>
+                    <!--onclick="window.location.href = '/create_lesson';"-->
+                    <button type="button" class="fas fa-plus-circle fa-5x" data-bs-toggle="modal" data-bs-target="#askLessonNameModal"> </button>
+                    <!-- Modal -->
+                    <div class="modal fade" id="askLessonNameModal" tabindex="-1" aria-labelledby="askLessonNameModalLabel" aria-hidden="true" value={{ showForm }}>
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="askLessonNameModalLabel">Création d'une leçon</h5>
+                                        <button type="button" class="btn-close close-modal" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                <div class="modal-body">
+                                    Veuillez entrer le nom de la leçon
+                                </div>
+
+                                <form action="/" method="post">
+                                    {% csrf_token %}
+                                    {{ form.as_p }}
+                                    <div class="modal-footer d-flex justify-content-center">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                                        <button type="submit" class="btn btn-primary">Créer</button>
+                                    </div>
+                                </form>
+
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="createLesson">Créer une nouvelle leçon</div>
                 </div>
             </div>
         </div>
     </div>
 
+
+    <script>
+        var myModal = new bootstrap.Modal(document.getElementById('askLessonNameModal'))
+        if (document.getElementById('askLessonNameModal').getAttribute("value") == "True"){
+            document.getElementById('askLessonNameModal').setAttribute("value", "False")
+            myModal.show()
+        }
+    </script>
 
 {% endblock %}

@@ -1,12 +1,16 @@
 .title {
     padding-top: 3%;
     padding-bottom: 3%;
+    text-align: center;
 }
 
 .paragraph {
     padding-top: 3%;
-    padding-left: 5%;
     padding-bottom: 3%;
+}
+
+.modifiableDescription {
+    padding-left: 5%;
 }
 
 .modification {
@@ -45,7 +49,7 @@
 
 .fa-plus-circle{
     padding-top: 3.3rem;
-    color:#00c010;
+    color:#25692b;
     background-color: white;
     border: 0;
 }
@@ -75,11 +79,21 @@ a:hover{
     color: black;
 }
 
-.modal-title {
-    color: red;
-}
+/*.modal-title {
+    margin: 1rem 0 3rem 1rem;
+}*/
 
 .modal-footer button {
-    padding: 0.8rem;
-    margin: 1rem;
+    /*padding: 0.8rem;*/
+    margin: 0 1rem;
+}
+
+#deleteModal .modal-header{
+    background-color: #c85a54;
+    color: white;
+}
+
+#askLessonNameModal .modal-header{
+    background-color: #0a74ca;
+    color: white;
 }
