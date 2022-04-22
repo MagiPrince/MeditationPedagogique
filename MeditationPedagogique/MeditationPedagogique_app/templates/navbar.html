@@ -1,28 +1,21 @@
-<div class="d-flex flex-fill">
-    <nav class="navbar navbar-light bg-primary navbar-expand-xl flex-fill">
+<div class="d-flex flex-fill navbar-fixed-top">
+    <nav class="navbar navbar-light navbar-expand-xl flex-fill justify-content-between">
         <a class="navbar-brand ps-4" href="/">
           <img src="../static/img/home.png" width="40" height="40" alt="logo">
         </a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-list-4" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-            <div class="collapse navbar-collapse justify-content-end" id="navbar-list-4">
-                <ul class="navbar-nav me-3">
-                    <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" id="navbarDropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <img src="../static/img/profil.png" width="40" height="40" class="rounded-circle">
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink">
-                        {% if user.is_authenticated%}
-                            <a class="dropdown-item" href="/modifier_mdp">Edit Password</a>
-                            <a class="dropdown-item" href="/logout">Log Out</a>
-                        {% else %}
-                            <a class="dropdown-item" href="/inscription">Sign up</a>
-                            <a class="dropdown-item" href="/login">Log In</a>
-                        {% endif %}
-                    </div>
-                    </li>
-                </ul>
-            </div>
+        <div class="dropdown justify-content-end">
+            <a class="nav-link dropdown-toggle" href="#" role="button" id="navbarDropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <img src="../static/img/profil.png" width="40" height="40" class="rounded-circle">
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton1">
+                {% if user.is_authenticated%}
+                    <li><a class="dropdown-item" href="/change-password">Editer mon mot de passe</a></li>
+                    <li><a class="dropdown-item" href="/logout">Se déconnecter</a></li>
+                {% else %}
+                    <li><a class="dropdown-item" href="/inscription">S'inscrire</a></li>
+                    <li><a class="dropdown-item" href="/login">Se connecter</a></li>
+                {% endif %}
+            </ul>
+          </div>
       </nav>
 </div>

@@ -1,12 +1,16 @@
 .title {
     padding-top: 3%;
     padding-bottom: 3%;
+    text-align: center;
 }
 
 .paragraph {
     padding-top: 3%;
-    padding-left: 5%;
     padding-bottom: 3%;
+}
+
+.modifiableDescription {
+    padding-left: 5%;
 }
 
 .modification {
@@ -19,4 +23,77 @@
 .paragraphDiv .modification {
     padding-right: 5%;
     padding-top: 2.5%;
+}
+
+.lessonsArea {
+    width:80%;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+
+.square {
+    margin:1em;
+    overflow:hidden;
+    text-align: center;
+    border: solid;
+    border-color: black;
+    height: 13.4em;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+}
+
+.fa-plus-circle{
+    padding-top: 3.3rem;
+    color:#25692b;
+    background-color: white;
+    border: 0;
+}
+
+
+.createLesson{
+    flex-direction: row;
+    align-items: end;
+    padding-top: 2rem;
+}
+
+.fa-times-circle{
+    background-color: white;
+    color: red;
+    border: 0;
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+}
+
+a {
+    text-decoration: none;
+    color: black;
+}
+
+a:hover{
+    color: black;
+}
+
+/*.modal-title {
+    margin: 1rem 0 3rem 1rem;
+}*/
+
+.modal-footer button {
+    /*padding: 0.8rem;*/
+    margin: 0 1rem;
+}
+
+#deleteModalHeader{
+    background-color: #c85a54;
+    color: white;
+}
+
+#askLessonNameModal .modal-header{
+    background-color: #0a74ca;
+    color: white;
 }

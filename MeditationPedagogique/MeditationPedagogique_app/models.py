@@ -1,6 +1,14 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.conf import settings
+import os
+import shutil
+import unicodedata
+import re
 
+def remove_accents(input_str):
+    nkfd_form = unicodedata.normalize('NFKD', str(input_str))
+    return u"".join([c for c in nkfd_form if not unicodedata.combining(c)])
 
 class User(AbstractUser):
     user = models.CharField(max_length=255)
@@ -27,6 +35,10 @@ class Ressource(models.Model):
     title = models.CharField(max_length=255, blank=True, null=True)
     description = models.TextField(blank=True, null=True)
     date = models.DateTimeField(blank=False)
+
+    def delete(self, *args, **kwargs):
+        os.remove(self.path)
+        super().delete(*args, **kwargs)
 
 
 class Comment(models.Model):
@@ -56,6 +68,21 @@ class Type(models.Model):
 
 class Lesson(models.Model):
     title = models.CharField(max_length=255, blank=False)
+    slug = models.CharField(max_length=255, blank=True, unique=True, editable=False)
+
+    def save(self, *args, **kwargs):
+        if self.slug == '':
+            self.slug = "{}".format(re.sub(r"[^\w\s]", '_', remove_accents((self.title).lower())).replace(' ', '_'))
+            path = os.path.join(settings.MEDIA_ROOT, self.slug)
+            if not os.path.isdir(path):
+                os.mkdir(path)
+        super(Lesson, self).save(*args, **kwargs)
+    
+    def delete(self, *args, **kwargs):
+        lesson_directory = os.path.join(settings.MEDIA_ROOT, self.slug)
+        #lesson_directory = os.path.join(root, 'lesson_' + str(lesson_id))
+        shutil.rmtree(lesson_directory)
+        super(Lesson, self).delete(*args, **kwargs)
 
 
 class Element(models.Model):
@@ -64,3 +91,7 @@ class Element(models.Model):
     order = models.PositiveSmallIntegerField(blank=False)
     path = models.CharField(max_length=255, blank=True, null=True)
     text = models.TextField(blank=True, null=True)
+
+class GeneralInformation(models.Model):
+    title = models.CharField(max_length=255, blank=False)
+    description = models.TextField(blank=False, null=True)

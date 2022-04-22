@@ -68,16 +68,36 @@ $(document).ready(function(){
 
 
     function closeDomEditor(e) {
-        console.log('he')
         if ($(this).hasClass("fa-edit") == true){
             $editor.remove();
-            //Le résultat est : $editor.val()
             if ($currentTargetElement) {
                 $currentTargetElement.html($editor.val());
+                var CSRFtoken = $('input[name=csrfmiddlewaretoken]').val();
+                var result = String($editor.val());
+                var url = "update-data/";
+                if ($currentTargetElement[0].classList.contains("generalTitle")){
+                    var field = "title";
+                    var id = 0;
+                    var table = "GeneralInformation"
+                }
+                else if ($currentTargetElement[0].classList.contains("generalDescription")){
+                    var field = "description";
+                    var id = 0;
+                    var table = "GeneralInformation"
+                }
+
+                //Add modification in DB
+                $.post(url,
+                {
+                    csrfmiddlewaretoken: CSRFtoken,
+                    content : result,
+                    table: table,
+                    id: id,
+                    field: field
+                });
             }
             $currentTargetElement = null;
         }
-
     }
 
     function editorClick(e) {

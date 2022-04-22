@@ -1,7 +1,8 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from .models import User
+from .models import User, Lesson
 from django.contrib.auth import get_user_model
+from django.forms import ModelForm
 
 
 class CustomUserForm(UserCreationForm):
@@ -51,3 +52,16 @@ class CustomUserForm(UserCreationForm):
         if commit:
             user.save()
         return user
+
+class createLessonForm(ModelForm):
+    title = forms.CharField(label='Titre', max_length=255)
+    class Meta:
+        model = Lesson
+        fields = ('title',)
+
+    def clean_title(self):
+        title = self.cleaned_data['title']
+        new = Lesson.objects.filter(title=title)
+        if new.count():
+            raise forms.ValidationError("Ce titre a déjà été donné à une autre leçon")
+        return title

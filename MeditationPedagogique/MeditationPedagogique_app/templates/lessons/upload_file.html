@@ -1,0 +1,40 @@
+<section>
+    <h2>Rendre un devoir</h2>
+
+    {% if upload_success %}
+        <div class="alert alert-success" role="alert">
+            Le devoir a bien été rendu
+        </div>
+    {% elif upload_success != '' %}
+        <div class="alert alert-danger" role="alert">
+            Une erreur est survenu lors du rendu
+        </div>
+    {% endif %}
+
+    <form action="/import-data/" method="post" id="data" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input class="form-control" type="file" id="formFile" name="homework" accept=".png, .jpg, .pdf">
+        <input type="hidden" id="lessonNb" name="lessonNb" value={{ lesson }}>
+        <input class="btn btn-primary" id="formFileSubmit" type="submit" value="Importer">
+    </form>
+
+    {% if uploaded_file_url %}
+        <p>Fichier importé : <a href="{{ uploaded_file_url }}">{{ uploaded_file_url }}</a></p>
+    {% endif %}
+</section>
+
+<script>
+    $(document).ready(
+    function(){
+        $('input:submit').attr('disabled',true);
+        $('input:file').change(
+            function(){
+                if ($(this).val()){
+                    $('input:submit').removeAttr('disabled'); 
+                }
+                else {
+                    $('input:submit').attr('disabled',true);
+                }
+            });
+    });
+</script>
