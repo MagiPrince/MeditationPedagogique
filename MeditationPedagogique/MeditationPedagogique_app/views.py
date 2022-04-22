@@ -8,14 +8,12 @@ from django.conf import settings
 from django.http import HttpResponse
 from django.apps import apps
 import os
-import shutil
 import datetime
 from .models import Lesson, Element, Ressource, Type, GeneralInformation
 
 
 # Create your views here.
 def index(request):
-    print(request)
 
     #Form to get title of new lesson
 
@@ -100,11 +98,9 @@ def add_paragraph_request(request, number, order):
 
 
 def delete_lesson(request, lesson_id):
-    root = 'medias'
     lesson = Lesson.objects.get(pk=lesson_id)
+    print(lesson_id)
     lesson.delete()
-    lesson_directory = os.path.join(root, 'lesson_' + str(lesson_id))
-    shutil.rmtree(lesson_directory)
     return redirect('index')
 
 

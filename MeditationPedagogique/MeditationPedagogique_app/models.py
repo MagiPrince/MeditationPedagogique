@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.conf import settings
 import os
+import shutil
 import unicodedata
 import re
 
@@ -77,6 +78,14 @@ class Lesson(models.Model):
             if not os.path.isdir(path):
                 os.mkdir(path)
         super(Lesson, self).save(*args, **kwargs)
+    
+    def delete(self, *args, **kwargs):
+        print("ici")
+        lesson_directory = os.path.join(settings.MEDIA_ROOT, self.slug)
+        print("la")
+        #lesson_directory = os.path.join(root, 'lesson_' + str(lesson_id))
+        shutil.rmtree(lesson_directory)
+        super(Lesson, self).delete(*args, **kwargs)
 
 
 class Element(models.Model):
