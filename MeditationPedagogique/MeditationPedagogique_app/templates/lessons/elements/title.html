@@ -1,6 +1,6 @@
-<div class="d-flex justify-content-center flex-row">
+<div class="d-flex justify-content-center flex-row element">
     {% if user.is_authenticated%}
-    <h1 class="title modifiable">{{ title }}</h1>
+    <h1 class="title modifiable" id={{id}}>{{ title }}</h1>
     <div class="modification">
         <i class="fas fa-edit modificationButton" type="button"></i>
     </div>

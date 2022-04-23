@@ -21,7 +21,7 @@
         {% endif %}
     </div>
     <div class="d-flex justify-content-center flex-row paragraphDiv">
-        
+
         {% if user.is_superuser%}
         <p class="generalDescription paragraph modifiable modifiableDescription">{{generalDescription}}</p>
         <div class="modification">
@@ -96,6 +96,7 @@
                 </div>
             </div>
             <script>
+                // Manage when you need to print an error in the modal. The page loads with the modal opened
                 var myModal = new bootstrap.Modal(document.getElementById('askLessonNameModal'))
                 if (document.getElementById('askLessonNameModal').getAttribute("value") == "True"){
                     document.getElementById('askLessonNameModal').setAttribute("value", "False")

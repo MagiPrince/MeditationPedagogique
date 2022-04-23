@@ -34,7 +34,8 @@ $(document).ready(function(){
                 });
             }
             if (classList.hasClass("paragraph") && firstTimeParagraph && modifying == true){
-                $('.paragraph').domEdit({
+
+                classList.domEdit({
                     editorClass: 'paragraphModification',
                     onSetEditorStyle: function($editorParagraph, $editingElement) {
                         $editorParagraph.css('font-size', '90%');
@@ -74,16 +75,26 @@ $(document).ready(function(){
                 $currentTargetElement.html($editor.val());
                 var CSRFtoken = $('input[name=csrfmiddlewaretoken]').val();
                 var result = String($editor.val());
-                var url = "update-data/";
+                var url = "/update-data/";
                 if ($currentTargetElement[0].classList.contains("generalTitle")){
                     var field = "title";
-                    var id = 0;
+                    var id = 1;
                     var table = "GeneralInformation"
                 }
                 else if ($currentTargetElement[0].classList.contains("generalDescription")){
                     var field = "description";
-                    var id = 0;
+                    var id = 1;
                     var table = "GeneralInformation"
+                }
+                else if ($currentTargetElement[0].classList.contains("paragraph")) {
+                    var field = "text";
+                    var id = $currentTargetElement[0].id;
+                    var table = "Element"
+                }
+                else if ($currentTargetElement[0].classList.contains("title")) {
+                    var field = "title";
+                    var id = $currentTargetElement[0].id;
+                    var table = "Lesson"
                 }
 
                 //Add modification in DB

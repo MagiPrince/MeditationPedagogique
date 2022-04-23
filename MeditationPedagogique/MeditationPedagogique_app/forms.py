@@ -1,9 +1,9 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from .models import User, Lesson
+from .models import Element, User, Lesson, Type
 from django.contrib.auth import get_user_model
 from django.forms import ModelForm
-
+from django.db.models import F
 
 class CustomUserForm(UserCreationForm):
     username = forms.CharField(label='username', min_length=4, max_length=150)
@@ -24,7 +24,7 @@ class CustomUserForm(UserCreationForm):
         if new.count():
             raise forms.ValidationError("User Already Exist")
         return username
-    
+
 
     def email_clean(self):
         email = self.cleaned_data['email'].lower()
@@ -37,7 +37,7 @@ class CustomUserForm(UserCreationForm):
     def clean_password2(self):
         password1 = self.cleaned_data['password1']
         password2 = self.cleaned_data['password2']
-  
+
         if password1 and password2 and password1 != password2:
             raise forms.ValidationError("Password don't match")
         return password2
@@ -65,3 +65,22 @@ class createLessonForm(ModelForm):
         if new.count():
             raise forms.ValidationError("Ce titre a déjà été donné à une autre leçon")
         return title
+
+class AddParagraphForm(ModelForm):
+    text = forms.CharField(label='Paragraphe', widget=forms.Textarea)
+
+    class Meta:
+        model = Element
+        fields = ('text',)
+
+    def save(self, lesson_number, order, commit=True):
+        order += 1
+        paragraph = super(AddParagraphForm, self).save(commit=False)
+        paragraph.type = Type.objects.get(name='paragraph')
+        paragraph.lesson = Lesson.objects.get(id=lesson_number)
+        paragraph.order = order
+        paragraph.text = self.cleaned_data['text']
+        if commit:
+            Element.objects.filter(order__gte=order).update(order = F('order') + 1)
+            paragraph.save()
+        return paragraph

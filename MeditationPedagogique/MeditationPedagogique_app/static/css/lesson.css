@@ -1,12 +1,11 @@
 .title {
-    padding-top: 3%;
-    padding-bottom: 3%;
+    padding-top: 2rem;
+    padding-bottom: 1rem;
 }
 
 .paragraph {
     padding-top: 3%;
     padding-left: 5%;
-    padding-bottom: 3%;
 }
 
 .modification {
@@ -16,16 +15,36 @@
     padding-left: 0.5%;
 }
 
-.paragraphDiv .modification {
-    padding-right: 5%;
-    padding-top: 2.5%;
+.fa-times-circle{
+    background-color: white;
+    color: red;
+    border: 0;
+
 }
 
 .divider{
-    width: 25px;
+    width: 2em;
     height: auto;
 }
 
 #formFileSubmit {
     margin-top: 20px;
 }
+
+.add-element-div {
+    display: none !important;
+}
+
+.paragraphModification:hover + .add-element-div, .element:hover + .add-element-div, .add-element-div:hover{
+    display: flex !important;
+}
+
+#deleteModalHeader{
+    background-color: #c85a54;
+    color: white;
+}
+
+/* .modificationButton {
+    bottom: 0.5em !important;
+} */
+

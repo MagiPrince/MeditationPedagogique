@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .forms import CustomUserForm, createLessonForm
+from .forms import CustomUserForm, createLessonForm, AddParagraphForm
 from django.contrib.auth import login
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -10,6 +10,8 @@ from django.apps import apps
 import os
 import datetime
 from .models import Lesson, Element, Ressource, Type, GeneralInformation
+import operator
+from django.db.models import F
 
 
 # Create your views here.
@@ -32,7 +34,7 @@ def index(request):
             context['showForm'] = "True"
     else:
         form = createLessonForm()
-        
+
     context['form'] = form
 
     # Get all lectures in the DB
@@ -75,27 +77,37 @@ def lesson(request, number):
     if 'uploaded_file_url' in request.session:
         context['uploaded_file_url'] = request.session['uploaded_file_url']
         del request.session['uploaded_file_url']
-    context['elements'] = elements
+
+    context = {}
+    context['showForm'] = "False"
+    if request.method == 'POST':
+        form = AddParagraphForm(request.POST)
+        order = int(request.POST.get('add_element_order', ''))
+        if form.is_valid():
+            form.save(lesson_number=number, order=order)
+            messages.success(request, 'Creation of lesson successful.')
+            return redirect('/lesson/' + str(lessonNumber.id))
+        else:
+            context['showForm'] = "True"
+    else:
+        form = AddParagraphForm()
+
+    context['form'] = form
+    context['elements'] = sorted(elements, key=operator.attrgetter('order'))
     context['title'] = Lesson.objects.all().filter(id=number)[0].title
     context['lessonNumber'] = number
     context['ressources'] = Ressource.objects.filter(lesson=number)
     return render(request, 'lessons/lesson.html', context)
 
-
-def add_paragraph_request(request, number, order):
+def delete_paragraph(request):
     if request.method == 'POST':
-        print(number)
-        """ type = models.ForeignKey(Type, on_delete=models.CASCADE)
-        lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE)
-        order = models.PositiveSmallIntegerField(blank=False)
-        path = models.CharField(max_length=255, blank=True, null=True)
-        text = models.TextField(blank=True, null=True) """
-        type = Type.objects.get(name='paragraph')
-        lessonNumber = Lesson.objects.get(id=number)
-        elementDB = Element(type=type, lesson=lessonNumber, order=order, text='Ceci est un paragraphe')
-        elementDB.save()
-    return lesson(request, number)
-
+        pargraph_id = int(request.POST.get('delete_element_id', ''))
+        order = int(request.POST.get('delete_element_order', ''))
+        lessonNumber = int(request.POST.get('lesson_number', ''))
+        element = Element.objects.get(pk=pargraph_id)
+        element.delete()
+        Element.objects.filter(order__gte=order).update(order = F('order') - 1)
+        return redirect('/lesson/' + str(lessonNumber))
 
 def delete_lesson(request, lesson_id):
     lesson = Lesson.objects.get(pk=lesson_id)
@@ -120,13 +132,13 @@ def import_data(request):
             filename = fs.save(homework.name, homework)
             request.session['upload_success'] = True
             request.session['uploaded_file_url'] = filename
-            
+
             # Create Ressource element in DB
             ressource = Ressource(user = request.user, path = os.path.join(os.path.join(settings.MEDIA_ROOT, lesson_object), filename), lesson = lesson, date = datetime.datetime.now())
             ressource.save()
 
             return redirect('lesson', lesson)
-        
+
         # If somehow we receive a file that does not correspond to the define extensions
         request.session['upload_success'] = False
         return redirect('lesson', lesson)
@@ -142,9 +154,8 @@ def update_data(request):
         id = int(request.POST['id'])
         field = request.POST['field']
         model = apps.get_model(app_label='MeditationPedagogique_app', model_name=table)
-        entry = model.objects.all()[id]
+        entry = model.objects.get(pk=id)
         setattr(entry, field, content)
         entry.save(update_fields=[field])
 
     return HttpResponse('Modification done !')
-    #return HttpResponse(response, mimetype='application/json')
