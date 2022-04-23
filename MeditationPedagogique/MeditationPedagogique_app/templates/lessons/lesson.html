@@ -6,7 +6,7 @@
 {% endblock %}
 {% block body_content %}
     {% csrf_token %}
-    {% include 'lessons/elements/title.html' with title=title %}
+    {% include 'lessons/elements/title.html' with title=title id=lessonNumber %}
     {% include 'lessons/add_element.html' %}
     {% for element in elements %}
         {% if element.type.name == 'paragraph' %}

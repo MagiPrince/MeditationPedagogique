@@ -78,18 +78,23 @@ $(document).ready(function(){
                 var url = "/update-data/";
                 if ($currentTargetElement[0].classList.contains("generalTitle")){
                     var field = "title";
-                    var id = 0;
+                    var id = 1;
                     var table = "GeneralInformation"
                 }
                 else if ($currentTargetElement[0].classList.contains("generalDescription")){
                     var field = "description";
-                    var id = 0;
+                    var id = 1;
                     var table = "GeneralInformation"
                 }
                 else if ($currentTargetElement[0].classList.contains("paragraph")) {
                     var field = "text";
-                    var id = $currentTargetElement[0].id - 1;
+                    var id = $currentTargetElement[0].id;
                     var table = "Element"
+                }
+                else if ($currentTargetElement[0].classList.contains("title")) {
+                    var field = "title";
+                    var id = $currentTargetElement[0].id;
+                    var table = "Lesson"
                 }
 
                 //Add modification in DB

@@ -141,7 +141,7 @@ def update_data(request):
         id = int(request.POST['id'])
         field = request.POST['field']
         model = apps.get_model(app_label='MeditationPedagogique_app', model_name=table)
-        entry = model.objects.all()[id]
+        entry = model.objects.get(pk=id)
         setattr(entry, field, content)
         entry.save(update_fields=[field])
 
