@@ -1,10 +1,36 @@
 <lessonParagraph></lessonParagraph>
 
 <div class="d-flex justify-content flex-row paragraphDiv element">
-    <p class="paragraph modifiable" id={{ id }} >{{ text }}</p>
+    <p class="paragraph modifiable" id={{ id }}>{{ text }}</p>
     {% if user.is_authenticated%}
     <div class="modification">
         <i class="fas fa-edit modificationButton" type="button"></i>
+    </div>
+    <button type="button" class="fas fa-times-circle fa-lg" id="deleteButton" onclick="return false;" data-bs-toggle="modal" data-bs-target="#delete{{ id }}"></button>
+
+    <!-- Modal -->
+    <div class="modal fade" id="delete{{ id }}" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                    <div class="modal-header" id="deleteModalHeader">
+                        <h5 class="modal-title" id="deleteModalLabel">Attention !</h5>
+                        <button type="button" class="btn-close close-modal" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                <div class="modal-body">
+                    Voulez-vous réellement supprimer ce paragraphe ?
+                    </div>
+                <div class="modal-footer d-flex justify-content-center">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <form action="/delete_paragraph/" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="delete_element_id" value={{ id }}>
+                        <input type="hidden" name="delete_element_order" value={{ order }}>
+                        <input type="hidden" name="lesson_number" value={{ lessonNumber }}>
+                        <button type="submit" class="btn btn-danger">Supprimer</button>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
     {% endif %}
 </div>

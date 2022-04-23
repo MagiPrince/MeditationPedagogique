@@ -15,9 +15,11 @@
     padding-left: 0.5%;
 }
 
-.paragraphDiv .modification {
-    padding-right: 5%;
-    padding-top: 2.5%;
+.fa-times-circle{
+    background-color: white;
+    color: red;
+    border: 0;
+
 }
 
 .divider{
@@ -36,4 +38,13 @@
 .paragraphModification:hover + .add-element-div, .element:hover + .add-element-div, .add-element-div:hover{
     display: flex !important;
 }
+
+#deleteModalHeader{
+    background-color: #c85a54;
+    color: white;
+}
+
+/* .modificationButton {
+    bottom: 0.5em !important;
+} */
 

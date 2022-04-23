@@ -3,14 +3,14 @@
     {% comment %} Add a paragraph {% endcomment %}
     <div id="addParagraph" >
         <div class="square">
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#askParagraphModal">Ajouter un paragraphe</button>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#askParagraphModal{{ order }}">Ajouter un paragraphe</button>
         </div>
     </div>
     <div class="divider"></div>
     <button class='btn btn-primary'>Téléverser un fichier</button>
 </div>
 <!-- Modal -->
-<div class="modal fade" id="askParagraphModal" tabindex="-1" aria-labelledby="askParagraphModalLabel" aria-hidden="true" value={{ showForm }}>
+<div class="modal fade" id="askParagraphModal{{ order }}" tabindex="-1" aria-labelledby="askParagraphModalLabel" aria-hidden="true" value={{ showForm }}>
     <div class="modal-dialog">
         <div class="modal-content">
                 <div class="modal-header">
@@ -24,6 +24,7 @@
             <form action="" method="post">
                 {% csrf_token %}
                 {{ form.as_p }}
+                <input type="hidden" name="add_element_order" value={{ order }}>
                 <div class="modal-footer d-flex justify-content-center">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
                     <button type="submit" class="btn btn-primary">Créer</button>
@@ -34,6 +35,7 @@
     </div>
 </div>
 <script>
+    // Manage when you need to print an error in the modal. The page loads with the modal opened
     var myModal = new bootstrap.Modal(document.getElementById('askParagraphModal'))
     if (document.getElementById('askParagraphModal').getAttribute("value") == "True"){
         document.getElementById('askParagraphModal').setAttribute("value", "False")

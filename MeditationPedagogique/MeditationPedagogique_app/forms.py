@@ -3,7 +3,7 @@ from django.contrib.auth.forms import UserCreationForm
 from .models import Element, User, Lesson, Type
 from django.contrib.auth import get_user_model
 from django.forms import ModelForm
-
+from django.db.models import F
 
 class CustomUserForm(UserCreationForm):
     username = forms.CharField(label='username', min_length=4, max_length=150)
@@ -73,13 +73,14 @@ class AddParagraphForm(ModelForm):
         model = Element
         fields = ('text',)
 
-
     def save(self, lesson_number, order, commit=True):
+        order += 1
         paragraph = super(AddParagraphForm, self).save(commit=False)
         paragraph.type = Type.objects.get(name='paragraph')
         paragraph.lesson = Lesson.objects.get(id=lesson_number)
         paragraph.order = order
         paragraph.text = self.cleaned_data['text']
         if commit:
+            Element.objects.filter(order__gte=order).update(order = F('order') + 1)
             paragraph.save()
         return paragraph

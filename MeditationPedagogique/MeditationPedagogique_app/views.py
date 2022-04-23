@@ -10,6 +10,8 @@ from django.apps import apps
 import os
 import datetime
 from .models import Lesson, Element, Ressource, Type, GeneralInformation
+import operator
+from django.db.models import F
 
 
 # Create your views here.
@@ -80,8 +82,9 @@ def lesson(request, number):
     context['showForm'] = "False"
     if request.method == 'POST':
         form = AddParagraphForm(request.POST)
+        order = int(request.POST.get('add_element_order', ''))
         if form.is_valid():
-            form.save(lesson_number=number, order=1)
+            form.save(lesson_number=number, order=order)
             messages.success(request, 'Creation of lesson successful.')
             return redirect('/lesson/' + str(lessonNumber.id))
         else:
@@ -90,11 +93,21 @@ def lesson(request, number):
         form = AddParagraphForm()
 
     context['form'] = form
-    context['elements'] = elements
+    context['elements'] = sorted(elements, key=operator.attrgetter('order'))
     context['title'] = Lesson.objects.all().filter(id=number)[0].title
     context['lessonNumber'] = number
     context['ressources'] = Ressource.objects.filter(lesson=number)
     return render(request, 'lessons/lesson.html', context)
+
+def delete_paragraph(request):
+    if request.method == 'POST':
+        pargraph_id = int(request.POST.get('delete_element_id', ''))
+        order = int(request.POST.get('delete_element_order', ''))
+        lessonNumber = int(request.POST.get('lesson_number', ''))
+        element = Element.objects.get(pk=pargraph_id)
+        element.delete()
+        Element.objects.filter(order__gte=order).update(order = F('order') - 1)
+        return redirect('/lesson/' + str(lessonNumber))
 
 def delete_lesson(request, lesson_id):
     lesson = Lesson.objects.get(pk=lesson_id)
