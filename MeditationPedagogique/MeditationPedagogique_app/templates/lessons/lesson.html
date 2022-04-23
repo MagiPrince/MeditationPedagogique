@@ -7,9 +7,10 @@
 {% block body_content %}
     {% csrf_token %}
     {% include 'lessons/elements/title.html' with title=title %}
+    {% include 'lessons/add_element.html' %}
     {% for element in elements %}
         {% if element.type.name == 'paragraph' %}
-            {% include 'lessons/elements/paragraph.html' with text=element.text %}
+            {% include 'lessons/elements/paragraph.html' with text=element.text id=element.id %}
         {% elif element.type.name == 'image' %}
             {% include 'lessons/elements/image.html' with path=element.path %}
         {% elif element.type.name == 'audio' %}

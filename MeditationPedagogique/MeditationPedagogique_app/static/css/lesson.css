@@ -1,12 +1,11 @@
 .title {
-    padding-top: 3%;
-    padding-bottom: 3%;
+    padding-top: 2rem;
+    padding-bottom: 1rem;
 }
 
 .paragraph {
     padding-top: 3%;
     padding-left: 5%;
-    padding-bottom: 3%;
 }
 
 .modification {
@@ -22,10 +21,19 @@
 }
 
 .divider{
-    width: 25px;
+    width: 2em;
     height: auto;
 }
 
 #formFileSubmit {
     margin-top: 20px;
 }
+
+.add-element-div {
+    display: none !important;
+}
+
+.paragraphModification:hover + .add-element-div, .element:hover + .add-element-div, .add-element-div:hover{
+    display: flex !important;
+}
+

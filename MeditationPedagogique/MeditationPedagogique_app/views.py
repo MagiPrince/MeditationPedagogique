@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .forms import CustomUserForm, createLessonForm
+from .forms import CustomUserForm, createLessonForm, AddParagraphForm
 from django.contrib.auth import login
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -32,7 +32,7 @@ def index(request):
             context['showForm'] = "True"
     else:
         form = createLessonForm()
-        
+
     context['form'] = form
 
     # Get all lectures in the DB
@@ -75,27 +75,26 @@ def lesson(request, number):
     if 'uploaded_file_url' in request.session:
         context['uploaded_file_url'] = request.session['uploaded_file_url']
         del request.session['uploaded_file_url']
+
+    context = {}
+    context['showForm'] = "False"
+    if request.method == 'POST':
+        form = AddParagraphForm(request.POST)
+        if form.is_valid():
+            form.save(lesson_number=number, order=1)
+            messages.success(request, 'Creation of lesson successful.')
+            return redirect('/lesson/' + str(lessonNumber.id))
+        else:
+            context['showForm'] = "True"
+    else:
+        form = AddParagraphForm()
+
+    context['form'] = form
     context['elements'] = elements
     context['title'] = Lesson.objects.all().filter(id=number)[0].title
     context['lessonNumber'] = number
     context['ressources'] = Ressource.objects.filter(lesson=number)
     return render(request, 'lessons/lesson.html', context)
-
-
-def add_paragraph_request(request, number, order):
-    if request.method == 'POST':
-        print(number)
-        """ type = models.ForeignKey(Type, on_delete=models.CASCADE)
-        lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE)
-        order = models.PositiveSmallIntegerField(blank=False)
-        path = models.CharField(max_length=255, blank=True, null=True)
-        text = models.TextField(blank=True, null=True) """
-        type = Type.objects.get(name='paragraph')
-        lessonNumber = Lesson.objects.get(id=number)
-        elementDB = Element(type=type, lesson=lessonNumber, order=order, text='Ceci est un paragraphe')
-        elementDB.save()
-    return lesson(request, number)
-
 
 def delete_lesson(request, lesson_id):
     lesson = Lesson.objects.get(pk=lesson_id)
@@ -120,13 +119,13 @@ def import_data(request):
             filename = fs.save(homework.name, homework)
             request.session['upload_success'] = True
             request.session['uploaded_file_url'] = filename
-            
+
             # Create Ressource element in DB
             ressource = Ressource(user = request.user, path = os.path.join(os.path.join(settings.MEDIA_ROOT, lesson_object), filename), lesson = lesson, date = datetime.datetime.now())
             ressource.save()
 
             return redirect('lesson', lesson)
-        
+
         # If somehow we receive a file that does not correspond to the define extensions
         request.session['upload_success'] = False
         return redirect('lesson', lesson)
@@ -147,4 +146,3 @@ def update_data(request):
         entry.save(update_fields=[field])
 
     return HttpResponse('Modification done !')
-    #return HttpResponse(response, mimetype='application/json')

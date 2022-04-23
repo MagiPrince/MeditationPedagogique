@@ -34,7 +34,8 @@ $(document).ready(function(){
                 });
             }
             if (classList.hasClass("paragraph") && firstTimeParagraph && modifying == true){
-                $('.paragraph').domEdit({
+
+                classList.domEdit({
                     editorClass: 'paragraphModification',
                     onSetEditorStyle: function($editorParagraph, $editingElement) {
                         $editorParagraph.css('font-size', '90%');
@@ -74,7 +75,7 @@ $(document).ready(function(){
                 $currentTargetElement.html($editor.val());
                 var CSRFtoken = $('input[name=csrfmiddlewaretoken]').val();
                 var result = String($editor.val());
-                var url = "update-data/";
+                var url = "/update-data/";
                 if ($currentTargetElement[0].classList.contains("generalTitle")){
                     var field = "title";
                     var id = 0;
@@ -84,6 +85,11 @@ $(document).ready(function(){
                     var field = "description";
                     var id = 0;
                     var table = "GeneralInformation"
+                }
+                else if ($currentTargetElement[0].classList.contains("paragraph")) {
+                    var field = "text";
+                    var id = $currentTargetElement[0].id - 1;
+                    var table = "Element"
                 }
 
                 //Add modification in DB
