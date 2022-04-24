@@ -12,22 +12,19 @@
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    {% if ressource.title != None %}
-                                        <h5 class="modal-title" id="exampleModalLabel">
-                                            {{ ressource.title }}<br>
-                                            <p class="fs-6">{{ ressource.user }}</p>
-                                        </h5>
-                                    {% else %}
-                                        <h5 class="modal-title" id="exampleModalLabel">
-                                            Titre du devoir<br>
-                                            <p class="fs-6">
-                                                <a class="user-image">
-                                                    <i class="fas fa-user-circle"></i> {{ ressource.user }}
-                                                </a><br>
-                                                <span class="date">{{ ressource.date }}<span>
-                                            </p>
-                                        </h5>
-                                    {% endif %}
+                                    <h5 class="modal-title" id="exampleModalLabel">
+                                        {% if ressource.title != None %}
+                                            {{ ressource.title }}
+                                        {% else %}
+                                            Titre du devoir
+                                        {% endif %}
+                                        <p class="fs-6">
+                                            <a class="user-image">
+                                                <i class="fas fa-user-circle"></i> {{ ressource.user }}
+                                            </a><br>
+                                            <span class="date">{{ ressource.date }}<span>
+                                        </p>
+                                    </h5>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
