@@ -13,9 +13,20 @@
                             <div class="modal-content">
                                 <div class="modal-header">
                                     {% if ressource.title != None %}
-                                        <h5 class="modal-title" id="exampleModalLabel">{{ ressource.title }}</h5>
+                                        <h5 class="modal-title" id="exampleModalLabel">
+                                            {{ ressource.title }}<br>
+                                            <p class="fs-6">{{ ressource.user }}</p>
+                                        </h5>
                                     {% else %}
-                                        <h5 class="modal-title" id="exampleModalLabel">Titre du devoir</h5>
+                                        <h5 class="modal-title" id="exampleModalLabel">
+                                            Titre du devoir<br>
+                                            <p class="fs-6">
+                                                <a class="user-image">
+                                                    <i class="fas fa-user-circle"></i> {{ ressource.user }}
+                                                </a><br>
+                                                <span class="date">{{ ressource.date }}<span>
+                                            </p>
+                                        </h5>
                                     {% endif %}
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
@@ -31,7 +42,10 @@
                                         {% for comment in ressource.comment_of_ressource.all %}
                                             <div>
                                                 <a class="user-profile"><i class="fas fa-user-circle"></i> {{ comment.user }}</a>
-                                                <p>{{ comment.text }}</p>
+                                                <p>
+                                                    {{ comment.text }}<br>
+                                                    <span class="date">{{ comment.date }}<span>
+                                                </p>
                                             </div>
                                             {% if not forloop.last %}
                                                 <hr>
@@ -40,7 +54,7 @@
                                     </div>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
                                 </div>
                             </div>
                         </div>
