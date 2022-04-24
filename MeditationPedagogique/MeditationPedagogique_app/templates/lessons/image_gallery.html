@@ -1,0 +1,54 @@
+{% load static %}
+<section>
+    <div class="container">
+        <div class="row">
+            {% for ressource in ressources %}
+                <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 img-div">
+                    <a data-bs-toggle="modal" data-bs-target="#{{ ressource.slug }}Modal">
+                        <img src="{% get_media_prefix %}{{ ressource.path }}" class="img-thumbnail" alt="">
+                    </a>
+
+                    <div class="modal fade" id="{{ ressource.slug }}Modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    {% if ressource.title != None %}
+                                        <h5 class="modal-title" id="exampleModalLabel">{{ ressource.title }}</h5>
+                                    {% else %}
+                                        <h5 class="modal-title" id="exampleModalLabel">Titre du devoir</h5>
+                                    {% endif %}
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <img src="{% get_media_prefix %}{{ ressource.path }}" class="img-fluid" alt="">
+                                    {% if ressource.title != None %}
+                                        <p>{{ ressource.description }}</p>
+                                    {% else %}
+                                        <p>Ma super description</p>
+                                    {% endif %}
+                                    <div class="image-comments">
+                                        <p class="fs-5">Commentaires ({{ ressource.comment_of_ressource.all.count }})</p>
+                                        {% for comment in ressource.comment_of_ressource.all %}
+                                            <div>
+                                                <a class="user-profile"><i class="fas fa-user-circle"></i> {{ comment.user }}</a>
+                                                <p>{{ comment.text }}</p>
+                                            </div>
+                                            {% if not forloop.last %}
+                                                <hr>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            {% endfor %}
+        </div>
+    </div> 
+
+</section>

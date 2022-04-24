@@ -112,7 +112,7 @@ def import_data(request):
             request.session['uploaded_file_url'] = filename
             
             # Create Ressource element in DB
-            ressource = Ressource(user = request.user, path = os.path.join(os.path.join(settings.MEDIA_ROOT, lesson_object), filename), lesson = lesson, date = datetime.datetime.now())
+            ressource = Ressource(user = request.user, path = os.path.join( lesson_object, filename), lesson = lesson, date = datetime.datetime.now())
             ressource.save()
 
             return redirect('lesson', lesson)

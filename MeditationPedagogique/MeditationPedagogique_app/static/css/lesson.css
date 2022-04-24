@@ -29,3 +29,21 @@
 #formFileSubmit {
     margin-top: 20px;
 }
+
+.image-width {
+    width: 200px;
+}
+
+.img-div {
+    margin-top: 20px;
+}
+
+a {
+    cursor: pointer;
+}
+
+.user-profile {
+    color: grey !important;
+    text-decoration: none;
+    font-size: 1.1em;
+}

@@ -35,14 +35,25 @@ class Ressource(models.Model):
     description = models.TextField(blank=True, null=True)
     date = models.DateTimeField(blank=False)
 
+    slug = models.CharField(max_length=255, blank=True, unique=True, editable=False)
+
+    def save(self, *args, **kwargs):
+        if self.slug == '':
+            self.slug = "{}".format(re.sub(r"[^\w\s]", '_', remove_accents((self.path).lower().split('/')[-1])).replace(' ', '_'))
+            print(self.slug)
+            path = os.path.join(settings.MEDIA_ROOT, self.slug)
+            if not os.path.isdir(path):
+                os.mkdir(path)
+        super(Ressource, self).save(*args, **kwargs)
+
     def delete(self, *args, **kwargs):
-        os.remove(self.path)
+        os.remove(os.path.join(settings.MEDIA_ROOT, self.path))
         super().delete(*args, **kwargs)
 
 
 class Comment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    ressource = models.ForeignKey(Ressource, on_delete=models.CASCADE)
+    ressource = models.ForeignKey(Ressource, on_delete=models.CASCADE, related_name='comment_of_ressource')
     date = models.DateTimeField(blank=False)
     is_text = models.BooleanField(blank=False)
     text = models.TextField(blank=True, null=True)
