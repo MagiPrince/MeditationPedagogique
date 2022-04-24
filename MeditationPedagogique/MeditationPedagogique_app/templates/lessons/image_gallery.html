@@ -1,0 +1,65 @@
+{% load static %}
+<section>
+    <div class="container">
+        <div class="row">
+            {% for ressource in ressources %}
+                <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 img-div">
+                    <a data-bs-toggle="modal" data-bs-target="#{{ ressource.slug }}Modal">
+                        <img src="{% get_media_prefix %}{{ ressource.path }}" class="img-thumbnail" alt="">
+                    </a>
+
+                    <div class="modal fade" id="{{ ressource.slug }}Modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">
+                                        {% if ressource.title != None %}
+                                            {{ ressource.title }}
+                                        {% else %}
+                                            Titre du devoir
+                                        {% endif %}
+                                        <p class="fs-6">
+                                            <a class="user-image">
+                                                <i class="fas fa-user-circle"></i> {{ ressource.user }}
+                                            </a><br>
+                                            <span class="date">{{ ressource.date }}<span>
+                                        </p>
+                                    </h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <img src="{% get_media_prefix %}{{ ressource.path }}" class="img-fluid" alt="">
+                                    {% if ressource.title != None %}
+                                        <p>{{ ressource.description }}</p>
+                                    {% else %}
+                                        <p>Ma super description</p>
+                                    {% endif %}
+                                    <div class="image-comments">
+                                        <p class="fs-5">Commentaires ({{ ressource.comment_of_ressource.all.count }})</p>
+                                        {% for comment in ressource.comment_of_ressource.all %}
+                                            <div>
+                                                <a class="user-profile"><i class="fas fa-user-circle"></i> {{ comment.user }}</a>
+                                                <p>
+                                                    {{ comment.text }}<br>
+                                                    <span class="date">{{ comment.date }}<span>
+                                                </p>
+                                            </div>
+                                            {% if not forloop.last %}
+                                                <hr>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            {% endfor %}
+        </div>
+    </div> 
+
+</section>

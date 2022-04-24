@@ -48,3 +48,31 @@
     bottom: 0.5em !important;
 } */
 
+.image-width {
+    width: 200px;
+}
+
+.img-div {
+    margin-top: 20px;
+}
+
+a {
+    cursor: pointer;
+}
+
+.user-profile {
+    color: grey !important;
+    text-decoration: none;
+    font-size: 1.1em;
+}
+
+.user-image {
+    color: black !important;
+    text-decoration: none;
+    font-size: 1.1em;
+}
+
+.date {
+    color: grey;
+    font-size: 0.8em;
+}
