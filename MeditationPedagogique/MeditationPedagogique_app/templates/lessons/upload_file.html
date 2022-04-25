@@ -46,7 +46,8 @@
                                 </div>
                             </div>
 
-                            <input class="form-control" type="file" id="formFile" name="homework" accept=".png, .jpg, .pdf">
+                            <input class="form-control" type="file" id="formFile" name="homework" accept=".png, .jpg">
+                            <p class="accepted-formats">Formats acceptés : .png, .jpg</p>
 
                             <input style="" type="hidden" id="lessonNb" name="lessonNb" value={{ lesson }}>
                             
@@ -69,7 +70,7 @@
     var inputTextOkay = false;
     $(document).ready(
     function(){
-        $('input:submit').attr('disabled',true);
+        $('#formFileSubmit').attr('disabled',true);
         $('input:file').change(
             function(){
                 if ($(this).val()){
@@ -80,10 +81,10 @@
                 }
 
                 if (inputFileOkay && inputTextOkay){
-                    $('input:submit').removeAttr('disabled'); 
+                    $('#formFileSubmit').removeAttr('disabled'); 
                 }
                 else{
-                    $('input:submit').attr('disabled',true);
+                    $('#formFileSubmit').attr('disabled',true);
                 }
             });
 
@@ -97,10 +98,10 @@
                 }
 
                 if (inputFileOkay && inputTextOkay){
-                    $('input:submit').removeAttr('disabled'); 
+                    $('#formFileSubmit').removeAttr('disabled'); 
                 }
                 else{
-                    $('input:submit').attr('disabled',true);
+                    $('#formFileSubmit').attr('disabled',true);
                 }
             });
 

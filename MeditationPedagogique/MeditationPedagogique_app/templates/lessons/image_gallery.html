@@ -49,6 +49,19 @@
                                             {% endif %}
                                         {% endfor %}
                                     </div>
+
+                                    <form action="/import-data/" method="post" id="data" enctype="multipart/form-data">
+                                        {% csrf_token %}
+                                        
+                                        <div class="form-group">
+                                            <label for="comment">Votre commentaire :</label>
+                                            <textarea class="form-control" id="comment" name="comment" rows="3"></textarea>
+                                        </div>
+                                        <input type="hidden" id="ressourceName" name="ressourceName" value={{ ressource }}>
+
+                                        <input class="btn btn-primary" id="" type="submit" value="Commenter">
+                                    </form>
+
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
