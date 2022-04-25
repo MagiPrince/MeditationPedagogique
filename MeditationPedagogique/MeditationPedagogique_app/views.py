@@ -9,7 +9,7 @@ from django.http import HttpResponse
 from django.apps import apps
 import os
 import datetime
-from .models import Lesson, Element, Ressource, Type, GeneralInformation
+from .models import Lesson, Element, Ressource, Type, GeneralInformation, Comment
 import operator
 from django.db.models import F
 
@@ -161,3 +161,21 @@ def update_data(request):
         entry.save(update_fields=[field])
 
     return HttpResponse('Modification done !')
+
+
+@login_required
+def add_comment(request):
+    if request.method == 'POST':
+        comment = request.POST['comment']
+        ressource = request.POST['ressourceName']
+        lesson = request.POST['lessonNb']
+
+        print('ICI',ressource)
+
+        c = Comment(user=request.user, ressource=Ressource.objects.get(id=ressource), text=comment, date=datetime.datetime.now(), )
+        c.save()
+
+        return redirect('lesson', lesson)
+
+    # If the request is not POST the user is redirected to the index
+    return redirect('index')

@@ -12,4 +12,5 @@ urlpatterns = [
     path('delete_lesson/<lesson_id>', views.delete_lesson, name='delete-lesson'),
     path('import-data/', views.import_data, name='import_data'),
     path('update-data/', views.update_data, name='update-data'),
+    path('add-comment/', views.add_comment, name='add_comment'),
 ]

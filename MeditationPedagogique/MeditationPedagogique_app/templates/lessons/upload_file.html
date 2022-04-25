@@ -49,7 +49,7 @@
                             <input class="form-control" type="file" id="formFile" name="homework" accept=".png, .jpg">
                             <p class="accepted-formats">Formats acceptés : .png, .jpg</p>
 
-                            <input style="" type="hidden" id="lessonNb" name="lessonNb" value={{ lesson }}>
+                            <input type="hidden" id="lessonNb" name="lessonNb" value={{ lesson }}>
                             
                             
                         
@@ -71,7 +71,7 @@
     $(document).ready(
     function(){
         $('#formFileSubmit').attr('disabled',true);
-        $('input:file').change(
+        $('#formFile').change(
             function(){
                 if ($(this).val()){
                     inputFileOkay = true;
@@ -88,7 +88,7 @@
                 }
             });
 
-        $('input:text').keyup(
+        $('#title').keyup(
             function(){
                 if ($(this).val()){
                     inputTextOkay = true;

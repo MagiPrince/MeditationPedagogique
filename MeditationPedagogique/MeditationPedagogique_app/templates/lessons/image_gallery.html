@@ -50,16 +50,17 @@
                                         {% endfor %}
                                     </div>
 
-                                    <form action="/import-data/" method="post" id="data" enctype="multipart/form-data">
+                                    <form action="/add-comment/" method="post" id="data" enctype="multipart/form-data">
                                         {% csrf_token %}
                                         
                                         <div class="form-group">
                                             <label for="comment">Votre commentaire :</label>
                                             <textarea class="form-control" id="comment" name="comment" rows="3"></textarea>
                                         </div>
-                                        <input type="hidden" id="ressourceName" name="ressourceName" value={{ ressource }}>
+                                        <input type="hidden" id="ressourceName" name="ressourceName" value={{ ressource.id }}>
+                                        <input type="hidden" id="lessonNb" name="lessonNb" value={{ lesson }}>
 
-                                        <input class="btn btn-primary" id="" type="submit" value="Commenter">
+                                        <input class="btn btn-primary" id="comment-submit" type="submit" value="Commenter">
                                     </form>
 
                                 </div>
@@ -76,3 +77,22 @@
     </div> 
 
 </section>
+
+<script>
+    $(document).ready(
+    function(){
+        $('#comment-submit').attr('disabled',true);
+        $('#comment').keyup(
+            function(){
+                if ($(this).val()){
+                    $('#comment-submit').removeAttr('disabled'); 
+                }
+                else {
+                    $('#comment-submit').attr('disabled',true);
+                }
+            });
+
+    });
+
+    
+</script>

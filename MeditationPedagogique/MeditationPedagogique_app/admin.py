@@ -44,7 +44,7 @@ admin.register(Ressource, RessourceAdmin)
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
     list_display = ['id', 'user', 'ressource',
-                    'date', 'is_text', 'text', 'audio_path']
+                    'date', 'text']
 
 
 admin.register(Comment, CommentAdmin)

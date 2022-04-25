@@ -56,9 +56,7 @@ class Comment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     ressource = models.ForeignKey(Ressource, on_delete=models.CASCADE, related_name='comment_of_ressource')
     date = models.DateTimeField(blank=False)
-    is_text = models.BooleanField(blank=False)
     text = models.TextField(blank=True, null=True)
-    audio_path = models.CharField(max_length=255, blank=True, null=True)
 
 
 class Question(models.Model):
