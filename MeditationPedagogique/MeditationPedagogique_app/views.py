@@ -124,6 +124,8 @@ def import_data(request):
         accepted_format_dictionnary = ['png', 'jpg', 'pdf']
         homework = request.FILES['homework']
         lesson = request.POST.get('lessonNb', '')
+        title = request.POST.get('title', '')
+        description = request.POST.get('description', '')
         if str(homework).split('.')[-1].lower() in accepted_format_dictionnary:
             # Get slug of the lesson
             lesson_object = Lesson.objects.get(id=lesson).slug
@@ -134,7 +136,7 @@ def import_data(request):
             request.session['uploaded_file_url'] = filename
 
             # Create Ressource element in DB
-            ressource = Ressource(user = request.user, path = os.path.join( lesson_object, filename), lesson = lesson, date = datetime.datetime.now())
+            ressource = Ressource(user = request.user, title=title, description=description, path = os.path.join( lesson_object, filename), lesson = lesson, date = datetime.datetime.now())
             ressource.save()
 
             return redirect('lesson', lesson)
