@@ -11,30 +11,101 @@
         </div>
     {% endif %}
 
-    <form action="/import-data/" method="post" id="data" enctype="multipart/form-data">
-        {% csrf_token %}
-        <input class="form-control" type="file" id="formFile" name="homework" accept=".png, .jpg, .pdf">
-        <input type="hidden" id="lessonNb" name="lessonNb" value={{ lesson }}>
-        <input class="btn btn-primary" id="formFileSubmit" type="submit" value="Importer">
-    </form>
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#deposithm">
+        Rendre un devoir
+    </button>
 
     {% if uploaded_file_url %}
         <p>Fichier importé : <a href="{{ uploaded_file_url }}">{{ uploaded_file_url }}</a></p>
     {% endif %}
+
+
+    <div class="modal fade" id="deposithm" tabindex="-1" aria-labelledby="deposithmLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form action="/import-data/" method="post" id="data" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="deposithmLabel">Modal title</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        
+
+                            <div class="mb-3 row">
+                                <label for="title" class="col-sm-3 col-form-label">Titre</label>
+                                <div class="col-sm-9">
+                                    <input class="form-control" type="text" name="title" id="title">
+                                </div>
+                            </div>
+
+                            <div class="mb-3 row">
+                                <label for="description" class="col-sm-3 col-form-label">Description</label>
+                                <div class="col-sm-9">
+                                    <textarea class="form-control" type="text" name="description" id="description"></textarea>
+                                </div>
+                            </div>
+
+                            <input class="form-control" type="file" id="formFile" name="homework" accept=".png, .jpg">
+                            <p class="accepted-formats">Formats acceptés : .png, .jpg</p>
+
+                            <input type="hidden" id="lessonNb" name="lessonNb" value={{ lesson }}>
+                            
+                            
+                        
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                        <input class="btn btn-primary" id="formFileSubmit" type="submit" value="Importer">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
 </section>
 
 <script>
+    var inputFileOkay = false;
+    var inputTextOkay = false;
     $(document).ready(
     function(){
-        $('input:submit').attr('disabled',true);
-        $('input:file').change(
+        $('#formFileSubmit').attr('disabled',true);
+        $('#formFile').change(
             function(){
                 if ($(this).val()){
-                    $('input:submit').removeAttr('disabled'); 
+                    inputFileOkay = true;
                 }
                 else {
-                    $('input:submit').attr('disabled',true);
+                    inputFileOkay = false;
+                }
+
+                if (inputFileOkay && inputTextOkay){
+                    $('#formFileSubmit').removeAttr('disabled'); 
+                }
+                else{
+                    $('#formFileSubmit').attr('disabled',true);
                 }
             });
+
+        $('#title').keyup(
+            function(){
+                if ($(this).val()){
+                    inputTextOkay = true;
+                }
+                else {
+                    inputTextOkay = false;
+                }
+
+                if (inputFileOkay && inputTextOkay){
+                    $('#formFileSubmit').removeAttr('disabled'); 
+                }
+                else{
+                    $('#formFileSubmit').attr('disabled',true);
+                }
+            });
+
     });
+
+    
 </script>

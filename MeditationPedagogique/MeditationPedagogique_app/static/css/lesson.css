@@ -10,10 +10,6 @@
     height: auto;
 }
 
-#formFileSubmit {
-    margin-top: 20px;
-}
-
 .add-element-div {
     padding-top: 1.5em;
     display: none !important;
@@ -26,4 +22,41 @@
 #deleteModalHeader{
     background-color: #c85a54;
     color: white;
+}
+
+/* .modificationButton {
+    bottom: 0.5em !important;
+} */
+
+.image-width {
+    width: 200px;
+}
+
+.img-div {
+    margin-top: 20px;
+}
+
+a {
+    cursor: pointer;
+}
+
+.user-profile {
+    color: grey !important;
+    text-decoration: none;
+    font-size: 1.1em;
+}
+
+.user-image {
+    color: black !important;
+    text-decoration: none;
+    font-size: 1.1em;
+}
+
+.date {
+    color: grey;
+    font-size: 0.8em;
+}
+
+.accepted-formats {
+    font-size: 0.8em;
 }

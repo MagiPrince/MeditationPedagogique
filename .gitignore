@@ -1,6 +1,10 @@
 # Ignore Mac DS_store
 .DS_Store
 
+# Ignore Media files
+*medias*
+!.gitkeep
+
 # Ignore migrations Django
 *migrations
 

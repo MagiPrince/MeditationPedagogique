@@ -13,4 +13,5 @@ urlpatterns = [
     path('import-data/', views.import_data, name='import_data'),
     path('update-data/', views.update_data, name='update-data'),
     path('edit/', views.edit, name='edit')
+    path('add-comment/', views.add_comment, name='add_comment'),
 ]

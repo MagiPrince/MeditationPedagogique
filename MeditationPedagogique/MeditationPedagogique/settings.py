@@ -129,4 +129,5 @@ LOGOUT_REDIRECT_URL = '/'
 
 AUTH_USER_MODEL = 'MeditationPedagogique_app.User'
 
-MEDIA_ROOT = os.path.join(os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__))), '../medias')
+MEDIA_ROOT = os.path.join(os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__))), '../medias/')
+MEDIA_URL = 'medias/'
