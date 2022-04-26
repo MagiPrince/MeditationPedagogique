@@ -2,7 +2,7 @@
 {% include 'footer.html' %}
 {% include 'navbar.html' %}
 {% block extracss %}
-    <link rel="stylesheet" href="/static/css/acceuil.css">
+    <link rel="stylesheet" href="/static/css/index.css">
 {% endblock %}
 
 
@@ -12,25 +12,22 @@
     <div class="d-flex justify-content-center titleDiv flex-row">
         <!-- if user.is_authenticated-->
         {% if user.is_superuser %}
-        <h1 class="generalTitle title modifiable">{{generalTitle}}</h1>
-        <div class="modification">
-            <i class="fas fa-edit modificationButton" type="button"></i>
-        </div>
+        <h1 class="generalTitle">{{generalTitle}}</h1>
+        {% include 'modification.html' with id=1 table='GeneralInformation' field='title' previous_value=generalTitle rows=1 %}
         {% else %}
-        <h1 class="generalTitle title">{{generalTitle}}</h1>
+        <h1 class="generalTitle">{{generalTitle}}</h1>
         {% endif %}
     </div>
     <div class="d-flex justify-content-center flex-row paragraphDiv">
 
         {% if user.is_superuser%}
-        <p class="generalDescription paragraph modifiable modifiableDescription">{{generalDescription}}</p>
-        <div class="modification">
-            <i class="fas fa-edit modificationButton" type="button"></i>
-        </div>
+        <p class="generalDescription paragraph">{{generalDescription}}</p>
+        {% include 'modification.html' with id=1 table='GeneralInformation' field='description' previous_value=generalDescription rows=6 %}
         {% else %}
         <p class="generalDescription paragraph">{{generalDescription}}</p>
         {% endif %}
     </div>
+
 
     <div class="lessonsArea">
         <div class="row lessonsArea-body" id="lessonsArea">
@@ -59,7 +56,7 @@
                         </div>
                     </div>
                     {% endif %}
-                    <div>{{ lesson.title }}</div>
+                    <div class='lessonTitle'>{{ lesson.title }}</div>
                 </a>
             </div>
             {% endfor %}
@@ -82,7 +79,8 @@
                                 <form action="/" method="post">
                                     {% csrf_token %}
                                     {{ form.as_p }}
-                                    <div class="modal-footer d-flex justify-content-center">
+                                    <div class="modal-footer d-flex justify-content-center modalFooterMargin">
+
                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
                                         <button type="submit" class="btn btn-primary">Créer</button>
                                     </div>

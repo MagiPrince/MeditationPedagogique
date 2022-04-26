@@ -1,0 +1,32 @@
+<!-- Button -->
+
+<i class="fas fa-edit modificationButton" type="button" data-bs-toggle="modal" data-bs-target="#modificationModal{{ id }}{{ table }}{{ field }}"></i>
+
+
+<!-- Modal -->
+<div class="modal fade modificationModal" id="modificationModal{{ id }}{{ table }}{{ field }}" tabindex="-1" aria-labelledby="modificationModalLabel" aria-hidden="true" value={{ showForm }}>
+    <div class="modal-dialog">
+        <div class="modal-content">
+                <div class="modal-header modificationModalHeader">
+                    <h5 class="modal-title" id="modificationModalLabel">Modification</h5>
+                    <button type="button" class="btn-close close-modal" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+            <div class="modal-body">
+            </div>
+
+            <form action={% url 'edit' %} method="post">
+                {% csrf_token %}
+                <textarea name="modification_modal_text" value="" rows={{ rows }} cols="50">{{ previous_value }}</textarea>
+                <input type="hidden" name="modification_modal_id" value={{ id }}>
+                <input type="hidden" name="modification_modal_table" value={{ table }}>
+                <input type="hidden" name="modification_modal_field" value={{ field }}>
+                <div class="modal-footer d-flex justify-content-center modalFooterMargin">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="submit" class="btn btn-primary">Créer</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+

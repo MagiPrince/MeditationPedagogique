@@ -77,7 +77,7 @@ class Lesson(models.Model):
             if not os.path.isdir(path):
                 os.mkdir(path)
         super(Lesson, self).save(*args, **kwargs)
-    
+
     def delete(self, *args, **kwargs):
         lesson_directory = os.path.join(settings.MEDIA_ROOT, self.slug)
         #lesson_directory = os.path.join(root, 'lesson_' + str(lesson_id))
@@ -91,6 +91,10 @@ class Element(models.Model):
     order = models.PositiveSmallIntegerField(blank=False)
     path = models.CharField(max_length=255, blank=True, null=True)
     text = models.TextField(blank=True, null=True)
+
+    def delete(self, *args, **kwargs):
+        os.remove(self.path)
+        super().delete(*args, **kwargs)
 
 class GeneralInformation(models.Model):
     title = models.CharField(max_length=255, blank=False)

@@ -1,30 +1,3 @@
-.title {
-    padding-top: 3%;
-    padding-bottom: 3%;
-    text-align: center;
-}
-
-.paragraph {
-    padding-top: 3%;
-    padding-bottom: 3%;
-}
-
-.modifiableDescription {
-    padding-left: 5%;
-}
-
-.modification {
-    background-color: white;
-    color: black;
-    padding-top: 3%;
-    padding-left: 0.5%;
-}
-
-.paragraphDiv .modification {
-    padding-right: 5%;
-    padding-top: 2.5%;
-}
-
 .lessonsArea {
     width:80%;
     display: block;
@@ -96,4 +69,8 @@ a:hover{
 #askLessonNameModal .modal-header{
     background-color: #0a74ca;
     color: white;
+}
+
+.lessonTitle {
+    font-size: 1.6rem;
 }

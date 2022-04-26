@@ -1,0 +1,26 @@
+<i type="button" class="fas fa-times-circle fa-lg deleteIcon" id="deleteButton" data-bs-toggle="modal" data-bs-target="#delete{{ id }}"></i>
+
+    <!-- Modal -->
+    <div class="modal fade" id="delete{{ id }}" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                    <div class="modal-header" id="deleteModalHeader">
+                        <h5 class="modal-title" id="deleteModalLabel">Attention !</h5>
+                        <button type="button" class="btn-close close-modal" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                <div class="modal-body">
+                    Voulez-vous réellement supprimer ce paragraphe ?
+                    </div>
+                <div class="modal-footer d-flex justify-content-center">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <form action="/delete_paragraph/" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="delete_element_id" value={{ id }}>
+                        <input type="hidden" name="delete_element_order" value={{ order }}>
+                        <input type="hidden" name="lesson_number" value={{ lessonNumber }}>
+                        <button type="submit" class="btn btn-danger">Supprimer</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
