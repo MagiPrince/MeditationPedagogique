@@ -49,10 +49,10 @@
                                             {% endif %}
                                         {% endfor %}
                                     </div>
-
+                                    {% if user.is_authenticated %}
                                     <form action="/add-comment/" method="post" id="data" enctype="multipart/form-data">
                                         {% csrf_token %}
-                                        
+
                                         <div class="form-group">
                                             <label for="comment">Votre commentaire :</label>
                                             <textarea class="form-control" id="comment" name="comment" rows="3"></textarea>
@@ -62,6 +62,7 @@
 
                                         <input class="btn btn-primary" id="comment-submit" type="submit" value="Commenter">
                                     </form>
+                                    {% endif %}
 
                                 </div>
                                 <div class="modal-footer">
@@ -74,7 +75,7 @@
                 </div>
             {% endfor %}
         </div>
-    </div> 
+    </div>
 
 </section>
 
@@ -85,7 +86,7 @@
         $('#comment').keyup(
             function(){
                 if ($(this).val()){
-                    $('#comment-submit').removeAttr('disabled'); 
+                    $('#comment-submit').removeAttr('disabled');
                 }
                 else {
                     $('#comment-submit').attr('disabled',true);
@@ -94,5 +95,5 @@
 
     });
 
-    
+
 </script>
