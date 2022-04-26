@@ -60,3 +60,13 @@ a {
 .accepted-formats {
     font-size: 0.8em;
 }
+
+.fabutton {
+    background: none;
+    padding: 0px;
+    border: none;
+  }
+
+form {
+    display: inline;
+}

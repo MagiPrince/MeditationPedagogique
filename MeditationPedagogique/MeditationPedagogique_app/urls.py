@@ -14,4 +14,6 @@ urlpatterns = [
     path('update-data/', views.update_data, name='update-data'),
     path('edit/', views.edit, name='edit'),
     path('add-comment/', views.add_comment, name='add_comment'),
+    path('delete-comment/', views.delete_comment, name='delete_comment'),
+    
 ]

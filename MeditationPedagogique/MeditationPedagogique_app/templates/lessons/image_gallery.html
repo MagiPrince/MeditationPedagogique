@@ -39,6 +39,18 @@
                                         {% for comment in ressource.comment_of_ressource.all %}
                                             <div>
                                                 <a class="user-profile"><i class="fas fa-user-circle"></i> {{ comment.user }}</a>
+                                                {% if user.is_superuser %}
+                                                    <form action="/delete-comment/" method="post" id="deleteComment" enctype="multipart/form-data">
+                                                        {% csrf_token %}
+                                                        <input type="hidden" id="commentId" name="commentId" value={{ comment.id }}>
+                                                        <input type="hidden" id="lessonNb" name="lessonNb" value={{ lesson }}>
+                                                        <input type="hidden" id="modalId" name="modalId" value="{{ ressource.slug }}Modal">
+                                                        <button type="submit" id="completed-task" class="fabutton">
+                                                            <i class="fas fa-times-circle"></i>
+                                                        </button>
+                                                        
+                                                    </form>
+                                                {% endif %}
                                                 <p>
                                                     {{ comment.text }}<br>
                                                     <span class="date">{{ comment.date }}<span>
@@ -59,6 +71,7 @@
                                         </div>
                                         <input type="hidden" id="ressourceName" name="ressourceName" value={{ ressource.id }}>
                                         <input type="hidden" id="lessonNb" name="lessonNb" value={{ lesson }}>
+                                        <input type="hidden" id="modalId" name="modalId" value="{{ ressource.slug }}Modal">
 
                                         <input class="btn btn-primary" id="comment-submit" type="submit" value="Commenter">
                                     </form>
@@ -92,8 +105,12 @@
                     $('#comment-submit').attr('disabled',true);
                 }
             });
-
+            if ({{ modalId }} != '') {
+                $('#{{ modalId }}').modal('show')
+            }
     });
+
+    
 
 
 </script>
