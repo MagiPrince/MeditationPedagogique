@@ -16,9 +16,7 @@ from django.db.models import F
 
 # Create your views here.
 def index(request):
-
     #Form to get title of new lesson
-
     context = {}
     context['showForm'] = "False"
 
@@ -179,3 +177,17 @@ def add_comment(request):
 
     # If the request is not POST the user is redirected to the index
     return redirect('index')
+
+def edit(request):
+    if request.method == 'POST':
+        modification_modal_id = int(request.POST.get('modification_modal_id', ''))
+        modification_modal_table = request.POST.get('modification_modal_table', '')
+        modification_modal_field = request.POST.get('modification_modal_field', '')
+        modification_modal_text = request.POST.get('modification_modal_text', '')
+        print(modification_modal_text)
+        model = apps.get_model(app_label='MeditationPedagogique_app', model_name=modification_modal_table)
+        entry = model.objects.get(pk=modification_modal_id)
+        setattr(entry, modification_modal_field, modification_modal_text)
+        entry.save(update_fields=[modification_modal_field])
+
+    return redirect(request.META['HTTP_REFERER'])

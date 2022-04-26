@@ -86,7 +86,7 @@ class Lesson(models.Model):
             if not os.path.isdir(path):
                 os.mkdir(path)
         super(Lesson, self).save(*args, **kwargs)
-    
+
     def delete(self, *args, **kwargs):
         lesson_directory = os.path.join(settings.MEDIA_ROOT, self.slug)
         #lesson_directory = os.path.join(root, 'lesson_' + str(lesson_id))

@@ -1,4 +1,4 @@
-{% if user.is_authenticated%}
+{% if user.is_superuser%}
 <div class="d-flex justify-content-center flex-row add-element-div">
     {% comment %} Add a paragraph {% endcomment %}
     <div id="addParagraph" >
@@ -34,13 +34,5 @@
         </div>
     </div>
 </div>
-<script>
-    // Manage when you need to print an error in the modal. The page loads with the modal opened
-    var myModal = new bootstrap.Modal(document.getElementById('askParagraphModal'))
-    if (document.getElementById('askParagraphModal').getAttribute("value") == "True"){
-        document.getElementById('askParagraphModal').setAttribute("value", "False")
-        myModal.show()
-    }
-</script>
 {% endif %}
 

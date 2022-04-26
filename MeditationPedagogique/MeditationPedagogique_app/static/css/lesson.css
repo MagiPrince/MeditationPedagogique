@@ -1,20 +1,3 @@
-.title {
-    padding-top: 2rem;
-    padding-bottom: 1rem;
-}
-
-.paragraph {
-    padding-top: 3%;
-    padding-left: 5%;
-}
-
-.modification {
-    background-color: white;
-    color: black;
-    padding-top: 3%;
-    padding-left: 0.5%;
-}
-
 .fa-times-circle{
     background-color: white;
     color: red;
@@ -28,10 +11,11 @@
 }
 
 .add-element-div {
+    padding-top: 1.5em;
     display: none !important;
 }
 
-.paragraphModification:hover + .add-element-div, .element:hover + .add-element-div, .add-element-div:hover{
+.paragraphDiv:hover + .add-element-div, .element:hover + .add-element-div, .add-element-div:hover{
     display: flex !important;
 }
 

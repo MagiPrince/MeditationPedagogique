@@ -14,3 +14,38 @@ body {
 .navbar {
     background-color:#64B5F6;
 }
+
+.titleDiv {
+    padding-top: 3%;
+    padding-bottom: 3%;
+    text-align: center;
+}
+
+.paragraphDiv {
+    padding: 1.5em 5em 0 5em;
+}
+
+.modificationButton {
+    margin-left: 0.7em;
+}
+
+p {
+    margin-bottom: 0 !important;
+}
+
+.modificationModal {
+    text-align: center;
+}
+
+.modificationModalHeader {
+    background-color: #c7c7c7;
+    color: black;
+}
+
+.modalFooterMargin {
+    margin-top: 1.5em;
+}
+
+.deleteIcon {
+    margin-left: 0.4em;
+}
