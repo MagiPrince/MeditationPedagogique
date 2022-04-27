@@ -66,6 +66,7 @@ def lesson(request, number):
     context = {
         'upload_success': '',
         'uploaded_file_url': '',
+        'modalID': '',
     }
     lessonNumber = Lesson.objects.get(id=number)
     elements =  Element.objects.filter(lesson=lessonNumber)
@@ -95,6 +96,9 @@ def lesson(request, number):
     context['title'] = Lesson.objects.all().filter(id=number)[0].title
     context['lessonNumber'] = number
     context['ressources'] = Ressource.objects.filter(lesson=number)
+    if 'modalId' in request.session:
+        context['modalId'] = request.session['modalId']
+        del request.session['modalId']
     return render(request, 'lessons/lesson.html', context)
 
 def delete_paragraph(request):
@@ -166,17 +170,35 @@ def add_comment(request):
     if request.method == 'POST':
         comment = request.POST['comment']
         ressource = request.POST['ressourceName']
-        lesson = request.POST['lessonNb']
+        lesson = request.POST.get('lessonNb', '')
+        request.session['modalId'] = request.POST.get('modalId', '')
 
         print('ICI',ressource)
 
         c = Comment(user=request.user, ressource=Ressource.objects.get(id=ressource), text=comment, date=datetime.datetime.now(), )
         c.save()
 
+        if lesson != '':
+            return redirect('lesson', lesson)
+
+    # If the request is not POST the user is redirected to the index
+    return redirect('index')
+
+
+@login_required
+def delete_comment(request):
+    if request.method == 'POST':
+        comment_id = request.POST['commentId']
+        lesson = request.POST.get('lessonNb', '')
+        request.session['modalId'] = request.POST.get('modalId', '')
+        print(request.user.role)
+        if request.user.is_superuser:
+            Comment.objects.filter(id=comment_id).delete()
         return redirect('lesson', lesson)
 
     # If the request is not POST the user is redirected to the index
     return redirect('index')
+
 
 def edit(request):
     if request.method == 'POST':
