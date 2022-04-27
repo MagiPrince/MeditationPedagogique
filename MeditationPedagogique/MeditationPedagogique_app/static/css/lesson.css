@@ -67,6 +67,6 @@ a {
     border: none;
   }
 
-form {
+#deleteComment {
     display: inline;
 }
