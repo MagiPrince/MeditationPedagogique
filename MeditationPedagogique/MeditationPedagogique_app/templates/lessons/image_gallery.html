@@ -39,7 +39,7 @@
                                         {% for comment in ressource.comment_of_ressource.all %}
                                             <div>
                                                 <a class="user-profile"><i class="fas fa-user-circle"></i> {{ comment.user }}</a>
-                                                {% if user.is_superuser %}
+                                                {% if user.is_superuser or comment.user == user %}
                                                     <form action="/delete-comment/" method="post" id="deleteComment" enctype="multipart/form-data">
                                                         {% csrf_token %}
                                                         <input type="hidden" id="commentId" name="commentId" value={{ comment.id }}>

@@ -9,7 +9,7 @@ from django.http import HttpResponse
 from django.apps import apps
 import os
 import datetime
-from .models import Lesson, Element, Ressource, Type, GeneralInformation, Comment
+from .models import Lesson, Element, Ressource, Type, GeneralInformation, Comment, User
 import operator
 from django.db.models import F
 
@@ -265,8 +265,7 @@ def delete_comment(request):
         comment_id = request.POST['commentId']
         lesson = request.POST.get('lessonNb', '')
         request.session['modalId'] = request.POST.get('modalId', '')
-        print(request.user.role)
-        if request.user.is_superuser:
+        if request.user.is_superuser or request.user == User.objects.get(id=Comment.objects.filter(id=comment_id).values('user')[0]['user']):
             Comment.objects.filter(id=comment_id).delete()
         return redirect('lesson', lesson)
 
