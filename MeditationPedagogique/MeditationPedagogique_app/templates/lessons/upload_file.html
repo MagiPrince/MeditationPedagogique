@@ -35,7 +35,7 @@
                             <div class="mb-3 row">
                                 <label for="title" class="col-sm-3 col-form-label">Titre</label>
                                 <div class="col-sm-9">
-                                    <input class="form-control" type="text" name="title" id="title">
+                                    <input class="form-control" type="text" name="title" id="titleHM">
                                 </div>
                             </div>
 
@@ -46,7 +46,7 @@
                                 </div>
                             </div>
 
-                            <input class="form-control" type="file" id="formFile" name="homework" accept=".png, .jpg">
+                            <input class="form-control" type="file" id="formFileHM" name="homework" accept=".png, .jpg">
                             <p class="accepted-formats">Formats acceptés : .png, .jpg</p>
 
                             <input type="hidden" id="lessonNb" name="lessonNb" value={{ lesson }}>
@@ -56,7 +56,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
-                        <input class="btn btn-primary" id="formFileSubmit" type="submit" value="Importer">
+                        <input class="btn btn-primary" id="formFileSubmitHM" type="submit" value="Importer">
                     </div>
                 </form>
             </div>
@@ -70,8 +70,8 @@
     var inputTextOkay = false;
     $(document).ready(
     function(){
-        $('#formFileSubmit').attr('disabled',true);
-        $('#formFile').change(
+        $('#formFileSubmitHM').attr('disabled',true);
+        $('#formFileHM').change(
             function(){
                 if ($(this).val()){
                     inputFileOkay = true;
@@ -81,14 +81,14 @@
                 }
 
                 if (inputFileOkay && inputTextOkay){
-                    $('#formFileSubmit').removeAttr('disabled'); 
+                    $('#formFileSubmitHM').removeAttr('disabled'); 
                 }
                 else{
-                    $('#formFileSubmit').attr('disabled',true);
+                    $('#formFileSubmitHM').attr('disabled',true);
                 }
             });
 
-        $('#title').keyup(
+        $('#titleHM').keyup(
             function(){
                 if ($(this).val()){
                     inputTextOkay = true;
@@ -98,10 +98,10 @@
                 }
 
                 if (inputFileOkay && inputTextOkay){
-                    $('#formFileSubmit').removeAttr('disabled'); 
+                    $('#formFileSubmitHM').removeAttr('disabled'); 
                 }
                 else{
-                    $('#formFileSubmit').attr('disabled',true);
+                    $('#formFileSubmitHM').attr('disabled',true);
                 }
             });
 

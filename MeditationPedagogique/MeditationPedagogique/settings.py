@@ -65,6 +65,9 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
+            'builtins': [
+                'MeditationPedagogique_app.templatetags.custom_tags',
+            ]
         },
     },
 ]

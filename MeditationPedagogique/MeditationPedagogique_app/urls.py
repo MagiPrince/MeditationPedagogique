@@ -11,9 +11,11 @@ urlpatterns = [
     path('delete_paragraph/', views.delete_paragraph, name='delete_paragraph'),
     path('delete_lesson/<lesson_id>', views.delete_lesson, name='delete-lesson'),
     path('import-data/', views.import_data, name='import_data'),
+    path('import-element/', views.import_element, name='import_element'),
     path('update-data/', views.update_data, name='update-data'),
     path('edit/', views.edit, name='edit'),
     path('add-comment/', views.add_comment, name='add_comment'),
     path('delete-comment/', views.delete_comment, name='delete_comment'),
+    path('delete-ressource/', views.delete_ressource, name='delete_ressource'),
     
 ]
