@@ -7,7 +7,7 @@
 {% block body_content %}
     {% csrf_token %}
     {% include 'lessons/elements/title.html' with title=title id=lessonNumber %}
-    {% include 'lessons/add_element.html' with order=0 %}
+    {% include 'lessons/add_element.html' with order=0 lesson=lessonNumber %}
     {% for element in elements %}
         {% if element.type.name == 'paragraph' %}
             {% include 'lessons/elements/paragraph.html' with text=element.text id=element.id order=element.order lessonNumber=lessonNumber%}
@@ -20,7 +20,7 @@
         {% elif element.type.name == 'document' %}
             {% include 'lessons/elements/document.html' with path=element.path %}
         {% endif %}
-        {% include 'lessons/add_element.html' with order=element.order %}
+        {% include 'lessons/add_element.html' with order=element.order lesson=lessonNumber %}
     {% endfor %}
     {% include 'lessons/image_gallery.html' with lesson=lessonNumber %}
     {% if user.is_superuser %}

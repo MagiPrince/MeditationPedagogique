@@ -81,6 +81,6 @@ class AddParagraphForm(ModelForm):
         paragraph.order = order
         paragraph.text = self.cleaned_data['text']
         if commit:
-            Element.objects.filter(order__gte=order).update(order = F('order') + 1)
+            Element.objects.filter(lesson=Lesson.objects.get(id=lesson_number), order__gte=order).update(order = F('order') + 1)
             paragraph.save()
         return paragraph

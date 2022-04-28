@@ -66,6 +66,8 @@ def lesson(request, number):
     context = {
         'upload_success': '',
         'uploaded_file_url': '',
+        'upload_success_element': '',
+        'uploaded_file_url_element': '',
         'modalID': '',
     }
     lessonNumber = Lesson.objects.get(id=number)
@@ -76,6 +78,13 @@ def lesson(request, number):
     if 'uploaded_file_url' in request.session:
         context['uploaded_file_url'] = request.session['uploaded_file_url']
         del request.session['uploaded_file_url']
+
+    if 'upload_success_element' in request.session:
+        context['upload_success_element'] = request.session['upload_success_element']
+        del request.session['upload_success_element']
+    if 'uploaded_file_url_element' in request.session:
+        context['uploaded_file_url_element'] = request.session['uploaded_file_url_element']
+        del request.session['uploaded_file_url_element']
 
     context = {}
     context['showForm'] = "False"
@@ -140,6 +149,71 @@ def import_data(request):
             # Create Ressource element in DB
             ressource = Ressource(user = request.user, title=title, description=description, path = os.path.join( lesson_object, filename), lesson = lesson, date = datetime.datetime.now())
             ressource.save()
+
+            return redirect('lesson', lesson)
+
+        # If somehow we receive a file that does not correspond to the define extensions
+        request.session['upload_success'] = False
+        return redirect('lesson', lesson)
+
+    # If the request is not POST the user is redirected to the index
+    return redirect('index')
+
+
+@login_required
+def import_element(request):
+    """
+    Import file passed by POST method, saving it in appropriate folder and creating a Ressource object in DB
+    """
+    if request.method == 'POST':
+        accepted_format_dictionnary = ['pdf', 'mp3', 'mp4', 'jpg', 'png', 'jpeg', 'gif']
+        element = request.FILES['element']
+        lesson = request.POST.get('lessonNb', '')
+        order = int(request.POST['add_element_order'])
+        extension = str(element).split('.')[-1].lower()
+        if extension in accepted_format_dictionnary:
+            # Get slug of the lesson
+            lesson_object = Lesson.objects.get(id=lesson).slug
+            # Save file in appropriate folder
+            fs = FileSystemStorage(location=os.path.join(settings.MEDIA_ROOT, lesson_object))
+            filename = fs.save(element.name, element)
+            request.session['upload_success_element'] = True
+            request.session['uploaded_file_url_element'] = filename
+
+            # Verify that types for elements are created, if not create them
+            if len(Type.objects.all()) < 5:
+                print(len(Type.objects.all()))
+                if len(Type.objects.filter(name='audio')) < 1:
+                    t = Type(name='audio')
+                    t.save()
+                if len(Type.objects.filter(name='document')) < 1:
+                    t = Type(name='document')
+                    t.save()
+                if len(Type.objects.filter(name='image')) < 1:
+                    t = Type(name='image')
+                    t.save()
+                if len(Type.objects.filter(name='paragraph')) < 1:
+                    t = Type(name='paragraph')
+                    t.save()
+                if len(Type.objects.filter(name='video')) < 1:
+                    t = Type(name='video')
+                    t.save()
+
+            # Define Type
+            type = ''
+            if extension in ['jpg', 'png', 'jpeg', 'gif']:
+                type = Type.objects.get(name='image')
+            if extension == 'pdf':
+                type = Type.objects.get(name='document')
+            if extension == 'mp3':
+                type = Type.objects.get(name='audio')
+            if extension == 'mp4':
+                type = Type.objects.get(name='video')
+
+            # Create Element element in DB
+            e = Element(type=type, lesson=Lesson.objects.get(id=lesson), order=order, path=os.path.join( lesson_object, filename))
+            e.save()
+            Element.objects.filter(lesson=Lesson.objects.get(id=lesson), order__gte=order).update(order = F('order') + 1)
 
             return redirect('lesson', lesson)
 
