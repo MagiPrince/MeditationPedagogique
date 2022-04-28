@@ -70,3 +70,8 @@ a {
 #deleteComment {
     display: inline;
 }
+
+.comments-hidden {
+    background-color: lightgray;
+    padding: 10px;
+}

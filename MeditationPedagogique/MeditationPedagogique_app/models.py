@@ -57,6 +57,7 @@ class Comment(models.Model):
     ressource = models.ForeignKey(Ressource, on_delete=models.CASCADE, related_name='comment_of_ressource')
     date = models.DateTimeField(blank=False)
     text = models.TextField(blank=True, null=True)
+    hidden = models.BooleanField(blank=True, default=False)
 
 
 class Question(models.Model):

@@ -37,44 +37,100 @@
                                     <div class="image-comments">
                                         <p class="fs-5">Commentaires ({{ ressource.comment_of_ressource.all.count }})</p>
                                         {% for comment in ressource.comment_of_ressource.all %}
-                                            <div>
-                                                <a class="user-profile"><i class="fas fa-user-circle"></i> {{ comment.user }}</a>
-                                                {% if user.is_superuser or comment.user == user %}
-                                                    <form action="/delete-comment/" method="post" id="deleteComment" enctype="multipart/form-data">
-                                                        {% csrf_token %}
-                                                        <input type="hidden" id="commentId" name="commentId" value={{ comment.id }}>
-                                                        <input type="hidden" id="lessonNb" name="lessonNb" value={{ lesson }}>
-                                                        <input type="hidden" id="modalId" name="modalId" value="{{ ressource.slug }}Modal">
-                                                        <button type="submit" id="completed-task" class="fabutton">
-                                                            <i class="fas fa-times-circle"></i>
-                                                        </button>
-                                                        
-                                                    </form>
+                                            {% if not comment.hidden %}
+                                                <div>
+                                                    <a class="user-profile"><i class="fas fa-user-circle"></i> {{ comment.user }}</a>
+                                                    {% if user.is_superuser or user.role == 2 or comment.user == user %}
+                                                        <form action="/delete-comment/" method="post" id="deleteComment" enctype="multipart/form-data">
+                                                            {% csrf_token %}
+                                                            <input type="hidden" id="commentId" name="commentId" value={{ comment.id }}>
+                                                            <input type="hidden" id="lessonNb" name="lessonNb" value={{ lesson }}>
+                                                            <input type="hidden" id="modalId" name="modalId" value="{{ ressource.slug }}Modal">
+                                                            <button type="submit" id="completed-task" class="fabutton">
+                                                                <i class="fas fa-times-circle"></i>
+                                                            </button>
+                                                            
+                                                        </form>
+                                                    {% endif %}
+                                                    <p>
+                                                        {{ comment.text }}<br>
+                                                        <span class="date">{{ comment.date }}<span>
+                                                    </p>
+                                                </div>
+                                                {% if not forloop.last %}
+                                                    <hr>
                                                 {% endif %}
-                                                <p>
-                                                    {{ comment.text }}<br>
-                                                    <span class="date">{{ comment.date }}<span>
-                                                </p>
-                                            </div>
-                                            {% if not forloop.last %}
-                                                <hr>
                                             {% endif %}
                                         {% endfor %}
                                     </div>
+
                                     {% if user.is_authenticated %}
-                                    <form action="/add-comment/" method="post" id="data" enctype="multipart/form-data">
-                                        {% csrf_token %}
+                                        <form action="/add-comment/" method="post" id="data" enctype="multipart/form-data">
+                                            {% csrf_token %}
 
-                                        <div class="form-group">
-                                            <label for="comment">Votre commentaire :</label>
-                                            <textarea class="form-control" id="comment" name="comment" rows="3"></textarea>
+                                            <div class="form-group">
+                                                <label for="comment">Votre commentaire :</label>
+                                                <textarea class="form-control" id="comment" name="comment" rows="3"></textarea>
+                                            </div>
+                                            <input type="hidden" id="ressourceName" name="ressourceName" value={{ ressource.id }}>
+                                            <input type="hidden" id="lessonNb" name="lessonNb" value={{ lesson }}>
+                                            <input type="hidden" id="modalId" name="modalId" value="{{ ressource.slug }}Modal">
+                                            <input type="hidden" id="commentHidden" name="commentHidden" value="">
+
+                                            <input class="btn btn-primary" id="comment-submit" type="submit" value="Commenter">
+                                        </form>
+                                    {% endif %}
+
+                                    {% if ressource.user == user or user.is_superuser or user.role == 2 %}
+                                        <hr>
+                                        <div class="comments-hidden">
+                                            <div class="image-comments">
+                                                <p class="fs-5">Retour individuel ({{ ressource.comment_of_ressource.all.count }})</p>
+                                                {% for comment in ressource.comment_of_ressource.all %}
+                                                    {% if comment.hidden %}
+                                                        <div>
+                                                            <a class="user-profile"><i class="fas fa-user-circle"></i> {{ comment.user }}</a>
+                                                            {% if user.is_superuser or user.role == 2 or comment.user == user %}
+                                                                <form action="/delete-comment/" method="post" id="deleteComment" enctype="multipart/form-data">
+                                                                    {% csrf_token %}
+                                                                    <input type="hidden" id="commentId" name="commentId" value={{ comment.id }}>
+                                                                    <input type="hidden" id="lessonNb" name="lessonNb" value={{ lesson }}>
+                                                                    <input type="hidden" id="modalId" name="modalId" value="{{ ressource.slug }}Modal">
+                                                                    <button type="submit" id="completed-task" class="fabutton">
+                                                                        <i class="fas fa-times-circle"></i>
+                                                                    </button>
+                                                                    
+                                                                </form>
+                                                            {% endif %}
+                                                            <p>
+                                                                {{ comment.text }}<br>
+                                                                <span class="date">{{ comment.date }}<span>
+                                                            </p>
+                                                        </div>
+                                                        {% if not forloop.last %}
+                                                            <hr>
+                                                        {% endif %}
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </div>
+
+                                            {% if user.is_superuser or user.role == 2 %}
+                                                <form action="/add-comment/" method="post" id="data" enctype="multipart/form-data">
+                                                    {% csrf_token %}
+
+                                                    <div class="form-group">
+                                                        <label for="comment">Votre commentaire :</label>
+                                                        <textarea class="form-control" id="comment" name="comment" rows="3"></textarea>
+                                                    </div>
+                                                    <input type="hidden" id="ressourceName" name="ressourceName" value={{ ressource.id }}>
+                                                    <input type="hidden" id="lessonNb" name="lessonNb" value={{ lesson }}>
+                                                    <input type="hidden" id="modalId" name="modalId" value="{{ ressource.slug }}Modal">
+                                                    <input type="hidden" id="commentHidden" name="commentHidden" value="True">
+
+                                                    <input class="btn btn-primary" id="comment-submit" type="submit" value="Commenter">
+                                                </form>
+                                            {% endif %}
                                         </div>
-                                        <input type="hidden" id="ressourceName" name="ressourceName" value={{ ressource.id }}>
-                                        <input type="hidden" id="lessonNb" name="lessonNb" value={{ lesson }}>
-                                        <input type="hidden" id="modalId" name="modalId" value="{{ ressource.slug }}Modal">
-
-                                        <input class="btn btn-primary" id="comment-submit" type="submit" value="Commenter">
-                                    </form>
                                     {% endif %}
 
                                 </div>

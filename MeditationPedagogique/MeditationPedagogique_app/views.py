@@ -245,11 +245,12 @@ def add_comment(request):
         comment = request.POST['comment']
         ressource = request.POST['ressourceName']
         lesson = request.POST.get('lessonNb', '')
+        comment_hidden = bool(request.POST.get('commentHidden', ''))
         request.session['modalId'] = request.POST.get('modalId', '')
 
         print('ICI',ressource)
 
-        c = Comment(user=request.user, ressource=Ressource.objects.get(id=ressource), text=comment, date=datetime.datetime.now(), )
+        c = Comment(user=request.user, ressource=Ressource.objects.get(id=ressource), text=comment, date=datetime.datetime.now(), hidden=comment_hidden)
         c.save()
 
         if lesson != '':
@@ -265,7 +266,7 @@ def delete_comment(request):
         comment_id = request.POST['commentId']
         lesson = request.POST.get('lessonNb', '')
         request.session['modalId'] = request.POST.get('modalId', '')
-        if request.user.is_superuser or request.user == User.objects.get(id=Comment.objects.filter(id=comment_id).values('user')[0]['user']):
+        if request.user.is_superuser or request.user.role == 2 or request.user == User.objects.get(id=Comment.objects.filter(id=comment_id).values('user')[0]['user']):
             Comment.objects.filter(id=comment_id).delete()
         return redirect('lesson', lesson)
 
