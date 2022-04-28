@@ -1,17 +1,18 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from .models import Element, User, Lesson, Type
+from .models import Element, User, Lesson, Type, InscriptionCode
 from django.contrib.auth import get_user_model
 from django.forms import ModelForm
 from django.db.models import F
 
 class CustomUserForm(UserCreationForm):
-    username = forms.CharField(label='username', min_length=4, max_length=150)
-    email = forms.EmailField(label='email', required=True)
-    first_name = forms.CharField(label='first name', max_length=50)
-    last_name = forms.CharField(label='last name', max_length=50)
-    password1 = forms.CharField(label='password', widget=forms.PasswordInput)
-    password2 = forms.CharField(label='Confirm password', widget=forms.PasswordInput)
+    username = forms.CharField(label='Nom d\'utilisateur', min_length=4, max_length=150)
+    email = forms.EmailField(label='Email', required=True)
+    first_name = forms.CharField(label='Prénom', max_length=50)
+    last_name = forms.CharField(label='Nom', max_length=50)
+    password1 = forms.CharField(label='Mot de passe', widget=forms.PasswordInput)
+    password2 = forms.CharField(label='Confirmer le mot de passe', widget=forms.PasswordInput)
+    code = forms.CharField(label='Code d\'inscription', widget=forms.PasswordInput)
 
     class Meta:
         model = User
@@ -43,12 +44,34 @@ class CustomUserForm(UserCreationForm):
         return password2
 
 
+    def clean_code(self):
+        code = self.cleaned_data['code']
+
+        for c in InscriptionCode.objects.all():
+            if c.code == code:
+                return code
+        
+        raise forms.ValidationError("Code invalide")
+
+
     def save(self, commit=True):
         user = super(CustomUserForm, self).save(commit=False)
         user.email = self.cleaned_data['email']
         user.first_name = self.cleaned_data['first_name']
         user.last_name = self.cleaned_data['last_name']
-        user.role = get_user_model().STUDENT
+        code = self.cleaned_data['code']
+
+        if len(InscriptionCode.objects.filter(role=1)) > 0:
+            for c in InscriptionCode.objects.filter(role=1):
+                if c.code == code:
+                    user.role = get_user_model().STUDENT
+
+        if len(InscriptionCode.objects.filter(role=2)) > 0:
+            for c in InscriptionCode.objects.filter(role=2):
+                if c.code == code:
+                    user.role = get_user_model().PROFESSOR
+
+        
         if commit:
             user.save()
         return user

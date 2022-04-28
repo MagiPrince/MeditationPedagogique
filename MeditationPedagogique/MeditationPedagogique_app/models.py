@@ -105,3 +105,17 @@ class Element(models.Model):
 class GeneralInformation(models.Model):
     title = models.CharField(max_length=255, blank=False)
     description = models.TextField(blank=False, null=True)
+
+class InscriptionCode(models.Model):
+
+    STUDENT = 1
+    PROFESSOR = 2
+
+    ROLE_CHOICES = (
+        (STUDENT, 'Student'),
+        (PROFESSOR, 'Professor'),
+    )
+    role = models.PositiveSmallIntegerField(
+        choices=ROLE_CHOICES, blank=True, null=True)
+
+    code = models.CharField(max_length=50, blank=False, null=False)

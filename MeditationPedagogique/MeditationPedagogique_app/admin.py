@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from .forms import CustomUserForm
-from .models import User, Ressource, Comment, Question, Answer, Type, Lesson, Element, GeneralInformation
+from .models import User, Ressource, Comment, Question, Answer, Type, Lesson, Element, GeneralInformation, InscriptionCode
 
 @admin.register(User)
 class UserAdmin(BaseUserAdmin):
@@ -95,3 +95,11 @@ class GeneralInformationsAdmin(admin.ModelAdmin):
 
 
 admin.register(GeneralInformation, GeneralInformationsAdmin)
+
+
+@admin.register(InscriptionCode)
+class InscriptionCodesAdmin(admin.ModelAdmin):
+    list_display = ['role', 'code']
+
+
+admin.register(InscriptionCode, InscriptionCodesAdmin)
