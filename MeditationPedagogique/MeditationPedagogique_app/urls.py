@@ -16,5 +16,6 @@ urlpatterns = [
     path('edit/', views.edit, name='edit'),
     path('add-comment/', views.add_comment, name='add_comment'),
     path('delete-comment/', views.delete_comment, name='delete_comment'),
+    path('delete-ressource/', views.delete_ressource, name='delete_ressource'),
     
 ]

@@ -267,7 +267,7 @@ def delete_comment(request):
         lesson = request.POST.get('lessonNb', '')
         request.session['modalId'] = request.POST.get('modalId', '')
         if request.user.is_superuser or request.user.role == 2 or request.user == User.objects.get(id=Comment.objects.filter(id=comment_id).values('user')[0]['user']):
-            Comment.objects.filter(id=comment_id).delete()
+            Comment.objects.get(id=comment_id).delete()
         return redirect('lesson', lesson)
 
     # If the request is not POST the user is redirected to the index
@@ -287,3 +287,17 @@ def edit(request):
         entry.save(update_fields=[modification_modal_field])
 
     return redirect(request.META['HTTP_REFERER'])
+
+@login_required
+def delete_ressource(request):
+    if request.method == 'POST':
+        ressource_id = request.POST['ressourceId']
+        lesson = request.POST.get('lessonNb', '')
+
+        if request.user.is_superuser or request.user.role == 2 or request.user == User.objects.get(id=Ressource.objects.filter(id=ressource_id).values('user')[0]['user']):
+            Ressource.objects.get(id=ressource_id).delete()
+        return redirect('lesson', lesson)
+
+    # If the request is not POST the user is redirected to the index
+    return redirect('index')
+
