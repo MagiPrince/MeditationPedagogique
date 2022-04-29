@@ -4,9 +4,7 @@ body {
 }
 
 .body-content {
-    margin-top: 5%;
-    margin-left: 15%;
-    margin-right: 15%;
+    margin: 5% 15%;
     background-color: white;
     border-radius: 1rem;
 }
