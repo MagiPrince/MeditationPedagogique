@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .forms import CustomUserForm, createLessonForm, AddParagraphForm
+from .forms import CustomUserForm, createLessonForm, AddParagraphForm, CreateEvaluationForm, CreateQuestionForm
 from django.contrib.auth import login
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -7,9 +7,10 @@ from django.core.files.storage import FileSystemStorage
 from django.conf import settings
 from django.http import HttpResponse
 from django.apps import apps
+from django.utils import timezone
 import os
 import datetime
-from .models import Lesson, Element, Ressource, Type, GeneralInformation, Comment, User
+from .models import Lesson, Element, Ressource, Type, GeneralInformation, Comment, User, Question, Answer
 import operator
 from django.db.models import F
 
@@ -88,7 +89,7 @@ def lesson(request, number):
 
     context = {}
     context['showForm'] = "False"
-    if request.method == 'POST':
+    if 'paragraphButton' in request.POST:
         form = AddParagraphForm(request.POST)
         order = int(request.POST.get('add_element_order', ''))
         if form.is_valid():
@@ -97,10 +98,51 @@ def lesson(request, number):
             return redirect('/lesson/' + str(lessonNumber.id))
         else:
             context['showForm'] = "True"
+
+    elif 'evaluationButton' in request.POST:
+        createEvaluationForm = CreateEvaluationForm(request.POST)
+        order = int(request.POST.get('add_element_order', ''))
+        if createEvaluationForm.is_valid():
+            createEvaluationForm.save(lesson_number=number, order=order)
+            return redirect('/lesson/' + str(lessonNumber.id))
+
+    elif 'questionButton' in request.POST:
+        elementId = int(request.POST.get('elementId', ''))
+        createQuestionForm = CreateQuestionForm(request.POST)
+        if createQuestionForm.is_valid():
+            createQuestionForm.save(elementId=elementId)
+            return redirect('/lesson/' + str(lessonNumber.id))
+    elif 'answerButton' in request.POST:
+        evaluationId = int(request.POST.get('elementId', ''))
+        element = Element.objects.get(pk=evaluationId)
+        user_answerer = request.user
+        questionIds = element.question_of_evaluation.all().values('id')
+        for questionId in questionIds:
+            answer = request.POST.get('question'+str(questionId['id']), '')
+            question = Question.objects.get(pk=questionId['id'])
+            #Check if user already answer this question or not:
+
+            if question.type==1:
+                answerElement, created = Answer.objects.update_or_create(
+                user=user_answerer, question=question,
+                defaults={'date': timezone.now(), 'answerText': answer}
+                )
+            elif question.type==2:
+                answerElement, created = Answer.objects.update_or_create(
+                user=user_answerer, question=question,
+                defaults={'date': timezone.now(), 'answerNumber': answer}
+                )
+        return redirect('/lesson/' + str(lessonNumber.id))
     else:
         form = AddParagraphForm()
+        createEvaluationForm = CreateEvaluationForm()
+        createQuestionForm = CreateQuestionForm()
+
+
 
     context['form'] = form
+    context['createEvaluationForm'] = createEvaluationForm
+    context['createQuestionForm'] = createQuestionForm
     context['elements'] = sorted(elements, key=operator.attrgetter('order'))
     context['title'] = Lesson.objects.all().filter(id=number)[0].title
     context['lessonNumber'] = number
@@ -125,6 +167,14 @@ def delete_lesson(request, lesson_id):
     lesson.delete()
     return redirect('index')
 
+def delete_question(request):
+
+    if request.method == 'POST':
+        questionId = request.POST.get('delete_question_id', '')
+        question = Question.objects.get(pk=questionId)
+        question.delete()
+        lessonNumber = int(request.POST.get('lesson_number', ''))
+        return redirect('/lesson/' + str(lessonNumber))
 
 @login_required
 def import_data(request):
@@ -302,4 +352,3 @@ def delete_ressource(request):
 
     # If the request is not POST the user is redirected to the index
     return redirect('index')
-

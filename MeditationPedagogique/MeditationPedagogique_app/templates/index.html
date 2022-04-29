@@ -13,7 +13,7 @@
         <!-- if user.is_authenticated-->
         {% if user.is_superuser %}
         <h1 class="generalTitle">{{generalTitle}}</h1>
-        {% include 'modification.html' with id=1 table='GeneralInformation' field='title' previous_value=generalTitle rows=1 %}
+        {% include 'modification.html' with id=1 table='GeneralInformation' field='title' previous_value=generalTitle rows=1 cols=30 %}
         {% else %}
         <h1 class="generalTitle">{{generalTitle}}</h1>
         {% endif %}
@@ -22,7 +22,7 @@
 
         {% if user.is_superuser%}
         <p class="generalDescription paragraph"></p>
-        {% include 'modification.html' with id=1 table='GeneralInformation' field='description' previous_value=generalDescription rows=6 %}
+        {% include 'modification.html' with id=1 table='GeneralInformation' field='description' previous_value=generalDescription rows=6 cols=50 %}
         {% else %}
         <p class="generalDescription paragraph"></p>
         {% endif %}

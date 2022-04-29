@@ -9,7 +9,11 @@
                         <button type="button" class="btn-close close-modal" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                 <div class="modal-body">
+                    {%if type == 'paragraph'%}
                     Voulez-vous réellement supprimer ce paragraphe ?
+                    {%elif type == 'evaluation'%}
+                    Voulez-vous réellement supprimer cette évaluation ?
+                    {%endif%}
                     </div>
                 <div class="modal-footer d-flex justify-content-center">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>

@@ -52,7 +52,7 @@ admin.register(Comment, CommentAdmin)
 
 @admin.register(Question)
 class QuestionAdmin(admin.ModelAdmin):
-    list_display = ['id', 'lesson', 'text']
+    list_display = ['id', 'evaluation', 'text', 'type']
 
 
 admin.register(Question, QuestionAdmin)
@@ -60,7 +60,7 @@ admin.register(Question, QuestionAdmin)
 
 @admin.register(Answer)
 class AnswerAdmin(admin.ModelAdmin):
-    list_display = ['id', 'user', 'question', 'date', 'answer']
+    list_display = ['id', 'user', 'question', 'date', 'answerNumber', 'answerText']
 
 
 admin.register(Answer, AnswerAdmin)

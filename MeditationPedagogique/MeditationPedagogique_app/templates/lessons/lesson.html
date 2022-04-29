@@ -18,11 +18,14 @@
             {% include 'lessons/elements/video.html' with path=element.path id=element.id order=element.order lessonNumber=lessonNumber%}
         {% elif element.type.name == 'document' %}
             {% include 'lessons/elements/document.html' with path=element.path id=element.id order=element.order lessonNumber=lessonNumber%}
+        {% elif element.type.name == 'evaluation' %}
+            {% if user.is_authenticated %}
+                {% include 'lessons/elements/evaluation.html' with element=element lessonNumber=lessonNumber %}
+            {% endif %}
         {% endif %}
     {% endfor %}
     {% include 'lessons/image_gallery.html' with lesson=lessonNumber %}
     {% if user.is_authenticated %}
         {% include 'lessons/upload_file.html' with lesson=lessonNumber uploaded_file_url=uploaded_file_url upload_success=upload_success %}
     {% endif %}
-    {% include 'lessons/feedbacks.html' with lesson=lessonNumber %}
 {% endblock %}
