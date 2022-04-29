@@ -3,5 +3,6 @@
     {% if user.is_superuser%}
     {% include 'modification.html' with id=id table='Element' field='text' previous_value=text rows=6 %}
     {% include 'delete.html' with id=id order=order lessonNumber=lessonNumber %}
+    {% include 'lessons/add_element.html' with id=id order=order lessonNumber=lessonNumber %}
     {% endif %}
 </div>

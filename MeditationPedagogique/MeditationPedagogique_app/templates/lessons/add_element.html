@@ -1,16 +1,29 @@
-{% if user.is_superuser%}
+<i type="button" class="fas fa-plus-circle fa-lg add-element-plus-button" data-bs-toggle="modal" data-bs-target="#add-element{{ id }}"></i>
 
-    <div class="d-flex justify-content-center flex-row add-element-div">
-        {% comment %} Add a paragraph {% endcomment %}
-        <div id="addParagraph" >
-            <div class="square">
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#askParagraphModal{{ order }}">Ajouter un paragraphe</button>
+    <!-- Add element modal -->
+    <div class="modal fade" id="add-element{{ id }}" tabindex="-1" aria-labelledby="addElementModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                    <div class="modal-header" id="addElementModalLabel">
+                        <h5 class="modal-title" id="addElementModalLabel">Ajouter un élément</h5>
+                        <button type="button" class="btn-close close-modal" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                <div class="modal-body">
+                    Quel type d'élément souhaitez-vous ajouter à cette leçon ?
+                    <div class="add-element-button-div">
+                        <button class="btn btn-primary add-element-button" data-bs-toggle="modal" data-bs-target="#askParagraphModal{{ order }}">Un paragraphe</button>
+                        <button class="btn btn-primary add-element-button" data-bs-toggle="modal" data-bs-target="#uploadElementModal{{ order }}">Un fichier</button>
+                        <button class="btn btn-primary add-element-button">Une évaluation</button>
+                    </div>
+                </div>
+                <div class="modal-footer d-flex">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                </div>
             </div>
         </div>
-        <div class="divider"></div>
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#uploadElementModal{{ order }}">Téléverser un fichier</button>
     </div>
-    <!-- Modal -->
+
+    <!-- Paragraph modal -->
     <div class="modal fade" id="askParagraphModal{{ order }}" tabindex="-1" aria-labelledby="askParagraphModalLabel" aria-hidden="true" value={{ showForm }}>
         <div class="modal-dialog">
             <div class="modal-content">
@@ -54,7 +67,7 @@
                             <input type="hidden" id="lessonNb" name="lessonNb" value={{ lesson }}>
 
                             <input type="hidden" name="add_element_order" value={{ order }}>
-                            
+
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
@@ -80,11 +93,8 @@
                         $('#formFileSubmitE').attr('disabled',true);
                     }
                 });
-    
+
         });
-    
-        
+
+
     </script>
-
-{% endif %}
-

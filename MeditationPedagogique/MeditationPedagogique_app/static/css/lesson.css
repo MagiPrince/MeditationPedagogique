@@ -5,28 +5,10 @@
 
 }
 
-.divider{
-    width: 2em;
-    height: auto;
-}
-
-.add-element-div {
-    padding-top: 1.5em;
-    display: none !important;
-}
-
-.paragraphDiv:hover + .add-element-div, .element:hover + .add-element-div, .add-element-div:hover{
-    display: flex !important;
-}
-
 #deleteModalHeader{
     background-color: #c85a54;
     color: white;
 }
-
-/* .modificationButton {
-    bottom: 0.5em !important;
-} */
 
 .image-width {
     width: 200px;
@@ -120,4 +102,16 @@ a {
     -moz-border-radius-topright: 5px;
      border-top-left-radius: 5px;
      border-top-right-radius: 5px;
+ }
+
+ .add-element-button-div {
+     margin-top: 1em;
+ }
+
+ .add-element-button {
+     margin: 0 0.5em;
+ }
+
+ .add-element-plus-button {
+    margin-left: 0.2em;
  }
