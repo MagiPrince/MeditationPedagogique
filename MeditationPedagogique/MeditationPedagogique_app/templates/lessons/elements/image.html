@@ -1,5 +1,11 @@
 {% load static %}
 {% load custom_tags %}
 <div class="d-flex justify-content-center image-div">
-    <img src="{% get_media_prefix %}{{ path }}" class="img-thumbnail mx-auto d-block">
+    <img src="{% get_media_prefix %}{{ path }}" class="img-fluid">
+    {% if user.is_superuser%}
+        {% include 'delete.html' with id=id order=order lessonNumber=lessonNumber %}
+        {% include 'lessons/add_element.html' with id=id order=order lessonNumber=lessonNumber %}
+    {% else %}
+        {% include 'lessons/download_ressource.html' with path=path %}
+    {% endif %}
 </div>

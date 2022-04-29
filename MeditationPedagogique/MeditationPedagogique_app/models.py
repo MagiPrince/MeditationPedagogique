@@ -90,6 +90,11 @@ class Element(models.Model):
     path = models.CharField(max_length=255, blank=True, null=True)
     text = models.TextField(blank=True, null=True)
 
+    def delete(self, *args, **kwargs):
+        if self.path:
+            os.remove(os.path.join(settings.MEDIA_ROOT, self.path))
+        super().delete(*args, **kwargs)
+
 class GeneralInformation(models.Model):
     title = models.CharField(max_length=255, blank=False)
     description = models.TextField(blank=False, null=True)

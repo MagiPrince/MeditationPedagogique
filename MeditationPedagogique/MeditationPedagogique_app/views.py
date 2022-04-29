@@ -261,9 +261,11 @@ def import_element(request):
                 type = Type.objects.get(name='video')
 
             # Create Element element in DB
+            order += 1
             e = Element(type=type, lesson=Lesson.objects.get(id=lesson), order=order, path=os.path.join( lesson_object, filename))
-            e.save()
             Element.objects.filter(lesson=Lesson.objects.get(id=lesson), order__gte=order).update(order = F('order') + 1)
+            e.save()
+
 
             return redirect('lesson', lesson)
 

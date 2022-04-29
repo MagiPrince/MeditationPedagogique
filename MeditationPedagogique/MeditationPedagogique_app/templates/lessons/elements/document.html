@@ -1,0 +1,13 @@
+{% load static %}
+{% load custom_tags %}
+<div class="d-flex justify-content-center document-div">
+    <a class="download-ressource" download="" href={% get_media_prefix %}{{ path }}>
+        {{ path|slice:"7:" }}
+    </a>
+    {% if user.is_superuser%}
+        {% include 'delete.html' with id=id order=order lessonNumber=lessonNumber %}
+        {% include 'lessons/add_element.html' with id=id order=order lessonNumber=lessonNumber %}
+    {% else %}
+        {% include 'lessons/download_ressource.html' with path=path %}
+    {% endif %}
+</div>
