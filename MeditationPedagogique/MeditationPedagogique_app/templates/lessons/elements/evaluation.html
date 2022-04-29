@@ -1,0 +1,120 @@
+<div class="paragraphDiv element">
+    <div class="d-flex justify-content flex-row">
+    <h3>{{ element.text }}</h3>
+        {% if user.is_superuser%}
+            {% include 'modification.html' with id=element.id table='Element' field='text' previous_value=element.text rows=1 cols=30 %}
+            {% include 'delete.html' with id=element.id order=element.order lessonNumber=lessonNumber type='evaluation' %}
+            {% include 'lessons/add_element.html' with id=element.id order=element.order lessonNumber=lessonNumber %}
+        {% endif %}
+    </div>
+    <!--Questions-->
+
+    <!-- For the connected users except admin-->
+    {% if not user.is_superuser and user.is_authenticated %}
+
+    <div class="questions">
+        <script> var numQuestion=1</script>
+
+        <form action="" method="post">
+            {% csrf_token %}
+
+            {% for question in element.question_of_evaluation.all %}
+                <div class="d-flex justify-content flex-row">
+                    <div class="question" id="Question{{question.id}}" ></div>
+                    <script>
+                        var questionId = `{{question.id}}`
+                        var question = "Question"+questionId
+                        document.getElementById(question).innerHTML = "Question " + numQuestion + " : "+`{{question.text}}`
+                        numQuestion+=1
+                    </script>
+                </div>
+                {% if question.type == 1%}
+                    <textarea name="question{{ question.id }}" value='' rows="5" cols="50">{%getAnswerText user question%}</textarea>
+                {%elif question.type == 2%}
+                    <div>number</div>
+                {% endif %}
+            {%endfor%}
+            <input type="hidden" name="elementId" value={{ element.id }}>
+            <div class="d-flex justify-content-start modalFooterMargin">
+                <button type="submit" name="answerButton" class="btn btn-primary">Évaluer</button>
+            </div>
+            </form>
+    </div>
+
+
+    <!-- For the admin -->
+    {% else %}
+
+    <div class="questions">
+        <script> var numQuestion=1</script>
+        {% for question in element.question_of_evaluation.all %}
+            <div class="d-flex justify-content flex-row">
+                <div class="question" id="Question{{question.id}}" ></div>
+                <script>
+                    var questionId = `{{question.id}}`
+                    var question = "Question"+questionId
+                    document.getElementById(question).innerHTML = "Question " + numQuestion + " : "+`{{question.text}}`
+                    numQuestion+=1
+                </script>
+                {% include 'modification.html' with id=question.id table='Question' field='text' previous_value=question.text rows=1 cols=30 %}
+                <i type="button" class="fas fa-times-circle fa-lg" id="deleteButton" data-bs-toggle="modal" data-bs-target="#deleteQuestion{{question.id}}"></i>
+                <!-- Modal -->
+                <div class="modal fade" id="deleteQuestion{{question.id}}" tabindex="-1" aria-labelledby="deleteQuestionModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                                <div class="modal-header" id="deleteModalHeader">
+                                    <h5 class="modal-title" id="deleteModalLabel">Attention !</h5>
+                                    <button type="button" class="btn-close close-modal" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                            <div class="modal-body">
+                                Voulez-vous réellement supprimer cette question ?
+                                </div>
+                                <div class="modal-footer d-flex justify-content-center">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                                <form action="/delete-question/" method="post">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="delete_question_id" value={{ question.id }}>
+                                    <input type="hidden" name="lesson_number" value={{ lessonNumber }}>
+                                    <button type="submit" class="btn btn-danger">Supprimer</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {%endfor%}
+    </div>
+    <button class="btn-sm btn-success addQuestion" data-bs-toggle="modal" data-bs-target="#askQuestionModal{{ element.order }}">Ajouter une question</button>
+
+    <!-- Add question modal -->
+    <div class="modal fade" id="askQuestionModal{{ element.order }}" tabindex="-1" aria-labelledby="askQuestionModalLabel" aria-hidden="true" value={{ showForm }}>
+        <div class="modal-dialog">
+            <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="askQuestionModalLabel">Ajout d'une question à l'évaluation</h5>
+                        <button type="button" class="btn-close close-modal" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                <div class="modal-body">
+                    Veuillez entrer l'énoncé et le type de votre question. Vous pourrez modifier le titre par la suite si nécessaire.
+                </div>
+
+                <form action="" method="post">
+                    {% csrf_token %}
+                    <div class="addQuestionForm">
+                        {{ createQuestionForm.as_p }}
+                        <input type="hidden" name="elementId" value={{ element.id }}>
+                    </div>
+                    <div class="modal-footer d-flex justify-content-center modalFooterMargin">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                        <button type="submit" name="questionButton" class="btn btn-primary">Créer</button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+    {% endif %}
+
+
+</div>

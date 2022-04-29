@@ -19,5 +19,12 @@ def count_hidden_comments(comments):
     for comment in comments:
         if comment.hidden:
             count+=1
-
     return count
+
+@register.simple_tag
+def getAnswerText(user, question):
+    answer = question.answer_of_question.all().filter(user=user).first()
+    if answer != None:
+        return answer.answerText
+    else:
+        return ''

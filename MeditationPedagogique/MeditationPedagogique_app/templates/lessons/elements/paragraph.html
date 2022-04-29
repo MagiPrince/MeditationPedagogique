@@ -1,8 +1,8 @@
 <div class="d-flex justify-content flex-row paragraphDiv element">
     <p id=id>{{ text }}</p>
     {% if user.is_superuser%}
-    {% include 'modification.html' with id=id table='Element' field='text' previous_value=text rows=6 %}
-    {% include 'delete.html' with id=id order=order lessonNumber=lessonNumber %}
+    {% include 'modification.html' with id=id table='Element' field='text' previous_value=text rows=6 cols=50 %}
+    {% include 'delete.html' with id=id order=order lessonNumber=lessonNumber type='paragraph' %}
     {% include 'lessons/add_element.html' with id=id order=order lessonNumber=lessonNumber %}
     {% endif %}
 </div>

@@ -60,18 +60,6 @@ class Comment(models.Model):
     hidden = models.BooleanField(blank=True, default=False)
 
 
-class Question(models.Model):
-    lesson = models.PositiveSmallIntegerField(blank=False)
-    text = models.CharField(max_length=255, blank=False)
-
-
-class Answer(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    question = models.ForeignKey(Question, on_delete=models.CASCADE)
-    date = models.DateTimeField(blank=False)
-    answer = models.PositiveSmallIntegerField(blank=False)
-
-
 class Type(models.Model):
     name = models.CharField(max_length=255, blank=False)
 
@@ -119,3 +107,26 @@ class InscriptionCode(models.Model):
         choices=ROLE_CHOICES, blank=True, null=True)
 
     code = models.CharField(max_length=50, blank=False, null=False)
+
+
+class Question(models.Model):
+    evaluation = models.ForeignKey(Element, on_delete=models.CASCADE, related_name='question_of_evaluation')
+    text = models.CharField(max_length=255, blank=False)
+    
+    TEXT = 1
+    NUMBER = 2
+
+    TYPE_CHOICES = (
+        (TEXT, 'text'),
+        (NUMBER, 'number'),
+    )
+    type = models.PositiveSmallIntegerField(
+        choices=TYPE_CHOICES, blank=True, null=True)
+
+
+class Answer(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name='answer_of_question')
+    date = models.DateTimeField(blank=False)
+    answerNumber = models.PositiveSmallIntegerField(blank=True, null=True)
+    answerText = models.TextField(blank=True, null=True)

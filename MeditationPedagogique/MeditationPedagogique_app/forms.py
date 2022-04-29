@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from .models import Element, User, Lesson, Type, InscriptionCode
+from .models import Element, User, Lesson, Type, InscriptionCode, Question
 from django.contrib.auth import get_user_model
 from django.forms import ModelForm
 from django.db.models import F
@@ -107,3 +107,46 @@ class AddParagraphForm(ModelForm):
             Element.objects.filter(lesson=Lesson.objects.get(id=lesson_number), order__gte=order).update(order = F('order') + 1)
             paragraph.save()
         return paragraph
+
+class CreateEvaluationForm(ModelForm):
+    text = forms.CharField(label='Titre', max_length=255)
+
+    class Meta:
+        model = Element
+        fields = ('text',)
+    
+    def save(self, lesson_number, order, commit=True):
+        order += 1
+        evaluation = super(CreateEvaluationForm, self).save(commit=False)
+        evaluation.type = Type.objects.get(name='evaluation')
+        evaluation.lesson = Lesson.objects.get(id=lesson_number)
+        evaluation.order = order
+        evaluation.text = self.cleaned_data['text']
+        if commit:
+            Element.objects.filter(lesson=Lesson.objects.get(id=lesson_number), order__gte=order).update(order = F('order') + 1)
+            evaluation.save()
+        return evaluation
+
+class CreateQuestionForm(ModelForm):
+    TEXT = 1
+    NUMBER = 2
+
+    TYPE_CHOICES = (
+        (TEXT, 'textuel'),
+        (NUMBER, 'numérique'),
+    )
+    text = forms.CharField(label='Énoncé', max_length=255)
+    type = forms.ChoiceField(choices = TYPE_CHOICES)
+
+    class Meta:
+        model = Question
+        fields = ('text',)
+    
+    def save(self, elementId, commit=True):
+        question = super(CreateQuestionForm, self).save(commit=False)
+        question.text=self.cleaned_data['text']
+        question.type=self.cleaned_data['type']
+        question.evaluation = Element.objects.get(id=elementId)
+
+        if commit:
+            question.save()

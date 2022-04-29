@@ -16,7 +16,7 @@
 
             <form action={% url 'edit' %} method="post">
                 {% csrf_token %}
-                <textarea name="modification_modal_text" value="" rows={{ rows }} cols="50">{{ previous_value }}</textarea>
+                <textarea name="modification_modal_text" value="" rows={{ rows }} cols={{ cols }}>{{ previous_value }}</textarea>
                 <input type="hidden" name="modification_modal_id" value={{ id }}>
                 <input type="hidden" name="modification_modal_table" value={{ table }}>
                 <input type="hidden" name="modification_modal_field" value={{ field }}>
