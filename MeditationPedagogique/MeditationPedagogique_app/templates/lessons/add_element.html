@@ -1,38 +1,90 @@
 {% if user.is_superuser%}
-<div class="d-flex justify-content-center flex-row add-element-div">
-    {% comment %} Add a paragraph {% endcomment %}
-    <div id="addParagraph" >
-        <div class="square">
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#askParagraphModal{{ order }}">Ajouter un paragraphe</button>
-        </div>
-    </div>
-    <div class="divider"></div>
-    <button class='btn btn-primary'>Téléverser un fichier</button>
-</div>
-<!-- Modal -->
-<div class="modal fade" id="askParagraphModal{{ order }}" tabindex="-1" aria-labelledby="askParagraphModalLabel" aria-hidden="true" value={{ showForm }}>
-    <div class="modal-dialog">
-        <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="askParagraphModalLabel">Ajout d'un paragraphe</h5>
-                    <button type="button" class="btn-close close-modal" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-            <div class="modal-body">
-                Veuillez entrer le paragraphe. Vous pourrez le modifier par la suite si nécessaire.
+
+    <div class="d-flex justify-content-center flex-row add-element-div">
+        {% comment %} Add a paragraph {% endcomment %}
+        <div id="addParagraph" >
+            <div class="square">
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#askParagraphModal{{ order }}">Ajouter un paragraphe</button>
             </div>
-
-            <form action="" method="post">
-                {% csrf_token %}
-                {{ form.as_p }}
-                <input type="hidden" name="add_element_order" value={{ order }}>
-                <div class="modal-footer d-flex justify-content-center">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                    <button type="submit" class="btn btn-primary">Créer</button>
+        </div>
+        <div class="divider"></div>
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#uploadElementModal{{ order }}">Téléverser un fichier</button>
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="askParagraphModal{{ order }}" tabindex="-1" aria-labelledby="askParagraphModalLabel" aria-hidden="true" value={{ showForm }}>
+        <div class="modal-dialog">
+            <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="askParagraphModalLabel">Ajout d'un paragraphe</h5>
+                        <button type="button" class="btn-close close-modal" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                <div class="modal-body">
+                    Veuillez entrer le paragraphe. Vous pourrez le modifier par la suite si nécessaire.
                 </div>
-            </form>
 
+                <form action="" method="post">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <input type="hidden" name="add_element_order" value={{ order }}>
+                    <div class="modal-footer d-flex justify-content-center">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                        <button type="submit" class="btn btn-primary">Créer</button>
+                    </div>
+                </form>
+
+            </div>
         </div>
     </div>
-</div>
+
+
+    <div class="modal fade" id="uploadElementModal{{ order }}" tabindex="-1" aria-labelledby="uploadElementModal{{ order }}Label" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form action="/import-element/" method="post" id="data" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="uploadElementModal{{ order }}Label">Ajouter un fichier</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+
+                            <input class="form-control" type="file" id="formFileE" name="element" accept=".pdf, .mp3, .mp4, .jpg, .png, .jpeg, .gif">
+                            <p class="accepted-formats">Formats acceptés : .pdf, .mp3, .mp4, .jpg, .png, .jpeg, .gif</p>
+
+                            <input type="hidden" id="lessonNb" name="lessonNb" value={{ lesson }}>
+
+                            <input type="hidden" name="add_element_order" value={{ order }}>
+                            
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                        <input class="btn btn-primary" id="formFileSubmitE" type="submit" value="Importer">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var inputFileOkay = false;
+        var inputTextOkay = false;
+        $(document).ready(
+        function(){
+            $('#formFileSubmitE').attr('disabled',true);
+            $('#formFileE').change(
+                function(){
+                    if ($(this).val()){
+                        $('#formFileSubmitE').removeAttr('disabled');
+                    }
+                    else {
+                        $('#formFileSubmitE').attr('disabled',true);
+                    }
+                });
+    
+        });
+    
+        
+    </script>
+
 {% endif %}
 

@@ -70,3 +70,54 @@ a {
 #deleteComment {
     display: inline;
 }
+
+.comments-hidden {
+    border-radius: 25px;
+    background-color: lightgray;
+    padding: 10px;
+}
+
+.fa-times-circle {
+    border-radius: 50%;
+}
+
+.delete-comment-button-bal {
+    float: right;
+}
+
+#evaluate-submit {
+    float: right;
+}
+
+#comment-submit {
+    float: right;
+}
+
+.fix-button-pos {
+    height:40px;
+    margin-top:10px;
+}
+
+.image {
+    position: relative;
+    display: inline-block;
+}
+
+.deleteRessource {
+    position: absolute;
+    right: 0;
+    top: 0;
+    margin-right: 10px;
+}
+
+.modal-header-danger {
+    padding:9px 15px;
+    border-bottom:1px solid #eee;
+    background-color: red;
+    -webkit-border-top-left-radius: 5px;
+    -webkit-border-top-right-radius: 5px;
+    -moz-border-radius-topleft: 5px;
+    -moz-border-radius-topright: 5px;
+     border-top-left-radius: 5px;
+     border-top-right-radius: 5px;
+ }

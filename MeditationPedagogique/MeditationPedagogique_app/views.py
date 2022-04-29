@@ -9,7 +9,7 @@ from django.http import HttpResponse
 from django.apps import apps
 import os
 import datetime
-from .models import Lesson, Element, Ressource, Type, GeneralInformation, Comment
+from .models import Lesson, Element, Ressource, Type, GeneralInformation, Comment, User
 import operator
 from django.db.models import F
 
@@ -66,6 +66,8 @@ def lesson(request, number):
     context = {
         'upload_success': '',
         'uploaded_file_url': '',
+        'upload_success_element': '',
+        'uploaded_file_url_element': '',
         'modalID': '',
     }
     lessonNumber = Lesson.objects.get(id=number)
@@ -76,6 +78,13 @@ def lesson(request, number):
     if 'uploaded_file_url' in request.session:
         context['uploaded_file_url'] = request.session['uploaded_file_url']
         del request.session['uploaded_file_url']
+
+    if 'upload_success_element' in request.session:
+        context['upload_success_element'] = request.session['upload_success_element']
+        del request.session['upload_success_element']
+    if 'uploaded_file_url_element' in request.session:
+        context['uploaded_file_url_element'] = request.session['uploaded_file_url_element']
+        del request.session['uploaded_file_url_element']
 
     context = {}
     context['showForm'] = "False"
@@ -151,6 +160,71 @@ def import_data(request):
     return redirect('index')
 
 
+@login_required
+def import_element(request):
+    """
+    Import file passed by POST method, saving it in appropriate folder and creating a Ressource object in DB
+    """
+    if request.method == 'POST':
+        accepted_format_dictionnary = ['pdf', 'mp3', 'mp4', 'jpg', 'png', 'jpeg', 'gif']
+        element = request.FILES['element']
+        lesson = request.POST.get('lessonNb', '')
+        order = int(request.POST['add_element_order'])
+        extension = str(element).split('.')[-1].lower()
+        if extension in accepted_format_dictionnary:
+            # Get slug of the lesson
+            lesson_object = Lesson.objects.get(id=lesson).slug
+            # Save file in appropriate folder
+            fs = FileSystemStorage(location=os.path.join(settings.MEDIA_ROOT, lesson_object))
+            filename = fs.save(element.name, element)
+            request.session['upload_success_element'] = True
+            request.session['uploaded_file_url_element'] = filename
+
+            # Verify that types for elements are created, if not create them
+            if len(Type.objects.all()) < 5:
+                print(len(Type.objects.all()))
+                if len(Type.objects.filter(name='audio')) < 1:
+                    t = Type(name='audio')
+                    t.save()
+                if len(Type.objects.filter(name='document')) < 1:
+                    t = Type(name='document')
+                    t.save()
+                if len(Type.objects.filter(name='image')) < 1:
+                    t = Type(name='image')
+                    t.save()
+                if len(Type.objects.filter(name='paragraph')) < 1:
+                    t = Type(name='paragraph')
+                    t.save()
+                if len(Type.objects.filter(name='video')) < 1:
+                    t = Type(name='video')
+                    t.save()
+
+            # Define Type
+            type = ''
+            if extension in ['jpg', 'png', 'jpeg', 'gif']:
+                type = Type.objects.get(name='image')
+            if extension == 'pdf':
+                type = Type.objects.get(name='document')
+            if extension == 'mp3':
+                type = Type.objects.get(name='audio')
+            if extension == 'mp4':
+                type = Type.objects.get(name='video')
+
+            # Create Element element in DB
+            e = Element(type=type, lesson=Lesson.objects.get(id=lesson), order=order, path=os.path.join( lesson_object, filename))
+            e.save()
+            Element.objects.filter(lesson=Lesson.objects.get(id=lesson), order__gte=order).update(order = F('order') + 1)
+
+            return redirect('lesson', lesson)
+
+        # If somehow we receive a file that does not correspond to the define extensions
+        request.session['upload_success'] = False
+        return redirect('lesson', lesson)
+
+    # If the request is not POST the user is redirected to the index
+    return redirect('index')
+
+
 def update_data(request):
     if request.method == 'POST':
         content = request.POST['content']
@@ -171,11 +245,12 @@ def add_comment(request):
         comment = request.POST['comment']
         ressource = request.POST['ressourceName']
         lesson = request.POST.get('lessonNb', '')
+        comment_hidden = bool(request.POST.get('commentHidden', ''))
         request.session['modalId'] = request.POST.get('modalId', '')
 
         print('ICI',ressource)
 
-        c = Comment(user=request.user, ressource=Ressource.objects.get(id=ressource), text=comment, date=datetime.datetime.now(), )
+        c = Comment(user=request.user, ressource=Ressource.objects.get(id=ressource), text=comment, date=datetime.datetime.now(), hidden=comment_hidden)
         c.save()
 
         if lesson != '':
@@ -191,9 +266,8 @@ def delete_comment(request):
         comment_id = request.POST['commentId']
         lesson = request.POST.get('lessonNb', '')
         request.session['modalId'] = request.POST.get('modalId', '')
-        print(request.user.role)
-        if request.user.is_superuser:
-            Comment.objects.filter(id=comment_id).delete()
+        if request.user.is_superuser or request.user.role == 2 or request.user == User.objects.get(id=Comment.objects.filter(id=comment_id).values('user')[0]['user']):
+            Comment.objects.get(id=comment_id).delete()
         return redirect('lesson', lesson)
 
     # If the request is not POST the user is redirected to the index
@@ -213,3 +287,17 @@ def edit(request):
         entry.save(update_fields=[modification_modal_field])
 
     return redirect(request.META['HTTP_REFERER'])
+
+@login_required
+def delete_ressource(request):
+    if request.method == 'POST':
+        ressource_id = request.POST['ressourceId']
+        lesson = request.POST.get('lessonNb', '')
+
+        if request.user.is_superuser or request.user.role == 2 or request.user == User.objects.get(id=Ressource.objects.filter(id=ressource_id).values('user')[0]['user']):
+            Ressource.objects.get(id=ressource_id).delete()
+        return redirect('lesson', lesson)
+
+    # If the request is not POST the user is redirected to the index
+    return redirect('index')
+

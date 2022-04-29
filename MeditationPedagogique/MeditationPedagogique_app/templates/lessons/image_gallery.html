@@ -1,12 +1,48 @@
 {% load static %}
+{% load custom_tags %}
+
 <section>
     <div class="container">
         <div class="row">
             {% for ressource in ressources %}
-                <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 img-div">
+                <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 img-div image">
                     <a data-bs-toggle="modal" data-bs-target="#{{ ressource.slug }}Modal">
                         <img src="{% get_media_prefix %}{{ ressource.path }}" class="img-thumbnail" alt="">
                     </a>
+                    {% if ressource.user == user or user.is_superuser or user.role == 2 %}
+
+                        <button type="submit" id="completed-task" class="fabutton deleteRessource" data-bs-toggle="modal" data-bs-target="#delete{{ressource.id}}">
+                            <i class="fas fa-times-circle"></i>
+                        </button>
+
+                        <!-- Modal -->
+                        <div class="modal fade" id="delete{{ressource.id}}" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <form action="/delete-ressource/" method="post" id="data" enctype="multipart/form-data">
+                                        {% csrf_token %}
+                                        <div class="modal-header modal-header-danger">
+                                            <h5 class="modal-title" id="deleteModalLabel">Attention !</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            
+                                            Voulez-vous réellement supprimer le fichier {{ ressource.slug }} ?
+                                                
+                                            <input type="hidden" id="ressourceId" name="ressourceId" value={{ ressource.id }}>
+                                            <input type="hidden" id="lessonNb" name="lessonNb" value={{ lesson }}>
+                                            
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                                            <input class="btn btn-danger" id="formDeleteLesson" type="submit" value="Supprimer">
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                    {% endif %}
 
                     <div class="modal fade" id="{{ ressource.slug }}Modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                         <div class="modal-dialog">
@@ -29,52 +65,116 @@
                                 </div>
                                 <div class="modal-body">
                                     <img src="{% get_media_prefix %}{{ ressource.path }}" class="img-fluid" alt="">
+                                    {% if ressource.user == user or user.is_superuser or user.role == 2 %}
+                                        <button type="submit" id="completed-task" class="fabutton deleteRessource" data-bs-toggle="modal" data-bs-target="#delete{{ressource.id}}">
+                                            <i class="fas fa-times-circle"></i>
+                                        </button>
+                                    {% endif %}
                                     {% if ressource.title != None %}
                                         <p>{{ ressource.description }}</p>
                                     {% else %}
                                         <p>Ma super description</p>
                                     {% endif %}
                                     <div class="image-comments">
-                                        <p class="fs-5">Commentaires ({{ ressource.comment_of_ressource.all.count }})</p>
+                                        <p class="fs-5">Commentaires ({% count_non_hidden_comments ressource.comment_of_ressource.all %})</p>
                                         {% for comment in ressource.comment_of_ressource.all %}
-                                            <div>
-                                                <a class="user-profile"><i class="fas fa-user-circle"></i> {{ comment.user }}</a>
-                                                {% if user.is_superuser %}
-                                                    <form action="/delete-comment/" method="post" id="deleteComment" enctype="multipart/form-data">
-                                                        {% csrf_token %}
-                                                        <input type="hidden" id="commentId" name="commentId" value={{ comment.id }}>
-                                                        <input type="hidden" id="lessonNb" name="lessonNb" value={{ lesson }}>
-                                                        <input type="hidden" id="modalId" name="modalId" value="{{ ressource.slug }}Modal">
-                                                        <button type="submit" id="completed-task" class="fabutton">
-                                                            <i class="fas fa-times-circle"></i>
-                                                        </button>
-                                                        
-                                                    </form>
+                                            {% if not comment.hidden %}
+                                                <div>
+                                                    <a class="user-profile"><i class="fas fa-user-circle"></i> {{ comment.user }}</a>
+                                                    {% if user.is_superuser or user.role == 2 or comment.user == user %}
+                                                        <form action="/delete-comment/" method="post" id="deleteComment" enctype="multipart/form-data">
+                                                            {% csrf_token %}
+                                                            <input type="hidden" id="commentId" name="commentId" value={{ comment.id }}>
+                                                            <input type="hidden" id="lessonNb" name="lessonNb" value={{ lesson }}>
+                                                            <input type="hidden" id="modalId" name="modalId" value="{{ ressource.slug }}Modal">
+                                                            <button type="submit" id="completed-task" class="fabutton delete-comment-button-bal">
+                                                                <i class="fas fa-times-circle delete-comment-button"></i>
+                                                            </button>
+                                                            
+                                                        </form>
+                                                    {% endif %}
+                                                    <p>
+                                                        {{ comment.text }}<br>
+                                                        <span class="date">{{ comment.date }}<span>
+                                                    </p>
+                                                </div>
+                                                {% if not forloop.last %}
+                                                    <hr>
                                                 {% endif %}
-                                                <p>
-                                                    {{ comment.text }}<br>
-                                                    <span class="date">{{ comment.date }}<span>
-                                                </p>
-                                            </div>
-                                            {% if not forloop.last %}
-                                                <hr>
                                             {% endif %}
                                         {% endfor %}
                                     </div>
+
                                     {% if user.is_authenticated %}
-                                    <form action="/add-comment/" method="post" id="data" enctype="multipart/form-data">
-                                        {% csrf_token %}
+                                        <form action="/add-comment/" method="post" id="data" enctype="multipart/form-data">
+                                            {% csrf_token %}
 
-                                        <div class="form-group">
-                                            <label for="comment">Votre commentaire :</label>
-                                            <textarea class="form-control" id="comment" name="comment" rows="3"></textarea>
+                                            <div class="form-group">
+                                                <label for="comment">Votre commentaire :</label>
+                                                <textarea class="form-control" id="comment" name="comment" rows="3"></textarea>
+                                            </div>
+                                            <input type="hidden" id="ressourceName" name="ressourceName" value={{ ressource.id }}>
+                                            <input type="hidden" id="lessonNb" name="lessonNb" value={{ lesson }}>
+                                            <input type="hidden" id="modalId" name="modalId" value="{{ ressource.slug }}Modal">
+                                            <input type="hidden" id="commentHidden" name="commentHidden" value="">
+
+                                            <div class="fix-button-pos">
+                                                <input class="btn btn-primary" id="comment-submit" type="submit" value="Commenter">
+                                            </div>
+                                        </form>
+                                    {% endif %}
+
+                                    {% if ressource.user == user or user.is_superuser or user.role == 2 %}
+                                        <hr>
+                                        <div class="comments-hidden">
+                                            <div class="image-comments">
+                                                <p class="fs-5">Retour individuel ({% count_hidden_comments ressource.comment_of_ressource.all %})</p>
+                                                {% for comment in ressource.comment_of_ressource.all %}
+                                                    {% if comment.hidden %}
+                                                        <div>
+                                                            <a class="user-profile"><i class="fas fa-user-circle"></i> {{ comment.user }}</a>
+                                                            {% if user.is_superuser or user.role == 2 or comment.user == user %}
+                                                                <form action="/delete-comment/" method="post" id="deleteComment" enctype="multipart/form-data">
+                                                                    {% csrf_token %}
+                                                                    <input type="hidden" id="commentId" name="commentId" value={{ comment.id }}>
+                                                                    <input type="hidden" id="lessonNb" name="lessonNb" value={{ lesson }}>
+                                                                    <input type="hidden" id="modalId" name="modalId" value="{{ ressource.slug }}Modal">
+                                                                    <button type="submit" id="completed-task" class="fabutton delete-comment-button-bal">
+                                                                        <i class="fas fa-times-circle"></i>
+                                                                    </button>
+                                                                    
+                                                                </form>
+                                                            {% endif %}
+                                                            <p>
+                                                                {{ comment.text }}<br>
+                                                                <span class="date">{{ comment.date }}<span>
+                                                            </p>
+                                                        </div>
+                                                        {% if not forloop.last %}
+                                                            <hr>
+                                                        {% endif %}
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </div>
+
+                                            {% if user.is_superuser or user.role == 2 %}
+                                                <form action="/add-comment/" method="post" id="data" enctype="multipart/form-data">
+                                                    {% csrf_token %}
+
+                                                    <div class="form-group">
+                                                        <label for="comment">Votre évaluation :</label>
+                                                        <textarea class="form-control" id="comment" name="comment" rows="3"></textarea>
+                                                    </div>
+                                                    <input type="hidden" id="ressourceName" name="ressourceName" value={{ ressource.id }}>
+                                                    <input type="hidden" id="lessonNb" name="lessonNb" value={{ lesson }}>
+                                                    <input type="hidden" id="modalId" name="modalId" value="{{ ressource.slug }}Modal">
+                                                    <input type="hidden" id="commentHidden" name="commentHidden" value="True">
+                                                    <div class="fix-button-pos">
+                                                        <input class="btn btn-primary clearfi" id="evaluate-submit" type="submit" value="Evaluer">
+                                                    </div>
+                                                </form>
+                                            {% endif %}
                                         </div>
-                                        <input type="hidden" id="ressourceName" name="ressourceName" value={{ ressource.id }}>
-                                        <input type="hidden" id="lessonNb" name="lessonNb" value={{ lesson }}>
-                                        <input type="hidden" id="modalId" name="modalId" value="{{ ressource.slug }}Modal">
-
-                                        <input class="btn btn-primary" id="comment-submit" type="submit" value="Commenter">
-                                    </form>
                                     {% endif %}
 
                                 </div>

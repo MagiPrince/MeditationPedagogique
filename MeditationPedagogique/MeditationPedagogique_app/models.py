@@ -12,7 +12,7 @@ def remove_accents(input_str):
 
 class User(AbstractUser):
     user = models.CharField(max_length=255)
-    password = models.CharField(max_length=50)
+    password = models.CharField(max_length=100)
     email = models.EmailField('Adresse mail', unique=True)
     first_name = models.CharField(max_length=30, blank=False, null=False)
     last_name = models.CharField(max_length=150, blank=False, null=False)
@@ -57,6 +57,7 @@ class Comment(models.Model):
     ressource = models.ForeignKey(Ressource, on_delete=models.CASCADE, related_name='comment_of_ressource')
     date = models.DateTimeField(blank=False)
     text = models.TextField(blank=True, null=True)
+    hidden = models.BooleanField(blank=True, default=False)
 
 
 class Question(models.Model):
@@ -104,3 +105,17 @@ class Element(models.Model):
 class GeneralInformation(models.Model):
     title = models.CharField(max_length=255, blank=False)
     description = models.TextField(blank=False, null=True)
+
+class InscriptionCode(models.Model):
+
+    STUDENT = 1
+    PROFESSOR = 2
+
+    ROLE_CHOICES = (
+        (STUDENT, 'Student'),
+        (PROFESSOR, 'Professor'),
+    )
+    role = models.PositiveSmallIntegerField(
+        choices=ROLE_CHOICES, blank=True, null=True)
+
+    code = models.CharField(max_length=50, blank=False, null=False)
