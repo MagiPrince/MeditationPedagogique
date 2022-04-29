@@ -144,3 +144,9 @@ a {
  #deleteButton {
      margin-left: 0.2em;
  }
+
+ .image-div {
+    max-width: 40em;
+    margin: 0 auto;
+ }
+
