@@ -118,5 +118,32 @@ a {
 
  .image-div {
     max-width: 40em;
-    margin: 0 auto;
+    margin: 1.5em auto 0 auto;
+    display: inline-block;
+ }
+
+ audio {
+    object-fit: contain;
+ }
+
+ .audio-div {
+    margin: 1.5em auto 0 auto;
+ }
+
+ .video-div {
+    margin: 1.5em auto 0 auto;
+    max-width: 50em;
+ }
+
+ video {
+    max-width: 100%;
+ }
+
+ .document-div {
+    margin: 1.5em auto 0 auto;
+ }
+
+ .download-ressource, .download-ressource:hover {
+    color: var(--bs-body-color);
+    margin-left: 0.4em;
  }
