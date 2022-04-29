@@ -2,6 +2,7 @@
     {% if user.is_superuser%}
     <h1 id={{id}}>{{ title }}</h1>
     {% include 'modification.html' with id=id table='Lesson' field='title' previous_value=title rows=1 %}
+    {% include 'lessons/add_element.html' with id=id order=0 lessonNumber=id %}
     {% else %}
     <h1 class="title">{{ title }}</h1>
     {% endif %}
