@@ -45,6 +45,17 @@
                                     <textarea class="form-control" type="text" name="description" id="description"></textarea>
                                 </div>
                             </div>
+                            
+                            <select class="form-select" id="selectLicence" name="licenceSelected" aria-label="Default select example">
+                                <option selected>Choisissez votre licence</option>
+                                <option value="CC-Zero">CC-Zero</option>
+                                <option value="CC-BY">CC-BY</option>
+                                <option value="CC-BY-SA">CC-BY-SA</option>
+                                <option value="CC-BY-ND">CC-BY-ND</option>
+                                <option value="CC-BY-NC">CC-BY-NC</option>
+                                <option value="CC-BY-NC-SA">CC-BY-NC-SA	</option>
+                                <option value="CC-BY-NC-ND">CC-BY-NC-ND</option>
+                            </select>
 
                             <input class="form-control" type="file" id="formFileHM" name="homework" accept=".png, .jpg">
                             <p class="accepted-formats">Formats acceptés : .png, .jpg</p>
@@ -68,6 +79,7 @@
 <script>
     var inputFileOkay = false;
     var inputTextOkay = false;
+    var licenceChoice = false;
     $(document).ready(
     function(){
         $('#formFileSubmitHM').attr('disabled',true);
@@ -80,13 +92,30 @@
                     inputFileOkay = false;
                 }
 
-                if (inputFileOkay && inputTextOkay){
+                if (inputFileOkay && inputTextOkay && licenceChoice){
                     $('#formFileSubmitHM').removeAttr('disabled'); 
                 }
                 else{
                     $('#formFileSubmitHM').attr('disabled',true);
                 }
             });
+
+        $('#selectLicence').change(
+                function(){
+                    if ($(this).val() != 'Choisissez votre licence'){
+                        licenceChoice = true;
+                    }
+                    else {
+                        licenceChoice = false;
+                    }
+    
+                    if (inputFileOkay && inputTextOkay && licenceChoice){
+                        $('#formFileSubmitHM').removeAttr('disabled'); 
+                    }
+                    else{
+                        $('#formFileSubmitHM').attr('disabled',true);
+                    }
+                });
 
         $('#titleHM').keyup(
             function(){
@@ -97,7 +126,7 @@
                     inputTextOkay = false;
                 }
 
-                if (inputFileOkay && inputTextOkay){
+                if (inputFileOkay && inputTextOkay && licenceChoice){
                     $('#formFileSubmitHM').removeAttr('disabled'); 
                 }
                 else{

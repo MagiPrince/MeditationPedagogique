@@ -35,6 +35,7 @@ class Ressource(models.Model):
     title = models.CharField(max_length=255, blank=True, null=True)
     description = models.TextField(blank=True, null=True)
     date = models.DateTimeField(blank=False)
+    licence_selected = models.CharField(max_length=255, blank=False)
 
     slug = models.CharField(max_length=255, blank=True, unique=True, editable=False)
 

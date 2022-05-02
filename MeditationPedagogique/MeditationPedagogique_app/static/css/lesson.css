@@ -176,3 +176,8 @@ a {
     color: var(--bs-body-color);
     margin-left: 0.4em;
  }
+
+
+ #selectLicence {
+     margin-bottom: 15px;
+ }
