@@ -1,3 +1,4 @@
+{% hasAnswered element user as answered %}
 <div class="paragraphDiv element">
     <div class="d-flex justify-content flex-row">
     <h3>{{ element.text }}</h3>
@@ -13,7 +14,9 @@
     {% if not user.is_superuser and user.is_authenticated %}
 
     <div class="questions">
-        <script> var numQuestion=1</script>
+        <script>
+            var numQuestion=1
+        </script>
 
         <form action="" method="post">
             {% csrf_token %}
@@ -36,10 +39,40 @@
             {%endfor%}
             <input type="hidden" name="elementId" value={{ element.id }}>
             <div class="d-flex justify-content-start modalFooterMargin">
-                <button type="submit" name="answerButton" class="btn btn-primary">Évaluer</button>
+                {%if answered%}
+                    <button type="submit" name="answerButton" class="btn btn-primary">Mettre à jour mon évaluation</button>
+                {%else%}
+                    <button type="submit" name="answerButton" class="btn btn-primary">Évaluer</button>
+                {%endif%}
             </div>
             </form>
     </div>
+     <!-- Updated evaluation Modal -->
+    <div class="modal fade" id="evaluationUpdated" tabindex="-1" aria-labelledby="evaluationUpdatedLabel" aria-hidden="false" value="{{showUpdateModal}}">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="evaluationUpdatedLabel">Information</h5>
+                    <button type="button" class="btn-close close-modal" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Votre évaluation a bien été mise à jour
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        //Show modal when update an evaluation
+        if (document.getElementById('evaluationUpdated').getAttribute("value") == "True"){
+            document.getElementById('evaluationUpdated').setAttribute("value", "False")
+            $(document).ready(function(){
+                $("#evaluationUpdated").modal('show');
+            });
+        }
+    </script>
+
+
 
 
     <!-- For the admin -->
@@ -70,13 +103,13 @@
                                 Voulez-vous réellement supprimer cette question ?
                                 </div>
                                 <div class="modal-footer d-flex justify-content-center">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                                <form action="/delete-question/" method="post">
-                                    {% csrf_token %}
-                                    <input type="hidden" name="delete_question_id" value={{ question.id }}>
-                                    <input type="hidden" name="lesson_number" value={{ lessonNumber }}>
-                                    <button type="submit" class="btn btn-danger">Supprimer</button>
-                                </form>
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                                    <form action="/delete-question/" method="post">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="delete_question_id" value={{ question.id }}>
+                                        <input type="hidden" name="lesson_number" value={{ lessonNumber }}>
+                                        <button type="submit" class="btn btn-danger">Supprimer</button>
+                                    </form>
                             </div>
                         </div>
                     </div>

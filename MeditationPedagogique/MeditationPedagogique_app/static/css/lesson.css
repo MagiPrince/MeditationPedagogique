@@ -181,3 +181,10 @@ a {
  #selectLicence {
      margin-bottom: 15px;
  }
+
+
+
+ #evaluationUpdated .modal-header{
+    background-color: #0a74ca;
+    color: white;
+}

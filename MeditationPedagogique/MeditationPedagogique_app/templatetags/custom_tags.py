@@ -1,6 +1,9 @@
 from atexit import register
 from django import template
 
+from ..models import Question, Answer
+from django.utils import timezone
+
 register = template.Library()
 
 @register.simple_tag
@@ -28,3 +31,15 @@ def getAnswerText(user, question):
         return answer.answerText
     else:
         return ''
+
+@register.simple_tag
+def hasAnswered(evaluation, user_answerer):
+    questionIds = evaluation.question_of_evaluation.all().values('id')
+    alreadyAnswered = False
+    for questionId in questionIds:
+        question = Question.objects.get(pk=questionId['id'])
+        
+        #Check if user already answered this question or not:
+        if Answer.objects.filter(user=user_answerer, question=question).exists():
+            alreadyAnswered = True
+    return alreadyAnswered
