@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% include 'footer.html' %}
+{% block extracss %}
+    <link rel="stylesheet" href="/static/css/profile.css">
+    <link rel="stylesheet" href="/static/css/image_gallery.css">
+{% endblock %}
+{% load static %}
+{% load custom_tags %}
+
+{% block body_content %}
+    {% csrf_token %}
+    <div class="d-flex flex-row profile-intro-div">
+        <h1 class="profileTitle">{{ username }}</h1>
+    </div>
+    <div class="image-gallery">
+        {% include 'lessons/image_gallery.html' with lesson=lessonNumber %}
+    </div>
+{% endblock %}
