@@ -353,3 +353,16 @@ def delete_ressource(request):
 
     # If the request is not POST the user is redirected to the index
     return redirect('index')
+
+def profile(request, username):
+    context= {}
+    if User.objects.filter(username=username).exists():
+        user = User.objects.get(username=username)
+        context['username'] = user.username
+        context['role'] = user.role
+        context['ressources'] = Ressource.objects.filter(user=user)
+        return render(request, 'profile.html', context)
+    else:
+        print("We didn't find the user", username)
+        return redirect('index')
+
