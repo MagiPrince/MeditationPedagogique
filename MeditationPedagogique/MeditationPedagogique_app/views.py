@@ -349,10 +349,10 @@ def delete_ressource(request):
 
         if request.user.is_superuser or request.user.role == 2 or request.user == User.objects.get(id=Ressource.objects.filter(id=ressource_id).values('user')[0]['user']):
             Ressource.objects.get(id=ressource_id).delete()
-        return redirect('lesson', lesson)
+        return redirect(request.META['HTTP_REFERER'])
 
-    # If the request is not POST the user is redirected to the index
-    return redirect('index')
+    # If the request is not POST the user is redirected to where he was
+    return redirect(request.META['HTTP_REFERER'])
 
 def profile(request, username):
     context= {}
