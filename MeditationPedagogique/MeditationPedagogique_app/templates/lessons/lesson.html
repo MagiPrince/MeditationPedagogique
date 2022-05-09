@@ -1,8 +1,8 @@
 {% extends 'base.html' %}
 {% include 'footer.html' %}
-{% include 'navbar.html'%}
 {% block extracss %}
     <link rel="stylesheet" href="/static/css/lesson.css">
+    <link rel="stylesheet" href="/static/css/image_gallery.css">
 {% endblock %}
 {% block body_content %}
     {% csrf_token %}
@@ -24,7 +24,7 @@
             {% endif %}
         {% endif %}
     {% endfor %}
-    {% include 'lessons/image_gallery.html' with lesson=lessonNumber %}
+    {% include 'lessons/image_gallery.html' %}
     {% if user.is_authenticated %}
         {% include 'lessons/upload_file.html' with lesson=lessonNumber uploaded_file_url=uploaded_file_url upload_success=upload_success %}
     {% endif %}
