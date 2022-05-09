@@ -137,14 +137,17 @@ def lesson(request, number):
                 else:
                     if answer!='':
                         changes = True
-                answerElement, created = Answer.objects.update_or_create(
-                user=user_answerer, question=question,
-                defaults={'date': timezone.now(), 'answerText': answer}
-                )
+                if answer=='' and previousAnswer != None:
+                    previousAnswer.delete()
+                elif answer!='':
+                    answerElement, created = Answer.objects.update_or_create(
+                    user=user_answerer, question=question,
+                    defaults={'date': timezone.now(), 'answerText': answer}
+                    )
             elif question.type==2:
                 if answer != "-1":
                     if previousAnswer != None:
-                        if previousAnswer.answerNumber != answer:
+                        if str(previousAnswer.answerNumber) != str(answer):
                             changes = True
                     else:
                         changes = True

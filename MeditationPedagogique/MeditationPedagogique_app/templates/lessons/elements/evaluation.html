@@ -34,15 +34,13 @@
                     </script>
                 </div>
                 {% if question.type == 1%}
-                    <textarea name="question{{ question.id }}" value='' style="width:40%" rows: "5">{%getAnswerText user question%}</textarea>
+                    <textarea class="answerTextArea" name="question{{ question.id }}" value='' cols:100 rows: "5">{%getAnswerText user question%}</textarea>
                 {%elif question.type == 2%}
-                    
                     <div class="range-wrap">
                         <input name="question{{ question.id }}" type="range" class="range" min="-1" max="10" step="1" value={%getAnswerNumber user question%}>
                         <output class="bubble"></output>
                     </div>
-
-                    {% endif %}
+                {% endif %}
             {%endfor%}
             <input type="hidden" name="elementId" value={{ element.id }}>
             <div class="d-flex justify-content-start modalFooterMargin">
@@ -179,17 +177,17 @@
                                         {% elif answer.user.role == 2 %}
                                             <a class="user-profile"><i class="fas fa-user-circle"></i> Professeur tiers</a>
                                         {% endif %}
-                                        <p>
+                                        <div>
                                             {% if question.type == 1 %}
                                                 {{answer.answerText}}<br>
                                             {% else %}
                                                 <div class="range-wrap resultSlider">
-                                                    <input type="range" disabled=true class="range" min="-1" max="10" step="1" value={{answer.answerNumber}}>
+                                                    <input type="range" disabled=true class="range" min="-1" max="10" step="1" value="{{answer.answerNumber}}"></input>
                                                     <output class="bubble"></output>
                                                 </div>
                                             {% endif %}
                                             <span class="date">{{ answer.date }}<span>
-                                        </p>
+                                            </div>
                                         {% if not forloop.last %}
                                             <hr>
                                         {% endif %}

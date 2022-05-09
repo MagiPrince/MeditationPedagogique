@@ -94,6 +94,11 @@
    margin-top:3rem;
 }
 
+.answerTextArea {
+   width: 30rem;
+   max-width: 100%;
+}
+
 /*Slider :*/
 
 .range-wrap {
