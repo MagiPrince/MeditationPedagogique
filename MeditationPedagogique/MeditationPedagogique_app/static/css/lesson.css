@@ -81,3 +81,49 @@
     background-color: #0a74ca;
     color: white;
 }
+
+#resultButton {
+   margin-left: 0.2em;
+}
+
+#questionTitle {
+   margin-bottom: 2rem;
+}
+
+.finalEvaluation {
+   margin-top:3rem;
+}
+
+/*Slider :*/
+
+.range-wrap {
+   position: relative;
+   margin: 0 auto 3rem;
+ }
+ .range {
+   width: 40%;
+ }
+ .bubble {
+   background: rgb(122, 122, 122);
+   color: white;
+   padding: 4px 12px;
+   margin-top: 1.6rem;;
+   position: absolute;
+   border-radius: 4px;
+   left: 50%;
+   transform: translateX(-50%);
+ }
+ .bubble::after {
+   content: "";
+   position: absolute;
+   width: 2px;
+   height: 2px;
+   background: rgb(122, 122, 122);
+   top: -1px;
+   left: 50%;
+ }
+
+ .resultSlider {
+    margin-top: 1rem;
+    margin-bottom: 2rem;
+ }

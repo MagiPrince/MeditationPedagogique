@@ -1,0 +1,46 @@
+
+
+{% finalEvaluationCreated elements as isFinalCreated %}
+
+<!-- Si l'évaluation n'a pas encore été créée-->
+{% if not isFinalCreated %}
+    <button class="btn btn-primary finalEvaluation" data-bs-toggle="modal" data-bs-target="#askEvaluationTitleFinalModal">Créer une évaluation pour cette leçon</button>
+    <!-- Evaluation modal -->
+    <div class="modal fade createEvaluationModal" id="askEvaluationTitleFinalModal" tabindex="-1" aria-labelledby="askEvaluationTitleFinalModalLabel" aria-hidden="true" value={{ showForm }}>
+        <div class="modal-dialog">
+            <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="askEvaluationTitleFinalModalLabel">Ajout de l'évaluation de la leçon</h5>
+                        <button type="button" class="btn-close close-modal" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                <div class="modal-body">
+                    Veuillez entrer le titre de votre évaluation. Vous pourrez le modifier par la suite si nécessaire.
+                </div>
+
+                <form action="" method="post">
+                    {% csrf_token %}
+                    {{ createEvaluationForm.as_p }}
+                    <input type="hidden" name="add_element_order" value="3000">
+                    <div class="modal-footer d-flex justify-content-center modalFooterMargin">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                        <button type="submit" name="evaluationButton" class="btn btn-primary">Créer</button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+<!--Si l'évaluation a déjà été créée-->
+{% else %}
+    {% for element in elements %}
+        {% finalEvaluation element.order as isFinal %}
+        {% if isFinal %}
+            {% if user.is_authenticated %}
+                <hr>
+                {% include 'lessons/elements/evaluation.html' with element=element lessonNumber=lessonNumber isFinal="true" %}
+            {% endif %}
+        {% endif %}
+    {% endfor %}
+
+{% endif %}

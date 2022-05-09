@@ -129,8 +129,8 @@ def lesson(request, number):
             question = Question.objects.get(pk=questionId['id'])
 
             #Check if user already answered this question or not:
+            previousAnswer = question.answer_of_question.all().filter(user=user_answerer).first()
             if question.type==1:
-                previousAnswer = question.answer_of_question.all().filter(user=user_answerer).first()
                 if previousAnswer != None:
                     if previousAnswer.answerText != answer:
                         changes = True
@@ -142,10 +142,21 @@ def lesson(request, number):
                 defaults={'date': timezone.now(), 'answerText': answer}
                 )
             elif question.type==2:
-                answerElement, created = Answer.objects.update_or_create(
-                user=user_answerer, question=question,
-                defaults={'date': timezone.now(), 'answerNumber': answer}
-                )
+                if answer != "-1":
+                    if previousAnswer != None:
+                        if previousAnswer.answerNumber != answer:
+                            changes = True
+                    else:
+                        changes = True
+                    answerElement, created = Answer.objects.update_or_create(
+                    user=user_answerer, question=question,
+                    defaults={'date': timezone.now(), 'answerNumber': answer}
+                    )
+                else:
+                    if previousAnswer != None:
+                        previousAnswer.delete()
+                        changes = True
+
         if changes == True:
             context['showUpdateModal'] = "True"
     else:
