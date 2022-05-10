@@ -34,7 +34,7 @@
                     </script>
                 </div>
                 {% if question.type == 1%}
-                    <textarea class="answerTextArea" name="question{{ question.id }}" value='' cols:100 rows: "5">{%getAnswerText user question%}</textarea>
+                    <textarea class="answerTextArea form-control" name="question{{ question.id }}" value='' cols:100 rows: "5">{%getAnswerText user question%}</textarea>
                 {%elif question.type == 2%}
                     <div class="range-wrap">
                         <input name="question{{ question.id }}" type="range" class="range" min="-1" max="10" step="1" value={%getAnswerNumber user question%}>

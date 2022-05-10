@@ -10,8 +10,18 @@
     margin-left: 0.2em;
  }
 
+ #submitHM {
+    margin-left: 5%;
+    margin-top: 2em;
+ }
+
  .createEvaluationModal {
      text-align: center;
+ }
+
+ #submitHRTitle {
+    margin-left: 5%;
+    margin-top: 1em;
  }
 
  .addQuestionForm {
