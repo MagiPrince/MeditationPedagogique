@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from .forms import CustomUserForm, createLessonForm, AddParagraphForm, CreateEvaluationForm, CreateQuestionForm
 from django.contrib.auth import login
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.core.files.storage import FileSystemStorage
 from django.conf import settings
 from django.http import HttpResponse
@@ -238,7 +238,7 @@ def import_data(request):
     return redirect('index')
 
 
-@login_required
+@user_passes_test(lambda u: u.is_superuser)
 def import_element(request):
     """
     Import file passed by POST method, saving it in appropriate folder and creating a Ressource object in DB
@@ -326,6 +326,10 @@ def add_comment(request):
         ressource = request.POST['ressourceName']
         lesson = request.POST.get('lessonNb', '')
         comment_hidden = bool(request.POST.get('commentHidden', ''))
+        if comment_hidden and request.user.is_superuser:
+            comment_hidden = True
+        else:
+            comment_hidden = False
         request.session['modalId'] = request.POST.get('modalId', '')
 
         print('ICI',ressource)
@@ -346,7 +350,7 @@ def delete_comment(request):
         comment_id = request.POST['commentId']
         lesson = request.POST.get('lessonNb', '')
         request.session['modalId'] = request.POST.get('modalId', '')
-        if request.user.is_superuser or request.user.role == 2 or request.user == User.objects.get(id=Comment.objects.filter(id=comment_id).values('user')[0]['user']):
+        if request.user.is_superuser or request.user == User.objects.get(id=Comment.objects.filter(id=comment_id).values('user')[0]['user']):
             Comment.objects.get(id=comment_id).delete()
         return redirect('lesson', lesson)
 
