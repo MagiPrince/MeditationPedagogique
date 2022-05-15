@@ -96,6 +96,12 @@ class Element(models.Model):
             os.remove(os.path.join(settings.MEDIA_ROOT, self.path))
         super().delete(*args, **kwargs)
 
+    def get_file_name(self):
+        if self.path:
+            splitted_url = self.path.split('\\')[-1]
+            filename = splitted_url[:-4]
+            return filename
+
 class GeneralInformation(models.Model):
     title = models.CharField(max_length=255, blank=False)
     description = models.TextField(blank=False, null=True)
@@ -118,7 +124,7 @@ class InscriptionCode(models.Model):
 class Question(models.Model):
     evaluation = models.ForeignKey(Element, on_delete=models.CASCADE, related_name='question_of_evaluation')
     text = models.CharField(max_length=255, blank=False)
-    
+
     TEXT = 1
     NUMBER = 2
 

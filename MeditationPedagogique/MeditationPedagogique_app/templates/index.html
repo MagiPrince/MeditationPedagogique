@@ -19,11 +19,9 @@
     </div>
     <div class="d-flex justify-content-center flex-row paragraphDiv">
 
+        <p class="generalDescription paragraph">{{generalDescription|linebreaksbr}}</p>
         {% if user.is_superuser%}
-        <p class="generalDescription paragraph"></p>
         {% include 'modification.html' with id=1 table='GeneralInformation' field='description' previous_value=generalDescription rows=6 cols=50 %}
-        {% else %}
-        <p class="generalDescription paragraph"></p>
         {% endif %}
     </div>
 
@@ -103,17 +101,5 @@
             {% endif %}
         </div>
     </div>
-
-
-    <script>
-        //Manage the case when the general description has line breaks
-        var generalDescription = `{{generalDescription}}`
-        var paragraphs = generalDescription.split("\n")
-        var newGeneralDescription = ""
-        for (let i = 0; i < paragraphs.length; i++) {
-            newGeneralDescription+=paragraphs[i]+"<br>"
-          }
-        document.getElementsByClassName("generalDescription")[0].innerHTML=newGeneralDescription.slice(0,-4)
-    </script>
 
 {% endblock %}
