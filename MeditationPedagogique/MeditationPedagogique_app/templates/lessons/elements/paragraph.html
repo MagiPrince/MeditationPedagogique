@@ -1,5 +1,8 @@
+{% load static %}
+{% load custom_tags %}
+
 <div class="d-flex justify-content flex-row paragraphDiv element">
-    <p id=id>{{ text|linebreaksbr }}</p>
+    <p id={{id}}>{{ text|linebreaksbr }}</p>
     {% if user.is_superuser%}
     {% include 'modification.html' with id=id table='Element' field='text' previous_value=text rows=6 cols=50 %}
     {% include 'lessons/delete.html' with id=id order=order lessonNumber=lessonNumber type='paragraph' %}

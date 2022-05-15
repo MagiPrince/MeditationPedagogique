@@ -94,6 +94,7 @@ def lesson(request, number):
         types_created_verification()
         form = AddParagraphForm(request.POST)
         order = int(request.POST.get('add_element_order', ''))
+        print(order)
         if form.is_valid():
             form.save(lesson_number=number, order=order)
             messages.success(request, 'Creation of lesson successful.')
