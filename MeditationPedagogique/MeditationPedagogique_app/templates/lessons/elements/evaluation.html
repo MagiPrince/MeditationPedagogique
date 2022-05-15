@@ -1,10 +1,13 @@
+{% hasAnswered element user as answered %}
 <div class="paragraphDiv element">
     <div class="d-flex justify-content flex-row">
     <h3>{{ element.text }}</h3>
         {% if user.is_superuser%}
             {% include 'modification.html' with id=element.id table='Element' field='text' previous_value=element.text rows=1 cols=30 %}
             {% include 'delete.html' with id=element.id order=element.order lessonNumber=lessonNumber type='evaluation' %}
-            {% include 'lessons/add_element.html' with id=element.id order=element.order lessonNumber=lessonNumber %}
+            {% if isFinal == "false"%}
+                {% include 'lessons/add_element.html' with id=element.id order=element.order lessonNumber=lessonNumber %}
+            {% endif %}
         {% endif %}
     </div>
     <!--Questions-->
@@ -13,7 +16,9 @@
     {% if not user.is_superuser and user.is_authenticated %}
 
     <div class="questions">
-        <script> var numQuestion=1</script>
+        <script>
+            var numQuestion=1
+        </script>
 
         <form action="" method="post">
             {% csrf_token %}
@@ -29,47 +34,87 @@
                     </script>
                 </div>
                 {% if question.type == 1%}
-                    <textarea name="question{{ question.id }}" value='' rows="5" cols="50">{%getAnswerText user question%}</textarea>
+                    <textarea class="answerTextArea form-control" name="question{{ question.id }}" value='' cols:100 rows: "5">{%getAnswerText user question%}</textarea>
                 {%elif question.type == 2%}
-                    <div>number</div>
+                    <div class="range-wrap">
+                        <input name="question{{ question.id }}" type="range" class="range" min="-1" max="10" step="1" value={%getAnswerNumber user question%}>
+                        <output class="bubble"></output>
+                    </div>
                 {% endif %}
             {%endfor%}
             <input type="hidden" name="elementId" value={{ element.id }}>
             <div class="d-flex justify-content-start modalFooterMargin">
-                <button type="submit" name="answerButton" class="btn btn-primary">Évaluer</button>
+                {%if answered%}
+                    <button type="submit" name="answerButton" class="btn btn-primary">Mettre à jour mon évaluation</button>
+                {%else%}
+                    <button type="submit" name="answerButton" class="btn btn-primary">Évaluer</button>
+                {%endif%}
             </div>
             </form>
     </div>
+     <!-- Updated evaluation Modal -->
+    <div class="modal fade" id="evaluationUpdated" tabindex="-1" aria-labelledby="evaluationUpdatedLabel" aria-hidden="false" value="{{showUpdateModal}}">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="evaluationUpdatedLabel">Information</h5>
+                    <button type="button" class="btn-close close-modal" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Votre évaluation a bien été mise à jour
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        //Show modal when update an evaluation
+        if (document.getElementById('evaluationUpdated').getAttribute("value") == "True"){
+            document.getElementById('evaluationUpdated').setAttribute("value", "False")
+            $(document).ready(function(){
+                $("#evaluationUpdated").modal('show');
+            });
+        }
+    </script>
+
+
 
 
     <!-- For the admin -->
     {% else %}
 
     <div class="questions">
-        <script> var numQuestion=1</script>
+        <script>
+            var numQuestion=1
+        </script>
         {% for question in element.question_of_evaluation.all %}
             <div class="d-flex justify-content flex-row">
                 <div class="question" id="Question{{question.id}}" ></div>
                 <script>
                     var questionId = `{{question.id}}`
                     var question = "Question"+questionId
-                    document.getElementById(question).innerHTML = "Question " + numQuestion + " : "+`{{question.text}}`
+                    if (`{{question.type}}` == 1){
+                        document.getElementById(question).innerHTML = "Question " + numQuestion + " (textuelle) : "+`{{question.text}}`
+                    }
+                    else{
+                        document.getElementById(question).innerHTML = "Question " + numQuestion + " (numérique) : "+`{{question.text}}`
+                    }
                     numQuestion+=1
                 </script>
                 {% include 'modification.html' with id=question.id table='Question' field='text' previous_value=question.text rows=1 cols=30 %}
                 <i type="button" class="fas fa-times-circle fa-lg" id="deleteButton" data-bs-toggle="modal" data-bs-target="#deleteQuestion{{question.id}}"></i>
-                <!-- Modal -->
+                <!-- Modal delete question -->
                 <div class="modal fade" id="deleteQuestion{{question.id}}" tabindex="-1" aria-labelledby="deleteQuestionModalLabel" aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
-                                <div class="modal-header" id="deleteModalHeader">
-                                    <h5 class="modal-title" id="deleteModalLabel">Attention !</h5>
-                                    <button type="button" class="btn-close close-modal" data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
+                            <div class="modal-header" id="deleteModalHeader">
+                                <h5 class="modal-title" id="deleteModalLabel">Attention !</h5>
+                                <button type="button" class="btn-close close-modal" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
                             <div class="modal-body">
                                 Voulez-vous réellement supprimer cette question ?
-                                </div>
-                                <div class="modal-footer d-flex justify-content-center">
+                            </div>
+                            <div class="modal-footer d-flex justify-content-center">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
                                 <form action="/delete-question/" method="post">
                                     {% csrf_token %}
@@ -77,6 +122,81 @@
                                     <input type="hidden" name="lesson_number" value={{ lessonNumber }}>
                                     <button type="submit" class="btn btn-danger">Supprimer</button>
                                 </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <i type="button" class="fas fa-poll fa-lg" id="resultButton" data-bs-toggle="modal" data-bs-target="#showResult{{question.id}}"></i>
+                <!-- Modal show results -->
+                <div class="modal fade" id="showResult{{question.id}}" tabindex="-1" aria-labelledby="showResultModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header" id="showResultModalHeaderl">
+                                <h5 class="modal-title" id="showResultModalLabel">Résultats de l'évaluation</h5>
+                                <button type="button" class="btn-close close-modal" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <h5 id="questionTitle">{{question.text}}</h5>
+                                <!--Réponses-->
+                                {% if not question.answer_of_question.all %}
+                                    <p> Il n'y a pas encore d'évaluation </p>
+                                {% else %}
+                                    {% if question.type == 2 %}
+                                        <div class="range-wrap resultSlider">
+                                            Évaluation minimale :
+                                            <br>
+                                            <input type="range" disabled=true class="range" min="-1" max="10" step="1" value="{%getMinimalAnswer question%}">
+                                            <output class="bubble"></output>
+                                        </div>
+                                        <div class="range-wrap resultSlider">
+                                            Évaluation maximale :
+                                            <br>
+                                            <input type="range" disabled=true class="range" min="-1" max="10" step="1" value={%getMaximalAnswer question%}>
+                                            <output class="bubble"></output>
+                                        </div>
+                                        <div class="range-wrap resultSlider">
+                                            Évaluation moyenne :
+                                            <br>
+                                            <input type="range" disabled=true class="range" min="-1" max="10" step="0.1" value={%getMeanAnswer question%}>
+                                            <output class="bubble"></output>
+                                        </div>
+                                        <div class="range-wrap resultSlider">
+                                            Écart type :
+                                            <br>
+                                            <input type="range" disabled=true class="range" min="-1" max="10" step="0.1" value={%getStdAnswer question%}>
+                                            <output class="bubble"></output>
+                                        </div>
+
+                                        <br>
+                                        <h5>Détails des évaluations</h5>
+                                        <hr>
+                                    {% endif %}
+                                    {% for answer in question.answer_of_question.all %}
+                                        {% if answer.user.role == 1 %}
+                                            <a class="user-profile"><i class="fas fa-user-circle"></i> Étudiant</a>
+                                        {% elif answer.user.role == 2 %}
+                                            <a class="user-profile"><i class="fas fa-user-circle"></i> Professeur tiers</a>
+                                        {% endif %}
+                                        <div>
+                                            {% if question.type == 1 %}
+                                                {{answer.answerText}}<br>
+                                            {% else %}
+                                                <div class="range-wrap resultSlider">
+                                                    <input type="range" disabled=true class="range" min="-1" max="10" step="1" value="{{answer.answerNumber}}"></input>
+                                                    <output class="bubble"></output>
+                                                </div>
+                                            {% endif %}
+                                            <span class="date">{{ answer.date }}<span>
+                                            </div>
+                                        {% if not forloop.last %}
+                                            <hr>
+                                        {% endif %}
+                                    {% endfor %}
+                                {% endif %}
+     
+                            </div>
+                            <div class="modal-footer d-flex justify-content-end">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Retour</button>
                             </div>
                         </div>
                     </div>
@@ -115,6 +235,4 @@
     </div>
 
     {% endif %}
-
-
 </div>

@@ -1,12 +1,14 @@
 body {
     /*background-color: rgb(238, 238, 238) !important*/
     background-color: #E1F5FE !important;
+    padding-top: 4.5rem;
 }
 
 .body-content {
     margin: 5% 15%;
     background-color: white;
     border-radius: 1rem;
+    padding-bottom: 2rem;
 }
 
 .navbar {

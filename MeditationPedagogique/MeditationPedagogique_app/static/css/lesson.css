@@ -10,8 +10,18 @@
     margin-left: 0.2em;
  }
 
+ #submitHM {
+    margin-left: 5%;
+    margin-top: 2em;
+ }
+
  .createEvaluationModal {
      text-align: center;
+ }
+
+ #submitHRTitle {
+    margin-left: 5%;
+    margin-top: 1em;
  }
 
  .addQuestionForm {
@@ -69,4 +79,70 @@
  .download-ressource, .download-ressource:hover {
     color: var(--bs-body-color);
     margin-left: 0.4em;
+ }
+
+
+ #selectLicence {
+     margin-bottom: 15px;
+ }
+
+
+ #evaluationUpdated .modal-header{
+    background-color: #0a74ca;
+    color: white;
+}
+
+#resultButton {
+   margin-left: 0.2em;
+}
+
+#questionTitle {
+   margin-bottom: 2rem;
+}
+
+.finalEvaluation {
+   margin-top:3rem;
+}
+
+.answerTextArea {
+   width: 30rem;
+   max-width: 100%;
+}
+
+/*Slider :*/
+
+.range-wrap {
+   position: relative;
+   margin: 0 auto 3rem;
+ }
+ .range {
+   width: 40%;
+ }
+ .bubble {
+   background: rgb(122, 122, 122);
+   color: white;
+   padding: 4px 12px;
+   margin-top: 1.6rem;;
+   position: absolute;
+   border-radius: 4px;
+   left: 50%;
+   transform: translateX(-50%);
+ }
+ .bubble::after {
+   content: "";
+   position: absolute;
+   width: 2px;
+   height: 2px;
+   background: rgb(122, 122, 122);
+   top: -1px;
+   left: 50%;
+ }
+
+ .resultSlider {
+    margin-top: 1rem;
+    margin-bottom: 2rem;
+ }
+
+ .comment-user-profile {
+    margin-left: 5px;
  }

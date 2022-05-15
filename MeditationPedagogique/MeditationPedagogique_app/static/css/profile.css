@@ -1,7 +1,12 @@
 .profile-intro-div {
-    padding: 2em 5em;
+    padding: 2em 5%;
 }
 
 .image-gallery {
     padding-bottom: 2em;
 }
+
+#submitHRTitle {
+    margin-left: 5%;
+    margin-top: 1em;
+ }

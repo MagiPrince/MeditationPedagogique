@@ -8,24 +8,29 @@
     {% csrf_token %}
     {% include 'lessons/elements/title.html' with title=title id=lessonNumber %}
     {% for element in elements %}
-        {% if element.type.name == 'paragraph' %}
-            {% include 'lessons/elements/paragraph.html' with text=element.text id=element.id order=element.order lessonNumber=lessonNumber%}
-        {% elif element.type.name == 'image' %}
-            {% include 'lessons/elements/image.html' with path=element.path id=element.id order=element.order lessonNumber=lessonNumber %}
-        {% elif element.type.name == 'audio' %}
-            {% include 'lessons/elements/audio.html' with path=element.path id=element.id order=element.order lessonNumber=lessonNumber%}
-        {% elif element.type.name == 'video' %}
-            {% include 'lessons/elements/video.html' with path=element.path id=element.id order=element.order lessonNumber=lessonNumber%}
-        {% elif element.type.name == 'document' %}
-            {% include 'lessons/elements/document.html' with path=element.path id=element.id order=element.order lessonNumber=lessonNumber%}
-        {% elif element.type.name == 'evaluation' %}
-            {% if user.is_authenticated %}
-                {% include 'lessons/elements/evaluation.html' with element=element lessonNumber=lessonNumber %}
+        {% finalEvaluation element.order as isFinal %}
+        {% if not isFinal %}
+            {% if element.type.name == 'paragraph' %}
+                {% include 'lessons/elements/paragraph.html' with text=element.text id=element.id order=element.order lessonNumber=lessonNumber%}
+            {% elif element.type.name == 'image' %}
+                {% include 'lessons/elements/image.html' with path=element.path id=element.id order=element.order lessonNumber=lessonNumber %}
+            {% elif element.type.name == 'audio' %}
+                {% include 'lessons/elements/audio.html' with path=element.path id=element.id order=element.order lessonNumber=lessonNumber%}
+            {% elif element.type.name == 'video' %}
+                {% include 'lessons/elements/video.html' with path=element.path id=element.id order=element.order lessonNumber=lessonNumber%}
+            {% elif element.type.name == 'document' %}
+                {% include 'lessons/elements/document.html' with path=element.path id=element.id order=element.order lessonNumber=lessonNumber%}
+            {% elif element.type.name == 'evaluation' %}
+                {% if user.is_authenticated %}
+                    {% include 'lessons/elements/evaluation.html' with element=element lessonNumber=lessonNumber isFinal="false" %}
+                {% endif %}
             {% endif %}
         {% endif %}
     {% endfor %}
     {% include 'lessons/image_gallery.html' %}
     {% if user.is_authenticated %}
         {% include 'lessons/upload_file.html' with lesson=lessonNumber uploaded_file_url=uploaded_file_url upload_success=upload_success %}
+        {% include 'lessons/elements/finalEvaluation.html' with elements=elements id=lessonNumber %}
     {% endif %}
+    <script src="/static/js/slider.js"></script>
 {% endblock %}

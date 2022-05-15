@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from .forms import CustomUserForm, createLessonForm, AddParagraphForm, CreateEvaluationForm, CreateQuestionForm
 from django.contrib.auth import login
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.core.files.storage import FileSystemStorage
 from django.conf import settings
 from django.http import HttpResponse
@@ -89,6 +89,7 @@ def lesson(request, number):
 
     context = {}
     context['showForm'] = "False"
+    context['showUpdateModal'] = "False"
     if 'paragraphButton' in request.POST:
         form = AddParagraphForm(request.POST)
         order = int(request.POST.get('add_element_order', ''))
@@ -98,6 +99,7 @@ def lesson(request, number):
             return redirect('/lesson/' + str(lessonNumber.id))
         else:
             context['showForm'] = "True"
+            context['form'] = form
 
     elif 'evaluationButton' in request.POST:
         createEvaluationForm = CreateEvaluationForm(request.POST)
@@ -105,6 +107,8 @@ def lesson(request, number):
         if createEvaluationForm.is_valid():
             createEvaluationForm.save(lesson_number=number, order=order)
             return redirect('/lesson/' + str(lessonNumber.id))
+        else:
+            context['createEvaluationForm'] = createEvaluationForm
 
     elif 'questionButton' in request.POST:
         elementId = int(request.POST.get('elementId', ''))
@@ -112,37 +116,60 @@ def lesson(request, number):
         if createQuestionForm.is_valid():
             createQuestionForm.save(elementId=elementId)
             return redirect('/lesson/' + str(lessonNumber.id))
+        else:
+            context['createQuestionForm'] = createQuestionForm
     elif 'answerButton' in request.POST:
         evaluationId = int(request.POST.get('elementId', ''))
         element = Element.objects.get(pk=evaluationId)
         user_answerer = request.user
         questionIds = element.question_of_evaluation.all().values('id')
+        changes = False
         for questionId in questionIds:
             answer = request.POST.get('question'+str(questionId['id']), '')
             question = Question.objects.get(pk=questionId['id'])
-            #Check if user already answer this question or not:
 
+            #Check if user already answered this question or not:
+            previousAnswer = question.answer_of_question.all().filter(user=user_answerer).first()
             if question.type==1:
-                answerElement, created = Answer.objects.update_or_create(
-                user=user_answerer, question=question,
-                defaults={'date': timezone.now(), 'answerText': answer}
-                )
+                if previousAnswer != None:
+                    if previousAnswer.answerText != answer:
+                        changes = True
+                else:
+                    if answer!='':
+                        changes = True
+                if answer=='' and previousAnswer != None:
+                    previousAnswer.delete()
+                elif answer!='':
+                    answerElement, created = Answer.objects.update_or_create(
+                    user=user_answerer, question=question,
+                    defaults={'date': timezone.now(), 'answerText': answer}
+                    )
             elif question.type==2:
-                answerElement, created = Answer.objects.update_or_create(
-                user=user_answerer, question=question,
-                defaults={'date': timezone.now(), 'answerNumber': answer}
-                )
-        return redirect('/lesson/' + str(lessonNumber.id))
+                if answer != "-1":
+                    if previousAnswer != None:
+                        if str(previousAnswer.answerNumber) != str(answer):
+                            changes = True
+                    else:
+                        changes = True
+                    answerElement, created = Answer.objects.update_or_create(
+                    user=user_answerer, question=question,
+                    defaults={'date': timezone.now(), 'answerNumber': answer}
+                    )
+                else:
+                    if previousAnswer != None:
+                        previousAnswer.delete()
+                        changes = True
+
+        if changes == True:
+            context['showUpdateModal'] = "True"
     else:
         form = AddParagraphForm()
         createEvaluationForm = CreateEvaluationForm()
         createQuestionForm = CreateQuestionForm()
+        context['form'] = form
+        context['createEvaluationForm'] = createEvaluationForm
+        context['createQuestionForm'] = createQuestionForm
 
-
-
-    context['form'] = form
-    context['createEvaluationForm'] = createEvaluationForm
-    context['createQuestionForm'] = createQuestionForm
     context['elements'] = sorted(elements, key=operator.attrgetter('order'))
     context['title'] = Lesson.objects.all().filter(id=number)[0].title
     context['lessonNumber'] = number
@@ -211,7 +238,7 @@ def import_data(request):
     return redirect('index')
 
 
-@login_required
+@user_passes_test(lambda u: u.is_superuser)
 def import_element(request):
     """
     Import file passed by POST method, saving it in appropriate folder and creating a Ressource object in DB
@@ -299,6 +326,10 @@ def add_comment(request):
         ressource = request.POST['ressourceName']
         lesson = request.POST.get('lessonNb', '')
         comment_hidden = bool(request.POST.get('commentHidden', ''))
+        if comment_hidden and request.user.is_superuser:
+            comment_hidden = True
+        else:
+            comment_hidden = False
         request.session['modalId'] = request.POST.get('modalId', '')
 
         print('ICI',ressource)
@@ -319,7 +350,7 @@ def delete_comment(request):
         comment_id = request.POST['commentId']
         lesson = request.POST.get('lessonNb', '')
         request.session['modalId'] = request.POST.get('modalId', '')
-        if request.user.is_superuser or request.user.role == 2 or request.user == User.objects.get(id=Comment.objects.filter(id=comment_id).values('user')[0]['user']):
+        if request.user.is_superuser or request.user == User.objects.get(id=Comment.objects.filter(id=comment_id).values('user')[0]['user']):
             Comment.objects.get(id=comment_id).delete()
         return redirect('lesson', lesson)
 
