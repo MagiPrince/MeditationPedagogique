@@ -1,0 +1,151 @@
+{% extends 'base.html' %}
+{% include 'footer.html' %}
+{% block extracss %}
+    <link rel="stylesheet" href="/static/css/codes.css">
+{% endblock %}
+
+
+{% block body_content %}
+    {% if user.is_superuser %}
+    {% csrf_token %}
+    <div class="d-flex justify-content-center titleDiv flex-row">
+        <h1 class="generalTitle">Gestion des codes d'invitation</h1>
+    </div>
+    <div class="d-flex justify-content-center flex-row paragraphDiv">
+
+        <p class="generalDescription paragraph">Lorsqu'un futur utilisateur crée son compte, il a besoin d'un code qui lui attribuera son rôle : étudiant ou professeur tier.
+            Vous pouvez, depuis cette page, créer, modifier et supprimer ces codes à votre convenance.
+        </p>
+        <br>
+    </div>
+    <div class="justify-content paragraphDiv">
+        <h4>Codes pour les étudiants :</h1>
+            {% for studentCode in studentCodes %}
+                <p class="codesListDiv">- {{ studentCode.code }}
+                    {% include 'modification.html' with id=studentCode.id table='InscriptionCode' field='code' previous_value=studentCode.code rows=1 cols=20 %}
+                    <!-- Supression d'un code -->
+                    <i type="button" class="fas fa-times-circle fa-lg deleteIcon" id="deleteButton" data-bs-toggle="modal" data-bs-target="#delete{{ studentCode.id }}"></i>
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="delete{{ studentCode.id }}" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                    <div class="modal-header" id="deleteModalHeader">
+                                        <h5 class="modal-title" id="deleteModalLabel">Attention !</h5>
+                                        <button type="button" class="btn-close close-modal" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                <div class="modal-body">
+                                    Voulez-vous réellement supprimer ce code ?
+                                </div>
+                                <div class="modal-footer d-flex justify-content-center">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                                    <form action="/delete-code/" method="post">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="code_id" value={{ studentCode.id }}>
+                                        <button type="submit" class="btn btn-danger">Supprimer</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </p>
+            {% endfor %}
+            <!-- Ajout d'un code -->
+            <button class="btn btn-primary add-element-button" data-bs-toggle="modal" data-bs-target="#addStudentCode">Ajouter un code étudiant</button>
+            <div class="modal fade" id="addStudentCode" tabindex="-1" aria-labelledby="addStudentCodeModalLabel">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="addStudentCodeModalLabel">
+                                Ajout d'un code étudiant
+                            </h5>
+                            <button type="button" class="btn-close close-modal" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            Veuillez entrer le code qui sera utilisé lors de la création d'un compte. Vous pourrez le modifier et le supprimer par la suite si nécessaire.
+                        </div>
+
+                        <form action="/add-code/" method="post">
+                            {% csrf_token %}
+                            <center>
+                            <textarea name="code" value="" rows=1 cols=20></textarea>
+                            </center>
+                            <input type="hidden" name="role" value="1">
+                            <div class="modal-footer d-flex justify-content-center modalFooterMargin">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                                <button type="submit" name="paragraphButton" class="btn btn-primary">Créer</button>
+                            </div>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+    </div>
+    <div class="justify-content paragraphDiv">
+        <h4>Codes pour les professeurs tiers :</h1>
+            {% for profCode in profCodes %}
+                <p class="codesListDiv">- {{ profCode.code }}
+                    {% include 'modification.html' with id=profCode.id table='InscriptionCode' field='code' previous_value=profCode.code rows=1 cols=20 %}
+                    <!-- Supression d'un code -->
+                    <i type="button" class="fas fa-times-circle fa-lg deleteIcon" id="deleteButton" data-bs-toggle="modal" data-bs-target="#delete{{ profCode.id }}"></i>
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="delete{{ profCode.id }}" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                    <div class="modal-header" id="deleteModalHeader">
+                                        <h5 class="modal-title" id="deleteModalLabel">Attention !</h5>
+                                        <button type="button" class="btn-close close-modal" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                <div class="modal-body">
+                                    Voulez-vous réellement supprimer ce code ?
+                                </div>
+                                <div class="modal-footer d-flex justify-content-center">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                                    <form action="/delete-code/" method="post">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="code_id" value={{ profCode.id }}>
+                                        <button type="submit" class="btn btn-danger">Supprimer</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </p>
+            {% endfor %}
+            <!-- Ajout d'un code -->
+            <button class="btn btn-primary add-element-button" data-bs-toggle="modal" data-bs-target="#addprofCode">Ajouter un code professeur tiers</button>
+            <div class="modal fade" id="addprofCode" tabindex="-1" aria-labelledby="addprofCodeModalLabel">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="addprofCodeModalLabel">
+                                Ajout d'un code professeur tiers
+                            </h5>
+                            <button type="button" class="btn-close close-modal" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            Veuillez entrer le code qui sera utilisé lors de la création d'un compte. Vous pourrez le modifier et le supprimer par la suite si nécessaire.
+                        </div>
+
+                        <form action="/add-code/" method="post">
+                            {% csrf_token %}
+                            <center>
+                            <textarea name="code" value="" rows=1 cols=20></textarea>
+                            </center>
+                            <input type="hidden" name="role" value="2">
+                            <div class="modal-footer d-flex justify-content-center modalFooterMargin">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                                <button type="submit" name="paragraphButton" class="btn btn-primary">Créer</button>
+                            </div>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+    </div>
+    {% else %}
+    <p>Vous n'avez pas les permissions pour accéder à cette page</p>
+    {% endif %}
+
+{% endblock %}

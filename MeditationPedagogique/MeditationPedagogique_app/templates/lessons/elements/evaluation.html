@@ -4,7 +4,7 @@
     <h3>{{ element.text }}</h3>
         {% if user.is_superuser%}
             {% include 'modification.html' with id=element.id table='Element' field='text' previous_value=element.text rows=1 cols=30 %}
-            {% include 'delete.html' with id=element.id order=element.order lessonNumber=lessonNumber type='evaluation' %}
+            {% include 'lessons/delete.html' with id=element.id order=element.order lessonNumber=lessonNumber type='evaluation' %}
             {% if isFinal == "false"%}
                 {% include 'lessons/add_element.html' with id=element.id order=element.order lessonNumber=lessonNumber %}
             {% endif %}
@@ -193,7 +193,7 @@
                                         {% endif %}
                                     {% endfor %}
                                 {% endif %}
-     
+
                             </div>
                             <div class="modal-footer d-flex justify-content-end">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Retour</button>

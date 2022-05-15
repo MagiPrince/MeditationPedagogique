@@ -10,7 +10,7 @@ from django.apps import apps
 from django.utils import timezone
 import os
 import datetime
-from .models import Lesson, Element, Ressource, Type, GeneralInformation, Comment, User, Question, Answer
+from .models import Lesson, Element, Ressource, Type, GeneralInformation, Comment, User, Question, Answer, InscriptionCode
 import operator
 from django.db.models import F
 
@@ -91,6 +91,7 @@ def lesson(request, number):
     context['showForm'] = "False"
     context['showUpdateModal'] = "False"
     if 'paragraphButton' in request.POST:
+        types_created_verification()
         form = AddParagraphForm(request.POST)
         order = int(request.POST.get('add_element_order', ''))
         if form.is_valid():
@@ -102,6 +103,7 @@ def lesson(request, number):
             context['form'] = form
 
     elif 'evaluationButton' in request.POST:
+        types_created_verification()
         createEvaluationForm = CreateEvaluationForm(request.POST)
         order = int(request.POST.get('add_element_order', ''))
         if createEvaluationForm.is_valid():
@@ -258,24 +260,7 @@ def import_element(request):
             request.session['upload_success_element'] = True
             request.session['uploaded_file_url_element'] = filename
 
-            # Verify that types for elements are created, if not create them
-            if len(Type.objects.all()) < 5:
-                print(len(Type.objects.all()))
-                if len(Type.objects.filter(name='audio')) < 1:
-                    t = Type(name='audio')
-                    t.save()
-                if len(Type.objects.filter(name='document')) < 1:
-                    t = Type(name='document')
-                    t.save()
-                if len(Type.objects.filter(name='image')) < 1:
-                    t = Type(name='image')
-                    t.save()
-                if len(Type.objects.filter(name='paragraph')) < 1:
-                    t = Type(name='paragraph')
-                    t.save()
-                if len(Type.objects.filter(name='video')) < 1:
-                    t = Type(name='video')
-                    t.save()
+            types_created_verification()
 
             # Define Type
             type = ''
@@ -331,8 +316,6 @@ def add_comment(request):
         else:
             comment_hidden = False
         request.session['modalId'] = request.POST.get('modalId', '')
-
-        print('ICI',ressource)
 
         c = Comment(user=request.user, ressource=Ressource.objects.get(id=ressource), text=comment, date=datetime.datetime.now(), hidden=comment_hidden)
         c.save()
@@ -397,3 +380,55 @@ def profile(request, username):
         print("We didn't find the user", username)
         return redirect('index')
 
+def types_created_verification():
+    # Verify that types for elements are created, if not create them
+    if len(Type.objects.all()) < 6:
+        print(len(Type.objects.all()))
+        if len(Type.objects.filter(name='audio')) < 1:
+            t = Type(name='audio')
+            t.save()
+        if len(Type.objects.filter(name='document')) < 1:
+            t = Type(name='document')
+            t.save()
+        if len(Type.objects.filter(name='image')) < 1:
+            t = Type(name='image')
+            t.save()
+        if len(Type.objects.filter(name='paragraph')) < 1:
+            t = Type(name='paragraph')
+            t.save()
+        if len(Type.objects.filter(name='video')) < 1:
+            t = Type(name='video')
+            t.save()
+        if len(Type.objects.filter(name='evaluation')) < 1:
+            t = Type(name='evaluation')
+            t.save()
+
+def codes(request):
+    context = {}
+
+    if request.user.is_superuser:
+        # Get all codes in the DB
+        context['studentCodes'] = InscriptionCode.objects.filter(role=1)
+        context['profCodes'] = InscriptionCode.objects.filter(role=2)
+
+    return render(request, 'codes.html', context)
+
+@login_required
+def delete_code(request):
+    if request.method == 'POST':
+        code_id = request.POST['code_id']
+        if request.user.is_superuser:
+            InscriptionCode.objects.get(id=code_id).delete()
+
+    # If the request is not POST the user is redirected to the codes page
+    return redirect('codes')
+
+@login_required
+def add_code(request):
+    if request.method == 'POST':
+        code = request.POST['code']
+        role = request.POST['role']
+        c = InscriptionCode(code=code, role=role)
+        c.save()
+    # If the request is not POST the user is redirected to the codes page
+    return redirect('codes')

@@ -18,5 +18,8 @@ urlpatterns = [
     path('delete-comment/', views.delete_comment, name='delete_comment'),
     path('delete-ressource/', views.delete_ressource, name='delete_ressource'),
     path('delete-question/', views.delete_question, name='delete_question'),
+    path('add-code/', views.add_code, name='add_code'),
+    path('delete-code/', views.delete_code, name='delete_code'),
     path('profile/<username>', views.profile, name='profile'),
+    path('codes/', views.codes, name='codes'),
 ]

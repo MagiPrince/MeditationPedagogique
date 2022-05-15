@@ -3,7 +3,7 @@
 <div class="d-flex justify-content-center image-div">
     <img src="{% get_media_prefix %}{{ path }}" class="img-fluid">
     {% if user.is_superuser%}
-        {% include 'delete.html' with id=id order=order lessonNumber=lessonNumber type="image" %}
+        {% include 'lessons/delete.html' with id=id order=order lessonNumber=lessonNumber type="image" %}
         {% include 'lessons/add_element.html' with id=id order=order lessonNumber=lessonNumber %}
     {% endif %}
     {% include 'lessons/download_ressource.html' with path=path %}

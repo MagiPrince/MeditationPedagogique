@@ -9,6 +9,9 @@
             </a>
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton1">
                 {% if user.is_authenticated%}
+                    {% if user.is_superuser%}
+                    <li><a class="dropdown-item" href="/codes">Gestion des codes</a></li>
+                    {% endif %}
                     <li><a class="dropdown-item" href="/profile/{{user.get_username}}">Mon profil</a></li>
                     <li><a class="dropdown-item" href="/change-password">Editer mon mot de passe</a></li>
                     <li><a class="dropdown-item" href="/logout">Se déconnecter</a></li>

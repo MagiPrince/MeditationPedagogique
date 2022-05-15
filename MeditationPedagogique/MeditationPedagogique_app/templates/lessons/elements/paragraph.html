@@ -2,7 +2,7 @@
     <p id=id>{{ text|linebreaksbr }}</p>
     {% if user.is_superuser%}
     {% include 'modification.html' with id=id table='Element' field='text' previous_value=text rows=6 cols=50 %}
-    {% include 'delete.html' with id=id order=order lessonNumber=lessonNumber type='paragraph' %}
+    {% include 'lessons/delete.html' with id=id order=order lessonNumber=lessonNumber type='paragraph' %}
     {% include 'lessons/add_element.html' with id=id order=order lessonNumber=lessonNumber %}
     {% endif %}
 </div>

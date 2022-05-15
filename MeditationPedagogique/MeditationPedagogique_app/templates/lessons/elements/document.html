@@ -6,7 +6,7 @@
         {{ filename }}
     </a>
     {% if user.is_superuser%}
-        {% include 'delete.html' with id=id order=order lessonNumber=lessonNumber type="document" %}
+        {% include 'lessons/delete.html' with id=id order=order lessonNumber=lessonNumber type="document" %}
         {% include 'lessons/add_element.html' with id=id order=order lessonNumber=lessonNumber %}
     {% endif %}
     {% include 'lessons/download_ressource.html' with path=path %}
