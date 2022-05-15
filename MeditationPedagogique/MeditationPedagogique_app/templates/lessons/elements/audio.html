@@ -8,7 +8,6 @@
     {% if user.is_superuser%}
         {% include 'delete.html' with id=id order=order lessonNumber=lessonNumber type="audio" %}
         {% include 'lessons/add_element.html' with id=id order=order lessonNumber=lessonNumber %}
-    {% else %}
-        {% include 'lessons/download_ressource.html' with path=path %}
     {% endif %}
+    {% include 'lessons/download_ressource.html' with path=path %}
 </div>
