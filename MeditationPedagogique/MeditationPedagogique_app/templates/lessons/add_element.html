@@ -1,7 +1,7 @@
-<i type="button" class="fas fa-plus-circle fa-lg add-element-plus-button" data-bs-toggle="modal" data-bs-target="#add-element{{ order }}"></i>
+<i type="button" class="fas fa-plus-circle fa-lg add-element-plus-button" data-bs-toggle="modal" data-bs-target="#add-element{{ id }}"></i>
 
     <!-- Add element modal -->
-    <div class="modal fade" id="add-element{{ order }}" tabindex="-1" aria-labelledby="addElementModalLabel" aria-hidden="true">
+    <div class="modal fade" id="add-element{{ id }}" tabindex="-1" aria-labelledby="addElementModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                     <div class="modal-header" id="addElementModalLabel">
@@ -66,9 +66,6 @@
                             <input type="hidden" id="lessonNb" name="lessonNb" value={{ lessonNumber }}>
 
                             <input type="hidden" name="add_element_order" value={{ order }}>
-                            <div>
-                                {{order}}
-                            </div>
 
                     </div>
                     <div class="modal-footer">
